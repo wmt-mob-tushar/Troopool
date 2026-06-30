@@ -209,6 +209,17 @@ body{font-family:var(--b);color:var(--ink);display:flex;align-items:center;justi
 .cthread .cscreen{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:#9C99AE;font-family:var(--m);margin-top:8px;background:rgba(255,255,255,.06);padding:3px 8px;border-radius:7px}
 .cthread .crep{font-size:11px;color:var(--lime);font-family:var(--m);margin-top:8px;margin-left:8px}
 .cshare{margin-bottom:0!important}
+.cviewers .lbl{color:#9C99AE;margin-bottom:0}
+.cviewers .lbl b{color:var(--lime)}
+.vtot{color:#7E7B90}
+.vlist{display:flex;flex-direction:column;gap:8px;margin-top:11px;max-height:128px;overflow:auto}
+.vlist:empty{display:none}
+.vrow{display:flex;align-items:center;gap:9px}
+.vrow .vmeta{min-width:0;flex:1;display:flex;flex-direction:column;line-height:1.25}
+.vrow .vname{font-size:12.5px;font-weight:700;color:#E7E5F0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vrow .vsub{font-size:10.5px;color:#8E8BA0;font-family:var(--m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vrow .vsub .vpg{color:var(--lime)}
+.vrow .vdot{width:7px;height:7px;border-radius:50%;background:var(--lime);flex:0 0 auto;box-shadow:0 0 0 3px rgba(203,242,78,.16)}
 .shint{font-size:11.5px;color:#9C99AE;line-height:1.5;margin:0 0 10px}
 .sharebtn{width:100%;background:rgba(203,242,78,.14);border:1px solid rgba(203,242,78,.3);color:var(--lime);font-family:var(--b);font-weight:700;font-size:13px;border-radius:11px;padding:10px;cursor:pointer;transition:.14s}
 .sharebtn:hover{background:rgba(203,242,78,.22)}
@@ -222,6 +233,7 @@ body{font-family:var(--b);color:var(--ink);display:flex;align-items:center;justi
 .cpop .ph button{background:none;border:none;cursor:pointer;color:var(--ink-3);padding:5px;border-radius:7px;display:flex;line-height:0}
 .cpop .ph button:hover{background:var(--soft);color:var(--ink)}
 .cpop .ph button.act{color:var(--teal)}
+.cpop .ph button.delthr:hover{background:var(--coral-soft);color:var(--coral-d)}
 .cpop .plist{max-height:280px;overflow:auto;padding:5px 0}
 .cpop .pc{padding:10px 14px;display:flex;gap:10px}
 .cpop .pc .av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex:0 0 auto}
@@ -285,8 +297,12 @@ body{font-family:var(--b);color:var(--ink);display:flex;align-items:center;justi
     <span class="kbd">C</span>
   </button>
 
+  <button class="cmode" id="hideBtn" onclick="Comments.toggleHide()">
+    <span id="hideLbl" style="flex:1;text-align:left">Hide comments</span>
+    <span class="kbd">H</span>
+  </button>
+
   <div class="cfilter">
-    <span class="presence" id="presence"></span>
     <label class="resw"><input type="checkbox" id="showRes" onchange="Comments.render()"> <span>Show resolved</span></label>
   </div>
 
@@ -320,13 +336,13 @@ function TABBAR(a){const t=[['home','Home'],['network','Network'],['commute','Co
 
 /* ===== data ===== */
 const PEOPLE={
-  rahul:{n:'Rahul Mehta',a:'R',c:'var(--teal)',role:'Sr. Software Engineer · Infosys',tier:'gold',pct:92,route:1,pro:1,why:{k:'way',t:'88% same route · leaves 9:30'},int:['Running','Photography','Coffee'],open:['Carpool','Coffee'],bio:'Hinjawadi by 10. Up for a post-work coffee or a weekend trail run.'},
-  sneha:{n:'Sneha Kapoor',a:'S',c:'var(--coral)',role:'UX Designer · Infosys',tier:'silver',w:1,pct:84,route:1,why:{k:'wave',t:'Both love books & yoga'},int:['Books','Yoga','Coffee'],open:['Book club','Walk to metro'],bio:'Reading the Booker list. Same Infosys corridor — happy to pool too.'},
-  aman:{n:'Aman Verma',a:'A',c:'#3E5C8A',role:'Data Analyst · TCS',tier:'',pct:74,route:1,why:{k:'way',t:'74% same route · TCS'},int:['Football','Coding'],open:['Carpool','Football'],bio:'5-a-side every Saturday. Need one more for the carpool too.'},
-  priya:{n:'Priya Sharma',a:'P',c:'var(--bronze)',role:'Product Manager · Infosys',tier:'gold',w:1,pct:90,route:1,why:{k:'near',t:'Your society · Building 7'},int:['Travel','Cooking','Films'],open:['Coffee','Carpool','Neighbour help'],bio:'New to Society 7 — same Wakad→Hinjawadi route. Happy to pool or split an airport cab.',gx:45,gy:62},
-  karan:{n:'Karan Singh',a:'K',c:'#3E5C8A',role:'DevOps Engineer · Infosys',tier:'silver',pct:81,route:1,why:{k:'near',t:'Your society · Building 4'},int:['Cricket','Travel','Music'],open:['Carpool','Airport pool'],bio:'Society 7, Building 4. Frequent airport runs — always happy to split a cab.',gx:30,gy:40},
-  divya:{n:'Divya Nair',a:'D',c:'var(--coral)',role:'HR Partner · Infosys',tier:'gold',w:1,pct:86,why:{k:'near',t:'Your society · Building 7'},int:['Yoga','Cooking','Films'],open:['Coffee','Neighbour help'],bio:'Building 7, same as you. Runs the morning yoga group + loves a recipe swap.',gx:61,gy:50},
-  neha:{n:'Neha Joshi',a:'N',c:'var(--teal)',role:'QA Lead · Wipro',tier:'',w:1,pct:79,why:{k:'wave',t:'Both into photography'},int:['Photography','Music','Coffee'],open:['Hobby buddy','Coffee'],bio:'Weekend photo walks around Pune. Looking for a shutter buddy nearby.',gx:74,gy:34}
+  rahul:{n:'Rahul Mehta',a:'R',c:'var(--teal)',role:'Sr. Software Engineer · Infosys',tier:'gold',pct:92,route:1,pro:1,why:{k:'way',t:'88% same route · leaves 9:30'},int:['Running','Photography','Coffee'],open:['Carpool','Coffee'],bio:'Hinjawadi by 10. Up for a post-work coffee or a weekend trail run.',ph:'https://randomuser.me/api/portraits/men/32.jpg'},
+  sneha:{n:'Sneha Kapoor',a:'S',c:'var(--coral)',role:'UX Designer · Infosys',tier:'silver',w:1,pct:84,route:1,why:{k:'wave',t:'Both love books & yoga'},int:['Books','Yoga','Coffee'],open:['Book club','Walk to metro'],bio:'Reading the Booker list. Same Infosys corridor — happy to pool too.',ph:'https://randomuser.me/api/portraits/women/44.jpg'},
+  aman:{n:'Aman Verma',a:'A',c:'#3E5C8A',role:'Data Analyst · TCS',tier:'',pct:74,route:1,why:{k:'way',t:'74% same route · TCS'},int:['Football','Coding'],open:['Carpool','Football'],bio:'5-a-side every Saturday. Need one more for the carpool too.',ph:'https://randomuser.me/api/portraits/men/45.jpg'},
+  priya:{n:'Priya Sharma',a:'P',c:'var(--bronze)',role:'Product Manager · Infosys',tier:'gold',w:1,pct:90,route:1,why:{k:'near',t:'Your society · Building 7'},int:['Travel','Cooking','Films'],open:['Coffee','Carpool','Neighbour help'],bio:'New to Society 7 — same Wakad→Hinjawadi route. Happy to pool or split an airport cab.',gx:45,gy:62,ph:'https://randomuser.me/api/portraits/women/68.jpg'},
+  karan:{n:'Karan Singh',a:'K',c:'#3E5C8A',role:'DevOps Engineer · Infosys',tier:'silver',pct:81,route:1,why:{k:'near',t:'Your society · Building 4'},int:['Cricket','Travel','Music'],open:['Carpool','Airport pool'],bio:'Society 7, Building 4. Frequent airport runs — always happy to split a cab.',gx:30,gy:40,ph:'https://randomuser.me/api/portraits/men/52.jpg'},
+  divya:{n:'Divya Nair',a:'D',c:'var(--coral)',role:'HR Partner · Infosys',tier:'gold',w:1,pct:86,why:{k:'near',t:'Your society · Building 7'},int:['Yoga','Cooking','Films'],open:['Coffee','Neighbour help'],bio:'Building 7, same as you. Runs the morning yoga group + loves a recipe swap.',gx:61,gy:50,ph:'https://randomuser.me/api/portraits/women/65.jpg'},
+  neha:{n:'Neha Joshi',a:'N',c:'var(--teal)',role:'QA Lead · Wipro',tier:'',w:1,pct:79,why:{k:'wave',t:'Both into photography'},int:['Photography','Music','Coffee'],open:['Hobby buddy','Coffee'],bio:'Weekend photo walks around Pune. Looking for a shutter buddy nearby.',gx:74,gy:34,ph:'https://randomuser.me/api/portraits/women/90.jpg'}
 };
 const CIRCLES={
   runners:{e:'🏃',n:'Hinjawadi Runners',c:'var(--brand)',members:240,joined:true,cat:'Wavelength · Running',about:'Runs Tue, Thu & Sun · all paces welcome. Verified colleagues & neighbours.',m3:[['R','var(--teal)'],['P','var(--coral)'],['A','#3E5C8A']],plans:[['Sunday trail run','6:30 AM · Hinjawadi hill','12 going']],chat:[['R','var(--teal)','Anyone up for 5k tomorrow morning?'],['P','var(--coral)','In! Gate at 6:25?']]},
@@ -347,6 +363,12 @@ function overlap(k,t){return `<span class="why ${k}">${k==='way'?'🛣️':k==='
 function ints(a){return a.map(i=>`<span class="chip out" style="font-size:11px;padding:5px 10px">${i}</span>`).join('');}
 function openTags(a){return a.map(o=>`<span class="chip brand-soft" style="font-size:11px;padding:5px 10px">${o}</span>`).join('');}
 function tierTag(t){return t?`<span class="tier ${t}">${t[0].toUpperCase()+t.slice(1)}</span>`:'';}
+/* ===== profile photos ===== */
+function faceCss(p,extra){return (p&&p.ph)?("background-image:url('"+p.ph+"');background-size:cover;background-position:center;"+(extra||'')):(extra||'');}
+function trustOf(p){return p.tier==='gold'?92:p.tier==='silver'?85:(p.pct?Math.max(74,p.pct-6):78);}
+/* circular trust/match score ring (for dark photo backgrounds) */
+function ringScore(pct,color){const sz=46,r=19,c=2*Math.PI*r,off=c*(1-pct/100);color=color||'var(--lime)';
+  return `<div style="position:relative;width:${sz}px;height:${sz}px"><svg width="${sz}" height="${sz}"><circle cx="23" cy="23" r="${r}" fill="rgba(0,0,0,.4)" stroke="rgba(255,255,255,.28)" stroke-width="3"/><circle cx="23" cy="23" r="${r}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 23 23)"/></svg><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--m);font-weight:700;font-size:13px;color:#fff">${pct}</div></div>`;}
 function matchRing(pct,sz,color){sz=sz||44;color=color||'var(--brand)';const r=sz/2-4,c=2*Math.PI*r,off=c*(1-pct/100),cx=sz/2;
   return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" style="flex:0 0 auto"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--soft)" stroke-width="4"/><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 ${cx} ${cx})"/><text class="ringnum" x="${cx}" y="${cx+0.5}" text-anchor="middle" dominant-baseline="middle" font-size="${sz>40?12:10}">${pct}</text></svg>`;}
 function mapScene(o){o=o||{};const h=o.h||300;const route=o.route||`M52 ${h-34} C 120 ${h-58} 150 ${Math.round(h*0.5)} 250 ${Math.round(h*0.30)} S 305 86 312 60`;const yA=Math.round(h*0.62),yB=Math.round(h*0.28);
@@ -392,7 +414,7 @@ reg('splash','light',`
 reg('onboard','dark',`
 <div class="body pt px pb" style="display:flex;flex-direction:column">
   <div style="height:236px;border-radius:24px;background:linear-gradient(150deg,var(--brand-soft),#DCD7F6);display:flex;align-items:center;justify-content:center;margin-top:8px">
-    <div style="display:flex"><div class="av" style="width:62px;height:62px;font-size:23px;background:var(--teal);border:3px solid #fff;border-radius:50%">R</div><div class="av" style="width:62px;height:62px;font-size:23px;background:var(--coral);border:3px solid #fff;margin-left:-16px;border-radius:50%">S</div><div class="av" style="width:62px;height:62px;font-size:23px;background:#3E5C8A;border:3px solid #fff;margin-left:-16px;border-radius:50%">A</div></div>
+    <div style="display:flex"><div class="av" style="width:62px;height:62px;border:3px solid #fff;border-radius:50%;${faceCss(PEOPLE.rahul)}"></div><div class="av" style="width:62px;height:62px;border:3px solid #fff;margin-left:-16px;border-radius:50%;${faceCss(PEOPLE.sneha)}"></div><div class="av" style="width:62px;height:62px;border:3px solid #fff;margin-left:-16px;border-radius:50%;${faceCss(PEOPLE.priya)}"></div></div>
   </div>
   <div style="margin-top:26px"><span class="chip lime" id="ob-k">Your daily orbit</span>
     <div class="h1" style="margin-top:14px" id="ob-t">The people you cross paths with — finally connectable.</div>
@@ -408,7 +430,7 @@ reg('welcome','light',`
 <div class="body" style="background:linear-gradient(160deg,#6E5DEC,#4A39C4 55%,#2C1A58);color:#fff;display:flex;flex-direction:column;padding:30px;position:relative;overflow:hidden">
   <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(203,242,78,.16),transparent 65%);top:4%;right:-26%"></div>
   <div style="flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2">
-    <div style="display:flex;margin-bottom:24px">${[['R','var(--teal)'],['S','var(--coral)'],['A','#3E5C8A'],['P','var(--bronze)']].map((a,i)=>`<div class="av" style="width:54px;height:54px;font-size:20px;background:${a[1]};border:3px solid #4A39C4;${i?'margin-left:-16px':''};border-radius:50%">${a[0]}</div>`).join('')}</div>
+    <div style="display:flex;margin-bottom:24px">${['rahul','sneha','aman','priya'].map((k,i)=>`<div class="av" style="width:54px;height:54px;border:3px solid #4A39C4;${i?'margin-left:-16px':''};border-radius:50%;${faceCss(PEOPLE[k])};background-color:${PEOPLE[k].c}"></div>`).join('')}</div>
     <div class="h1" style="color:#fff;font-size:33px;line-height:1.08">Meet professionals already in your daily orbit.</div>
     <p style="opacity:.85;font-size:15px;margin-top:14px;max-width:30ch">Same route. Same office corridor. Same interests. The commute is the reason to meet — the <b style="color:var(--lime)">network is the point</b>.</p>
   </div>
@@ -528,7 +550,7 @@ function matchHTML(id){const p=PEOPLE[id];return `
 <div class="body" style="background:linear-gradient(165deg,var(--brand),#3A2E9E);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px">
   <div style="font-family:var(--d);font-weight:800;font-size:32px;animation:pop .5s cubic-bezier(.3,1.4,.5,1)">It's a match! 🎉</div>
   <p style="opacity:.9;font-size:14px;margin-top:8px">You and ${p.n.split(' ')[0]} both liked each other.</p>
-  <div class="row" style="gap:0;margin-top:26px"><div class="av" style="width:84px;height:84px;font-size:30px;border-radius:50%;background:var(--teal);border:3px solid #fff">T</div><div class="av" style="width:84px;height:84px;font-size:30px;border-radius:50%;background:${p.c};border:3px solid #fff;margin-left:-18px">${p.a}</div></div>
+  <div class="row" style="gap:0;margin-top:26px"><div class="av" style="width:84px;height:84px;font-size:30px;border-radius:50%;background:var(--teal);border:3px solid #fff">T</div><div class="av" style="width:84px;height:84px;font-size:30px;border-radius:50%;background-color:${p.c};border:3px solid #fff;margin-left:-18px;${faceCss(p)}">${p.ph?'':p.a}</div></div>
   <div style="margin-top:18px">${overlap(p.why.k,p.why.t)}</div></div>
 <div class="cta-dock" style="background:#3A2E9E">
   ${p.route?`<button class="btn" style="background:var(--lime);color:var(--ink)" onclick="requestJoinCarpool('${id}')">${I_CAR} Request to join carpool</button>`:''}
@@ -613,7 +635,7 @@ function detailHTML(){const p=PEOPLE[CTX.person]||PEOPLE.rahul;return `
   ${mapScene({h:230,pins:[{t:'label',k:'c',x:15,y:84,l:'YOU'},{t:'av',x:40,y:62,l:p.a,c:p.c},{t:'label',k:'w',x:84,y:24,l:'WORK'}]})}
   <div class="carmark" style="left:50%;bottom:12px;top:auto">Tap to view route ↗</div></div>
 <div class="body px pb" style="background:var(--bg);border-radius:24px 24px 0 0;margin-top:-22px;position:relative;z-index:4">
-  <div class="row" style="margin-top:18px"><div class="av" style="background:${p.c};width:52px;height:52px">${p.a}</div>
+  <div class="row" style="margin-top:18px"><div class="av" style="background-color:${p.c};width:52px;height:52px;${faceCss(p)}">${p.ph?'':p.a}</div>
     <div style="flex:1"><div class="row" style="gap:8px"><b style="font-size:17px">${p.n}</b>${tierTag(p.tier)}</div><div class="desig">${p.role}</div><div class="stars" style="margin-top:2px">★★★★★ <span class="muted" style="font-family:var(--b);font-size:12.5px">4.9 · 240 rides</span></div></div></div>
   <div class="card" style="margin-top:14px">
     <div class="between"><b style="font-size:14px">Why you matched</b>${matchRing(p.pct,40)}</div>
@@ -649,7 +671,7 @@ reg('active','light',`
   <div class="between" style="margin-top:18px"><div class="row"><div class="av" style="background:var(--teal)">R</div><div><b style="font-size:14.5px">Rahul is 4 min away</b><div class="lab tnum">MH 12 RT 4408 · White i20</div></div></div>
     <button class="iconbtn pulse" style="width:54px;height:54px;background:var(--coral);color:#fff;font-family:var(--d);font-weight:800;font-size:13px" onclick="openSOS()">SOS</button></div>
   <div class="card" style="margin-top:14px"><div class="between" style="margin-bottom:10px"><span class="lab">Co-passengers in this ride</span><span class="lab" style="color:var(--brand);cursor:pointer" onclick="go('poolchat')">${I_CHAT} Ride chat →</span></div>
-    <div class="row" style="gap:8px;flex-wrap:wrap">${[['priya'],['aman']].map(([pid])=>{const p=PEOPLE[pid];return `<div class="row" style="gap:7px;background:var(--soft);padding:5px 12px 5px 5px;border-radius:999px;cursor:pointer" onclick="openPerson('${pid}')"><div class="av" style="width:28px;height:28px;font-size:11px;border-radius:50%;background:${p.c}">${p.a}</div><b style="font-size:12.5px">${p.n.split(' ')[0]}</b></div>`;}).join('')}</div></div>
+    <div class="row" style="gap:8px;flex-wrap:wrap">${[['priya'],['aman']].map(([pid])=>{const p=PEOPLE[pid];return `<div class="row" style="gap:7px;background:var(--soft);padding:5px 12px 5px 5px;border-radius:999px;cursor:pointer" onclick="openPerson('${pid}')"><div class="av" style="width:28px;height:28px;font-size:11px;border-radius:50%;background-color:${p.c};${faceCss(p)}">${p.ph?'':p.a}</div><b style="font-size:12.5px">${p.n.split(' ')[0]}</b></div>`;}).join('')}</div></div>
   <div class="row" style="gap:11px;margin-top:12px"><button class="btn btn-ghost" onclick="go('poolchat')">${I_CHAT} Pool chat</button><button class="btn btn-ink" onclick="toast('Live trip shared with your 3 contacts')">📍 Share trip</button></div>
   <button class="btn btn-teal" style="margin-top:11px" onclick="go('cost')">Complete ride (demo)</button>
 </div>`);
@@ -688,7 +710,7 @@ reg('poolchat','dark',`
 <div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><div class="row" style="gap:9px"><div style="font-size:20px">🚗</div><div><b style="font-size:14px">Today's carpool</b><div class="lab" style="text-transform:none">Wakad → Hinjawadi · 9:30 AM</div></div></div></div>
 <div class="body px" style="display:flex;flex-direction:column;gap:10px;padding-top:8px">
   <div class="card"><div class="lab" style="margin-bottom:11px">In this pool · tap to chat or call</div>
-    ${[['rahul','Driver'],['priya','Co-passenger'],['aman','Co-passenger']].map(([pid,role])=>{const p=PEOPLE[pid];return `<div class="between" style="margin-bottom:9px"><div class="row" style="gap:10px;flex:1;cursor:pointer;min-width:0" onclick="openPerson('${pid}')"><div class="av" style="border-radius:50%;background:${p.c};width:38px;height:38px;font-size:14px">${p.a}</div><div style="min-width:0"><div class="row" style="gap:6px"><b style="font-size:13px">${p.n.split(' ')[0]} ${p.n.split(' ')[1]||''}</b>${role==='Driver'?'<span class="chip teal" style="font-size:9px;padding:2px 7px;cursor:default">Driver</span>':''}</div><div class="desig" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.role}</div></div></div><div class="row" style="gap:6px;flex:0 0 auto"><button class="iconbtn" style="width:36px;height:36px;background:var(--soft);color:var(--ink-2)" onclick="requestCall('${pid}')"><span style="width:16px;height:16px;display:block">${I_PHONE}</span></button><button class="iconbtn" style="width:36px;height:36px;background:var(--brand-soft);color:var(--brand)" onclick="openChat('${pid}')"><span style="width:16px;height:16px;display:block">${I_CHAT}</span></button></div></div>`;}).join('')}
+    ${[['rahul','Driver'],['priya','Co-passenger'],['aman','Co-passenger']].map(([pid,role])=>{const p=PEOPLE[pid];return `<div class="between" style="margin-bottom:9px"><div class="row" style="gap:10px;flex:1;cursor:pointer;min-width:0" onclick="openPerson('${pid}')"><div class="av" style="border-radius:50%;background-color:${p.c};width:38px;height:38px;font-size:14px;${faceCss(p)}">${p.ph?'':p.a}</div><div style="min-width:0"><div class="row" style="gap:6px"><b style="font-size:13px">${p.n.split(' ')[0]} ${p.n.split(' ')[1]||''}</b>${role==='Driver'?'<span class="chip teal" style="font-size:9px;padding:2px 7px;cursor:default">Driver</span>':''}</div><div class="desig" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.role}</div></div></div><div class="row" style="gap:6px;flex:0 0 auto"><button class="iconbtn" style="width:36px;height:36px;background:var(--soft);color:var(--ink-2)" onclick="requestCall('${pid}')"><span style="width:16px;height:16px;display:block">${I_PHONE}</span></button><button class="iconbtn" style="width:36px;height:36px;background:var(--brand-soft);color:var(--brand)" onclick="openChat('${pid}')"><span style="width:16px;height:16px;display:block">${I_CHAT}</span></button></div></div>`;}).join('')}
   </div>
   <div style="align-self:center;background:var(--soft);color:var(--ink-2);font-size:10.5px;font-weight:600;padding:6px 13px;border-radius:999px">Pool chat · everyone sees these messages</div>
   <div style="align-self:flex-start;max-width:82%"><div class="lab" style="margin:0 0 3px 5px">Priya</div><div style="background:#fff;border:1px solid var(--line);padding:11px 14px;border-radius:16px 16px 16px 5px;font-size:13.5px">See you all at Wakad Chowk by 9:35 🙌</div></div>
@@ -773,7 +795,7 @@ function circleHTML(id){const c=CIRCLES[id];const mem=CIRCLE_MEM[id]||['rahul','
     <div class="row" style="margin-top:13px">${c.m3.map((a,i)=>`<div class="av" style="width:30px;height:30px;font-size:12px;background:${a[1]};${i?'margin-left:-10px':''};border:2px solid ${c.c}">${a[0]}</div>`).join('')}<span style="margin-left:9px;font-size:12px;opacity:.85">${c.members.toLocaleString()} members</span></div></div>
 
   <div class="between" style="margin:18px 2px 9px"><span class="lab">Members</span><span class="lab" style="text-transform:none;color:var(--ink-3)">tap to chat or carpool</span></div>
-  ${mem.map(pid=>{const p=PEOPLE[pid];return `<div class="card between" style="margin-bottom:10px"><div class="row" style="gap:11px;flex:1;cursor:pointer;min-width:0" onclick="openPerson('${pid}')"><div class="av" style="border-radius:50%;background:${p.c};width:42px;height:42px;font-size:16px">${p.a}</div><div style="min-width:0"><div class="row" style="gap:6px"><b style="font-size:13.5px">${p.n}</b>${p.pro?proChip():''}${p.w?'<span class="vok" style="color:var(--coral)">♀</span>':''}</div><div class="desig" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.role}</div></div></div><div class="row" style="gap:7px;flex:0 0 auto">${p.route?`<button class="iconbtn" style="width:38px;height:38px;background:var(--teal-soft);color:var(--teal-d)" onclick="requestJoinCarpool('${pid}')"><span style="width:18px;height:18px;display:block">${I_CAR}</span></button>`:''}<button class="iconbtn" style="width:38px;height:38px;background:var(--soft);color:var(--ink-2)" onclick="requestCall('${pid}')"><span style="width:17px;height:17px;display:block">${I_PHONE}</span></button><button class="iconbtn" style="width:38px;height:38px;background:var(--brand-soft);color:var(--brand)" onclick="openChat('${pid}')"><span style="width:17px;height:17px;display:block">${I_CHAT}</span></button></div></div>`;}).join('')}
+  ${mem.map(pid=>{const p=PEOPLE[pid];return `<div class="card between" style="margin-bottom:10px"><div class="row" style="gap:11px;flex:1;cursor:pointer;min-width:0" onclick="openPerson('${pid}')"><div class="av" style="border-radius:50%;background-color:${p.c};width:42px;height:42px;font-size:16px;${faceCss(p)}">${p.ph?'':p.a}</div><div style="min-width:0"><div class="row" style="gap:6px"><b style="font-size:13.5px">${p.n}</b>${p.pro?proChip():''}${p.w?'<span class="vok" style="color:var(--coral)">♀</span>':''}</div><div class="desig" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.role}</div></div></div><div class="row" style="gap:7px;flex:0 0 auto">${p.route?`<button class="iconbtn" style="width:38px;height:38px;background:var(--teal-soft);color:var(--teal-d)" onclick="requestJoinCarpool('${pid}')"><span style="width:18px;height:18px;display:block">${I_CAR}</span></button>`:''}<button class="iconbtn" style="width:38px;height:38px;background:var(--soft);color:var(--ink-2)" onclick="requestCall('${pid}')"><span style="width:17px;height:17px;display:block">${I_PHONE}</span></button><button class="iconbtn" style="width:38px;height:38px;background:var(--brand-soft);color:var(--brand)" onclick="openChat('${pid}')"><span style="width:17px;height:17px;display:block">${I_CHAT}</span></button></div></div>`;}).join('')}
 
   <div class="lab" style="margin:16px 2px 9px">Events</div>
   ${c.plans.map(p=>`<div class="card between" style="margin-bottom:10px"><div><b style="font-size:13.5px">${p[0]}</b><div class="muted" style="font-size:12px">${p[1]}</div><div class="lab" style="margin-top:3px">${p[2]}</div></div><span class="chip" onclick="rsvpPlan(this)">RSVP</span></div>`).join('')}
@@ -833,7 +855,7 @@ function planNewHTML(){const sel=NEWPLAN.type,d=PLAN_TYPES[sel];return `
   <div class="field" style="margin-top:16px"><div style="flex:1"><div class="lab">Plan</div><div class="val">${d[2]}</div></div></div>
   <div class="row" style="gap:10px"><div class="field" style="flex:1;margin:0"><div><div class="lab">When</div><div class="val" style="font-size:13.5px">${d[3]}</div></div></div><div class="field" style="flex:1;margin:0"><div><div class="lab">Where</div><div class="val" style="font-size:13.5px">${d[4]}</div></div></div></div>
   <div class="lab" style="margin:18px 2px 9px">Invite your matches</div>
-  <div style="display:flex;gap:11px;overflow-x:auto;padding-bottom:4px">${['rahul','priya','aman','sneha'].map(k=>{const p=PEOPLE[k];return `<button onclick="toggleInvite(this,'${p.n.split(' ')[0]}')" data-on="0" style="border:none;background:none;cursor:pointer;text-align:center;flex:0 0 auto"><div class="av" style="width:50px;height:50px;border-radius:50%;background:${p.c};border:2.5px solid transparent">${p.a}</div><div style="font-size:11px;margin-top:5px;font-weight:600">${p.n.split(' ')[0]}</div></button>`;}).join('')}</div>
+  <div style="display:flex;gap:11px;overflow-x:auto;padding-bottom:4px">${['rahul','priya','aman','sneha'].map(k=>{const p=PEOPLE[k];return `<button onclick="toggleInvite(this,'${p.n.split(' ')[0]}')" data-on="0" style="border:none;background:none;cursor:pointer;text-align:center;flex:0 0 auto"><div class="av" style="width:50px;height:50px;border-radius:50%;background-color:${p.c};border:2.5px solid transparent;${faceCss(p)}">${p.ph?'':p.a}</div><div style="font-size:11px;margin-top:5px;font-weight:600">${p.n.split(' ')[0]}</div></button>`;}).join('')}</div>
   <div class="lab" style="margin:16px 2px 9px">Invite a circle</div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">${['🏃 Runners','🏠 Society 7','📚 Book Club'].map(c=>`<span class="chip out" onclick="toggleInvite(this,'${c}')" data-on="0">${c}</span>`).join('')}</div>
   <div class="vok" id="invCount" style="margin-top:14px;color:var(--ink-3)">No one invited yet</div></div>
@@ -918,14 +940,17 @@ function networkHTML(){const g={way:['rahul','aman','karan'],near:['priya','divy
     <div class="lab" style="margin:16px 2px 11px">${DTAB==='way'?'On your route':DTAB==='near'?'Works nearby':'Shared interests'}</div>
     <div style="display:flex;flex-direction:column;gap:13px">${g[DTAB].map(pcard).join('')}</div>
     ${INTERACTIONS>=3?pmkSection():''}
-    ${CONNECTIONS.size?`<div class="lab" style="margin:18px 2px 11px">Your matches</div><div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px">${[...CONNECTIONS].map(k=>{const p=PEOPLE[k];return `<div style="flex:0 0 auto;text-align:center;cursor:pointer" onclick="openChat('${k}')"><div class="av" style="width:54px;height:54px;border-radius:50%;background:${p.c};border:2.5px solid var(--lime)">${p.a}</div><div style="font-size:11px;margin-top:5px;font-weight:600">${p.n.split(' ')[0]}</div></div>`;}).join('')}</div>`:''}
+    ${CONNECTIONS.size?`<div class="lab" style="margin:18px 2px 11px">Your matches</div><div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px">${[...CONNECTIONS].map(k=>{const p=PEOPLE[k];return `<div style="flex:0 0 auto;text-align:center;cursor:pointer" onclick="openChat('${k}')"><div class="av" style="width:54px;height:54px;border-radius:50%;background-color:${p.c};border:2.5px solid var(--lime);${faceCss(p)}">${p.ph?'':p.a}</div><div style="font-size:11px;margin-top:5px;font-weight:600">${p.n.split(' ')[0]}</div></div>`;}).join('')}</div>`:''}
   </div></div>${TABBAR('network')}`;}
 function swipeCardHTML(){const id=ORBIT[deckIdx];
   if(!id)return `<div class="card" style="margin-top:14px;text-align:center;padding:28px 18px"><div style="font-size:34px">🎉</div><b style="font-size:15px;display:block;margin-top:8px">You're all caught up</b><div class="muted" style="font-size:12.5px;margin-top:4px">New professionals join your orbit daily.</div><button class="btn btn-ghost" style="margin-top:14px;width:auto;padding:0 18px;margin-left:auto;margin-right:auto" onclick="resetDeck()">Start over</button></div>`;
   const p=PEOPLE[id];const grad={way:'linear-gradient(160deg,#16BCA4,#0A6B5B)',near:'linear-gradient(160deg,#E8884A,#9A5722)',wave:'linear-gradient(160deg,#7C6CF0,#3A2A8E)'}[p.why.k];
+  const bg=p.ph?`#1b1c28 url('${p.ph}') center/cover`:grad;
   return `<div style="margin-top:14px">
-    <div class="deckcard" style="position:relative;height:320px;border-radius:24px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;background:${grad};box-shadow:var(--sh-3);cursor:pointer" onclick="openPerson('${id}')">
+    <div class="deckcard" style="position:relative;height:340px;border-radius:24px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;background:${bg};box-shadow:var(--sh-3);cursor:pointer" onclick="openPerson('${id}')">
       <div class="grad"></div>
+      <div style="position:absolute;top:13px;right:13px;z-index:3;text-align:center">${ringScore(trustOf(p),'var(--lime)')}<div style="font-size:9px;font-weight:800;letter-spacing:.1em;margin-top:3px;text-shadow:0 1px 4px rgba(0,0,0,.6)">TRUST</div></div>
+      ${p.tier?`<div style="position:absolute;top:15px;left:14px;z-index:3">${tierTag(p.tier)}</div>`:''}
       <div class="info" style="position:relative;z-index:2;padding:18px">
         <div style="margin-bottom:9px">${overlap(p.why.k,p.why.t)} ${p.pro?proChip():''}</div>
         <div style="font-family:var(--d);font-weight:700;font-size:23px">${p.n}${p.w?' ♀':''}</div>
@@ -939,7 +964,7 @@ function swipeCardHTML(){const id=ORBIT[deckIdx];
     </div>
     <div style="text-align:center;margin-top:9px"><span class="lab" style="text-transform:none;color:var(--ink-3);font-size:11px">${deckIdx+1} of ${ORBIT.length}  ·  ✕ pass · ❤ connect</span></div>
   </div>`;}
-function pmkSection(){const ids=['sneha','divya','neha'].filter(k=>!CONNECTIONS.has(k));return `<div class="card" style="margin-top:18px;background:var(--brand-soft);border-color:#D9D4F7"><div class="row" style="gap:8px"><span style="font-size:18px">🤝</span><b style="font-size:13.5px">People you may know</b></div><div class="muted" style="font-size:12px;margin-top:3px">From your commute network · same company, route or interest.</div><div style="display:flex;gap:11px;overflow-x:auto;margin-top:12px;padding-bottom:4px">${ids.map(k=>{const p=PEOPLE[k];return `<div class="card" style="min-width:142px;flex:0 0 auto;cursor:pointer;background:var(--paper)" onclick="openPerson('${k}')"><div class="av" style="width:40px;height:40px;border-radius:50%;background:${p.c}">${p.a}</div><b style="font-size:12.5px;display:block;margin-top:7px">${p.n.split(' ')[0]}</b><div class="lab" style="text-transform:none">${p.role.split(' · ')[1]||p.role}</div></div>`;}).join('')}</div></div>`;}
+function pmkSection(){const ids=['sneha','divya','neha'].filter(k=>!CONNECTIONS.has(k));return `<div class="card" style="margin-top:18px;background:var(--brand-soft);border-color:#D9D4F7"><div class="row" style="gap:8px"><span style="font-size:18px">🤝</span><b style="font-size:13.5px">People you may know</b></div><div class="muted" style="font-size:12px;margin-top:3px">From your commute network · same company, route or interest.</div><div style="display:flex;gap:11px;overflow-x:auto;margin-top:12px;padding-bottom:4px">${ids.map(k=>{const p=PEOPLE[k];return `<div class="card" style="min-width:142px;flex:0 0 auto;cursor:pointer;background:var(--paper)" onclick="openPerson('${k}')"><div class="av" style="width:40px;height:40px;border-radius:50%;background-color:${p.c};${faceCss(p)}">${p.ph?'':p.a}</div><b style="font-size:12.5px;display:block;margin-top:7px">${p.n.split(' ')[0]}</b><div class="lab" style="text-transform:none">${p.role.split(' · ')[1]||p.role}</div></div>`;}).join('')}</div></div>`;}
 function netLike(id){INTERACTIONS++;if(LIKES_YOU.has(id)){CONNECTIONS.add(id);CTX.person=id;CTX.chatWith=id;deckIdx++;go('match');}else{toast('Liked '+PEOPLE[id].n.split(' ')[0]+' — we will tell you if it is mutual');deckIdx++;reNet();}}
 function netPass(id){deckIdx++;reNet();}
 function resetDeck(){deckIdx=0;reNet();}
@@ -962,13 +987,13 @@ function nearbyMapHTML(){const near=['priya','divya','karan'];return `
   </svg>
   <div style="position:absolute;left:50%;top:60%;transform:translate(-50%,-50%)" class="pulse"><div style="width:20px;height:20px;border-radius:50%;background:var(--brand);border:3px solid #fff;box-shadow:0 5px 12px -3px rgba(91,75,214,.7)"></div></div>
   <div class="walk" style="left:50%;top:68%;background:var(--brand);color:#fff;border:none">You</div>
-  ${near.map(id=>{const p=PEOPLE[id];return `<div style="position:absolute;left:${p.gx}%;top:${p.gy}%;transform:translate(-50%,-50%);cursor:pointer;z-index:3" onclick="openPerson('${id}')"><div class="av" style="width:40px;height:40px;font-size:15px;background:${p.c};border:3px solid #fff;border-radius:50% 50% 50% 5px">${p.a}</div></div>`;}).join('')}
+  ${near.map(id=>{const p=PEOPLE[id];return `<div style="position:absolute;left:${p.gx}%;top:${p.gy}%;transform:translate(-50%,-50%);cursor:pointer;z-index:3" onclick="openPerson('${id}')"><div class="av" style="width:40px;height:40px;font-size:15px;background-color:${p.c};border:3px solid #fff;border-radius:50% 50% 50% 5px;${faceCss(p)}">${p.ph?'':p.a}</div></div>`;}).join('')}
   <div style="position:absolute;left:80%;top:74%;transform:translate(-50%,-50%);width:15px;height:15px;border-radius:50%;background:#fff;border:2.5px solid var(--brand-2)"></div>
   <div style="position:absolute;left:18%;top:30%;transform:translate(-50%,-50%);width:15px;height:15px;border-radius:50%;background:#fff;border:2.5px solid var(--brand-2)"></div>
   <div class="walk" style="left:22%;top:90%">📍 Approx · privacy-safe</div>
 </div>
 <div style="display:flex;gap:10px;overflow-x:auto;padding:12px 0 2px">
-  ${near.map(id=>{const p=PEOPLE[id];return `<div class="card" style="min-width:154px;flex:0 0 auto;cursor:pointer;padding:11px" onclick="openPerson('${id}')"><div class="row" style="gap:9px"><div class="av" style="width:40px;height:40px;border-radius:50%;background:${p.c}">${p.a}</div><div><b style="font-size:12.5px">${p.n.split(' ')[0]}${p.w?' ♀':''}</b><div class="lab" style="text-transform:none">${p.why.t}</div></div></div></div>`;}).join('')}
+  ${near.map(id=>{const p=PEOPLE[id];return `<div class="card" style="min-width:154px;flex:0 0 auto;cursor:pointer;padding:11px" onclick="openPerson('${id}')"><div class="row" style="gap:9px"><div class="av" style="width:40px;height:40px;border-radius:50%;background-color:${p.c};${faceCss(p)}">${p.ph?'':p.a}</div><div><b style="font-size:12.5px">${p.n.split(' ')[0]}${p.w?' ♀':''}</b><div class="lab" style="text-transform:none">${p.why.t}</div></div></div></div>`;}).join('')}
 </div>
 <div onclick="openHowNear()" style="text-align:center;margin-top:10px;font-size:12px;color:var(--brand);font-weight:700;cursor:pointer">🔒 How do we know you are neighbours? →</div>`;}
 function requestCall(id){const p=PEOPLE[id]||{n:'Them'};const nm=p.n.split(' ')[0];const b=document.getElementById('sheetBody');b.innerHTML=`<div style="text-align:center;padding:4px 0 2px"><div style="width:58px;height:58px;border-radius:50%;background:var(--teal-soft);margin:0 auto;display:flex;align-items:center;justify-content:center"><span style="width:26px;height:26px;color:var(--teal-d);display:block">${I_PHONE}</span></div><div class="h2" style="margin-top:12px">Request a call</div><p class="muted" style="font-size:12.5px;margin-top:6px;max-width:30ch;margin-left:auto;margin-right:auto">Numbers are never shared. ${nm} gets a call request — if they accept, you talk on a <b style="color:var(--ink)">masked in-app call</b>.</p></div><div class="card row" style="gap:10px;background:var(--teal-soft);border-color:#CFE9E2;margin-top:14px"><span style="font-size:16px">🔒</span><div style="font-size:11.5px">Both numbers stay hidden · either side can end or block anytime.</div></div><button class="btn btn-teal" style="margin-top:14px" onclick="closeSheet();toast('Call request sent to '+'${nm}')">Send call request</button><button class="btn btn-ghost" style="margin-top:10px" onclick="closeSheet()">Cancel</button>`;document.getElementById('scrim').classList.add('show');document.getElementById('sheet').classList.add('show');}
@@ -1055,7 +1080,7 @@ function chatsHTML(){return `<div class="body pt pb"><div class="px" style="padd
     ${['rahul','sneha','priya','aman'].map(k=>`<div style="flex:0 0 auto;cursor:pointer" onclick="openChat('${k}')"><div class="av" style="width:54px;height:54px;border-radius:50%;background:${PEOPLE[k].c};border:2.5px solid var(--lime)">${PEOPLE[k].a}</div></div>`).join('')}</div>
   <div class="lab" style="margin:16px 2px 10px">Messages</div>
   ${[['rahul','Want to pool tomorrow? ☕','9:30','2'],['sneha','The book club meets Wed!','Yest',''],['priya','Thanks for the cooker 🙏','Mon','']].map(m=>{const p=PEOPLE[m[0]];return `
-  <div class="card between" style="margin-bottom:10px;cursor:pointer" onclick="openChat('${m[0]}')"><div class="row" style="gap:12px"><div class="av" style="border-radius:50%;background:${p.c}">${p.a}</div><div><b style="font-size:14px">${p.n}</b><div class="muted" style="font-size:12.5px">${m[1]}</div></div></div><div style="text-align:right"><div class="lab">${m[2]}</div>${m[3]?`<div style="margin-top:5px;width:20px;height:20px;border-radius:50%;background:var(--coral);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-left:auto">${m[3]}</div>`:''}</div></div>`;}).join('')}
+  <div class="card between" style="margin-bottom:10px;cursor:pointer" onclick="openChat('${m[0]}')"><div class="row" style="gap:12px"><div class="av" style="border-radius:50%;background-color:${p.c};${faceCss(p)}">${p.ph?'':p.a}</div><div><b style="font-size:14px">${p.n}</b><div class="muted" style="font-size:12.5px">${m[1]}</div></div></div><div style="text-align:right"><div class="lab">${m[2]}</div>${m[3]?`<div style="margin-top:5px;width:20px;height:20px;border-radius:50%;background:var(--coral);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-left:auto">${m[3]}</div>`:''}</div></div>`;}).join('')}
 </div></div>${TABBAR('chats')}`;}
 
 function profileHTML(){const ts=TRUST.score;return `<div class="body pb">
@@ -1211,7 +1236,7 @@ const Comments=(function(){
     plans:'Plans',myplans:'My plans',planNew:'New plan',planCreated:'Plan created',neighborDetail:'Neighbour',
     wholiked:'Who liked you',deck:'Swipe deck'};
 
-  let sb=null, threads=new Map(), mode=false, popEl=null, selId=null, popAnchor=null, presenceMap={}, ready=false;
+  let sb=null, threads=new Map(), mode=false, popEl=null, selId=null, popAnchor=null, presenceMap={}, ready=false, myIp=null, hidden=false;
   let me=loadMe(); const uid=loadUid();
 
   /* ---------- identity ---------- */
@@ -1240,12 +1265,28 @@ const Comments=(function(){
   async function init(){
     if(!window.supabase){console.warn('supabase-js not loaded');renderPanel();return;}
     sb=window.supabase.createClient(SB_URL,SB_KEY,{realtime:{params:{eventsPerSecond:8}}});
-    await load();
+    const [,ip]=await Promise.all([load(),fetchIp()]);
+    myIp=ip;
     subscribe();
     bindUI();
     ready=true;
     renderPanel();renderPins();
+    logView();
   }
+  async function fetchIp(){
+    try{const r=await fetch('https://api.ipify.org?format=json',{cache:'no-store'});return (await r.json()).ip;}
+    catch(e){try{const r=await fetch('https://ipapi.co/json/');return (await r.json()).ip;}catch(e2){return null;}}
+  }
+  async function logView(){
+    if(!sb)return;
+    try{
+      await sb.from('prototype_views').upsert({uid,board:BOARD,name:me.name||'Guest',color:me.color,ip:myIp,user_agent:(navigator.userAgent||'').slice(0,300),screen:curScreen(),last_seen:new Date().toISOString()},{onConflict:'uid'});
+      const {count}=await sb.from('prototype_views').select('*',{count:'exact',head:true}).eq('board',BOARD);
+      const vt=document.getElementById('vtotal');if(vt&&count!=null)vt.textContent=' · '+count+' total';
+    }catch(e){console.warn('logView',e);}
+  }
+  let _logT=0;
+  function touchView(){const now=Date.now();if(now-_logT<4000)return;_logT=now;if(sb)sb.from('prototype_views').update({screen:curScreen(),last_seen:new Date().toISOString(),name:me.name||'Guest',ip:myIp}).eq('uid',uid).then(()=>{},()=>{});}
   async function load(){
     const [{data:ts,error:e1},{data:cs,error:e2}]=await Promise.all([
       sb.from('comment_threads').select('*').eq('board',BOARD),
@@ -1263,15 +1304,15 @@ const Comments=(function(){
         if(p.eventType==='DELETE')delCommentById(p.old.id);else upComment(p.new);
         renderPanel();renderPins();refreshPop();})
       .on('presence',{event:'sync'},()=>{presenceMap=ch.presenceState();renderPresence();})
-      .subscribe(async st=>{if(st==='SUBSCRIBED')await ch.track({name:me.name,color:me.color,uid,at:curScreen()});});
+      .subscribe(async st=>{if(st==='SUBSCRIBED')await ch.track({name:me.name,color:me.color,uid,at:curScreen(),ip:myIp});});
     window._cch=ch;
   }
-  function trackPresence(){if(window._cch&&window._cch.state==='joined')window._cch.track({name:me.name,color:me.color,uid,at:curScreen()});}
+  function trackPresence(){if(window._cch&&window._cch.state==='joined')window._cch.track({name:me.name,color:me.color,uid,at:curScreen(),ip:myIp});}
 
   /* ---------- writes ---------- */
-  async function createThread(x,y,screen,body){
+  async function createThread(x,y,screen,body,cy){
     if(!sb)return;
-    const {data:tr,error}=await sb.from('comment_threads').insert({board:BOARD,screen,x,y,author:me.name||'Guest',color:me.color}).select().single();
+    const {data:tr,error}=await sb.from('comment_threads').insert({board:BOARD,screen,x,y,cy,author:me.name||'Guest',color:me.color}).select().single();
     if(error){toast('Could not post — check connection');return null;}
     upThread(tr);
     const {data:c}=await sb.from('comments').insert({thread_id:tr.id,board:BOARD,author:me.name||'Guest',color:me.color,body}).select().single();
@@ -1294,10 +1335,18 @@ const Comments=(function(){
     if(sb)await sb.from('comments').delete().eq('id',id);
     if(t&&t.comments.length===0){delThread(t.id);renderPanel();renderPins();if(sb)await sb.from('comment_threads').delete().eq('id',t.id);}
   }
+  async function deleteThread(id){
+    if(!threads.get(id))return;
+    delThread(id);closePop();renderPanel();renderPins();
+    if(sb)await sb.from('comment_threads').delete().eq('id',id); // cascade removes its comments
+  }
 
   /* ---------- pins ---------- */
+  function activeBody(){return document.querySelector('.screen.active .body');}
   function renderPins(){
     const layer=document.getElementById('cLayer');if(!layer)return;
+    if(hidden){layer.innerHTML='';layer.style.display='none';layer.classList.remove('on');return;}
+    layer.style.display='';
     layer.classList.toggle('on',mode);
     const scr=curScreen(),showRes=resFilter();
     layer.innerHTML='';
@@ -1306,12 +1355,37 @@ const Comments=(function(){
       const n=numberOf(t.id);
       const pin=document.createElement('div');
       pin.className='cpin'+(t.resolved?' res':'')+(selId===t.id?' sel':'');
-      pin.dataset.id=t.id;pin.style.left=t.x+'%';pin.style.top=t.y+'%';pin.style.background=t.color;
+      pin.dataset.id=t.id;pin.dataset.cy=(t.cy==null?'':t.cy);pin.dataset.y=t.y;
+      pin.style.left=t.x+'%';pin.style.background=t.color;
       pin.textContent=n;
       if(t.comments.length>1){const r=document.createElement('span');r.className='rc';r.textContent=t.comments.length;pin.appendChild(r);}
       pin.onclick=ev=>{ev.stopPropagation();openThread(t.id);};
       layer.appendChild(pin);
     });
+    bindScroll();positionAll();
+  }
+  // Position pins: content-anchored pins (cy set) track the screen's scroll; others stick to the viewport.
+  function positionAll(){
+    const layer=document.getElementById('cLayer');if(!layer)return;
+    const body=activeBody(),lr=layer.getBoundingClientRect();
+    let bTop=0,bScroll=0,bClient=lr.height,hasBody=false;
+    if(body){const br=body.getBoundingClientRect();bTop=br.top-lr.top;bScroll=body.scrollTop;bClient=body.clientHeight;hasBody=true;}
+    layer.querySelectorAll('.cpin').forEach(pin=>{
+      const cy=pin.dataset.cy;
+      if(cy!==''&&cy!=null&&hasBody){
+        const top=bTop+(parseFloat(cy)-bScroll);
+        pin.style.top=top+'px';
+        pin.style.display=(top>=bTop-6&&top<=bTop+bClient+6)?'':'none';
+      }else{pin.style.top=(pin.dataset.y||50)+'%';pin.style.display='';}
+    });
+  }
+  let _scrollEl=null,_scrollH=null;
+  function bindScroll(){
+    const body=activeBody();
+    if(body===_scrollEl)return;
+    if(_scrollEl&&_scrollH)_scrollEl.removeEventListener('scroll',_scrollH);
+    _scrollEl=body;
+    if(body){_scrollH=()=>requestAnimationFrame(positionAll);body.addEventListener('scroll',_scrollH,{passive:true});}
   }
   function resFilter(){const c=document.getElementById('showRes');return c?c.checked:false;}
 
@@ -1348,21 +1422,38 @@ const Comments=(function(){
     }).join('');
   }
   function renderPresence(){
-    const box=document.getElementById('presence');if(!box)return;
+    const box=document.getElementById('presence');
     const seen={},people=[];
     Object.values(presenceMap).forEach(arr=>arr.forEach(p=>{if(!seen[p.uid]){seen[p.uid]=1;people.push(p);}}));
     const dot=document.getElementById('liveDot');if(dot)dot.classList.toggle('live',people.length>0);
     const shown=people.slice(0,5);
-    box.innerHTML=shown.map(p=>'<span class="pav sm" title="'+esc(p.name||'Guest')+'" style="background:'+(p.color||'#5B4BD6')+'">'+initial(p.name)+'</span>').join('')
+    if(box)box.innerHTML=shown.map(p=>'<span class="pav sm" title="'+esc(p.name||'Guest')+'" style="background:'+(p.color||'#5B4BD6')+'">'+initial(p.name)+'</span>').join('')
       +(people.length>shown.length?'<span class="pmore">+'+(people.length-shown.length)+'</span>':'')
       +(people.length?'<span class="pmore">'+(people.length===1?'just you':people.length+' here')+'</span>':'');
+    // live viewers card — name · IP · current page
+    const vn=document.getElementById('vnow');if(vn)vn.textContent=people.length;
+    const vl=document.getElementById('vlist');
+    if(vl)vl.innerHTML=people.map(p=>
+      '<div class="vrow"><span class="vdot" style="background:'+(p.color||'#5B4BD6')+'"></span>'
+      +'<div class="vmeta"><span class="vname">'+esc(p.name||'Guest')+(p.uid===uid?' (you)':'')+'</span>'
+      +'<span class="vsub">'+esc(p.ip||'resolving IP…')+' · on <span class="vpg">'+esc(scrLabel(p.at))+'</span></span></div></div>'
+    ).join('');
   }
 
   /* ---------- mode ---------- */
   function toggleMode(force){
     mode=(typeof force==='boolean')?force:!mode;
+    if(mode&&hidden)toggleHide(false);   // entering comment mode reveals pins
     const b=document.getElementById('cmodeBtn');if(b)b.classList.toggle('on',mode);
     const lbl=document.getElementById('cmodeLbl');if(lbl)lbl.textContent=mode?'Placing comment — tap the screen':'Comment mode';
+    renderPins();
+  }
+  function toggleHide(force){
+    hidden=(typeof force==='boolean')?force:!hidden;
+    if(hidden&&mode)toggleMode(false);
+    const b=document.getElementById('hideBtn');if(b)b.classList.toggle('on',hidden);
+    const lbl=document.getElementById('hideLbl');if(lbl)lbl.textContent=hidden?'Show comments':'Hide comments';
+    if(hidden&&popEl)closePop();
     renderPins();
   }
 
@@ -1378,8 +1469,8 @@ const Comments=(function(){
     selId=id;popAnchor=pinClientAnchor(id)||{x:innerWidth/2,y:innerHeight/2};
     buildPop({mode:'thread'});renderPins();
   }
-  function openComposer(x,y,screen,anchor){
-    selId='__new';popAnchor=anchor;buildPop({mode:'new',x,y,screen});
+  function openComposer(x,y,screen,anchor,cy){
+    selId='__new';popAnchor=anchor;buildPop({mode:'new',x,y,screen,cy});
   }
   function buildPop(o){
     if(popEl)popEl.remove();
@@ -1394,6 +1485,7 @@ const Comments=(function(){
       '<div class="ph"><span class="pn" style="background:'+col+'">'+num+'</span>'
       +'<span class="pscr">'+esc(scrLabel(screen))+'</span>'
       +(isNew?'':'<button class="'+(t.resolved?'act':'')+'" title="'+(t.resolved?'Reopen':'Resolve')+'" onclick="Comments.resolve(\''+selId+'\','+(!t.resolved)+')"><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button>')
+      +(isNew?'':'<button class="delthr" title="Delete this whole thread" onclick="Comments.delThread(\''+selId+'\')"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button>')
       +'<button title="Close" onclick="Comments.closePop()"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>'
       +(!isNew&&t.resolved?'<div class="cresolved-tag">Resolved ✓ — reopen from the check above</div>':'')
       +'<div class="plist" id="popList"></div>'
@@ -1415,7 +1507,7 @@ const Comments=(function(){
       const body=ta.value.trim();if(!body)return;
       if(nm){const nv=nm.value.trim();if(!nv){nm.focus();return;}me.name=nv;saveMe();renderMe();trackPresence();}
       ta.value='';ta.style.height='auto';send.disabled=true;
-      if(isNew){const x=o.x,y=o.y,scr=o.screen;closePop();createThread(x,y,scr,body).then(id=>{if(id)openThread(id);});}
+      if(isNew){const x=o.x,y=o.y,scr=o.screen,cy=o.cy;closePop();createThread(x,y,scr,body,cy).then(id=>{if(id)openThread(id);});}
       else addReply(selId,body);
     }
   }
@@ -1427,7 +1519,7 @@ const Comments=(function(){
     box.innerHTML=t.comments.map(c=>
       '<div class="pc"><span class="av" style="background:'+c.color+'">'+initial(c.author)+'</span>'
       +'<div style="flex:1;min-width:0"><div><span class="pcwho">'+esc(c.author)+'</span><span class="pctime">'+ago(c.created_at)+'</span>'
-      +(c.author===me.name?'<button class="del" onclick="Comments.del(\''+c.id+'\')">delete</button>':'')+'</div>'
+      +'<button class="del" onclick="Comments.del(\''+c.id+'\')">delete</button></div>'
       +'<div class="pctext">'+esc(c.body)+'</div></div></div>').join('');
   }
   function refreshPop(){
@@ -1441,14 +1533,19 @@ const Comments=(function(){
   }
 
   /* ---------- nav / placement ---------- */
-  function onNav(){renderPins();if(popEl){if(selId==='__new'||(threads.get(selId)&&threads.get(selId).screen!==curScreen()))closePop();else position();}trackPresence();}
+  function onNav(){renderPins();if(popEl){if(selId==='__new'||(threads.get(selId)&&threads.get(selId).screen!==curScreen()))closePop();else position();}trackPresence();touchView();}
   function placeAt(e){
     if(!mode)return;
     const layer=document.getElementById('cLayer'),r=layer.getBoundingClientRect();
     const x=Math.max(2,Math.min(98,(e.clientX-r.left)/r.width*100));
     const y=Math.max(3,Math.min(97,(e.clientY-r.top)/r.height*100));
+    // If the tap lands inside the scrollable content, anchor it to the content (scrolls with the page);
+    // taps on fixed chrome (tab bar, CTA dock, status bar) stay pinned to the viewport.
+    let cy=null;const body=activeBody();
+    if(body){const br=body.getBoundingClientRect();
+      if(e.clientY>=br.top&&e.clientY<=br.bottom)cy=+((e.clientY-br.top)+body.scrollTop).toFixed(1);}
     toggleMode(false);
-    openComposer(+x.toFixed(2),+y.toFixed(2),curScreen(),{x:e.clientX,y:e.clientY});
+    openComposer(+x.toFixed(2),+y.toFixed(2),curScreen(),{x:e.clientX,y:e.clientY},cy);
   }
 
   /* ---------- share ---------- */
@@ -1467,6 +1564,7 @@ const Comments=(function(){
     window.addEventListener('keydown',e=>{
       const tag=(e.target.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea')return;
       if(e.key==='c'||e.key==='C'){toggleMode();}
+      else if(e.key==='h'||e.key==='H'){toggleHide();}
       else if(e.key==='Escape'){if(popEl)closePop();else if(mode)toggleMode(false);}
     });
     setInterval(()=>{if(threads.size)renderThreadList();},30000);
@@ -1478,7 +1576,7 @@ const Comments=(function(){
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 
-  return {toggleMode,share,render:renderPanel,jumpTo,resolve:setResolved,del:removeComment,closePop,_state:()=>threads};
+  return {toggleMode,toggleHide,share,render:renderPanel,jumpTo,resolve:setResolved,del:removeComment,delThread:deleteThread,closePop,_state:()=>threads};
 
   function jumpTo(id){
     const t=threads.get(id);if(!t)return;
