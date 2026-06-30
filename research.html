@@ -1,0 +1,344 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Troopool — R&D Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1F0F8;--paper:#FFFFFF;--soft:#ECEAF6;--ink:#181826;--ink-2:#54566B;--ink-3:#8E90A6;--brand:#5B4BD6;--brand-soft:#ECEAFB;--coral:#FF6A4D;--teal:#10A88F;--lime:#CBF24E;--line:#E6E3F1;
+ --d:'Bricolage Grotesque',sans-serif;--b:'Hanken Grotesk',sans-serif;--m:'JetBrains Mono',monospace;}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--b);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.7}
+::selection{background:var(--lime)}
+nav{position:sticky;top:0;z-index:50;background:rgba(241,240,248,.85);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line)}
+nav .in{max-width:980px;margin:0 auto;padding:0 22px;height:58px;display:flex;align-items:center;gap:16px}
+.logo{font-family:var(--d);font-weight:800;font-size:18px;display:flex;align-items:center;gap:8px;letter-spacing:-.02em;text-decoration:none;color:var(--ink)}
+.logo i{width:12px;height:12px;border-radius:50% 50% 50% 3px;background:var(--coral);transform:rotate(8deg);box-shadow:0 0 0 4px rgba(255,106,77,.2)}
+.back{margin-left:auto;font-size:13px;font-weight:700;color:#fff;background:var(--brand);padding:9px 15px;border-radius:10px;text-decoration:none}
+.docnav{background:var(--paper);border-bottom:1px solid var(--line)}
+.docnav .in{max-width:980px;margin:0 auto;padding:9px 22px;display:flex;gap:6px;overflow-x:auto}
+.docnav a{font-size:12.5px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:7px 12px;border-radius:9px;white-space:nowrap;transition:.15s}
+.docnav a:hover{background:var(--soft);color:var(--ink)}
+.docnav a.on{background:var(--brand);color:#fff}
+.hero{background:#16142A;color:#fff;padding:54px 0 46px;background-image:radial-gradient(circle at 12% 16%,rgba(110,93,236,.4),transparent 48%),radial-gradient(circle at 90% 80%,rgba(255,106,77,.2),transparent 46%)}
+.hero .in{max-width:980px;margin:0 auto;padding:0 22px}
+.hero .eyebrow{font-family:var(--m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);font-weight:700}
+.hero h1{font-family:var(--d);font-weight:800;font-size:clamp(30px,5vw,46px);letter-spacing:-.025em;line-height:1.05;margin:14px 0 10px}
+.hero p{color:#C4C1D6;font-size:17px;max-width:62ch}
+.doc{max-width:860px;margin:0 auto;padding:48px 22px 90px}
+.doc h1{font-family:var(--d);font-weight:800;font-size:30px;letter-spacing:-.02em;margin:34px 0 14px}
+.doc h2{font-family:var(--d);font-weight:700;font-size:25px;letter-spacing:-.02em;margin:40px 0 14px;padding-top:24px;border-top:2px solid var(--line)}
+.doc h3{font-family:var(--d);font-weight:700;font-size:18px;margin:26px 0 8px}
+.doc h4{font-weight:700;font-size:15px;margin:18px 0 6px;color:var(--ink)}
+.doc p{color:var(--ink-2);margin:12px 0;font-size:15.5px}
+.doc a{color:var(--brand);font-weight:600}
+.doc strong{color:var(--ink);font-weight:700}
+.doc ul,.doc ol{margin:12px 0 12px 4px;padding-left:22px;color:var(--ink-2);font-size:15.5px}
+.doc li{margin:7px 0}
+.doc li::marker{color:var(--brand)}
+.doc blockquote{margin:18px 0;padding:14px 18px;background:var(--brand-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;color:var(--ink)}
+.doc blockquote p{color:var(--ink);margin:4px 0}
+.doc hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+.doc code{font-family:var(--m);font-size:13px;background:var(--soft);padding:2px 6px;border-radius:6px;color:var(--brand)}
+.doc pre{background:#16142A;color:#E6E3F5;border-radius:14px;padding:16px 18px;overflow-x:auto;margin:18px 0;font-size:12.5px;line-height:1.6}
+.doc pre code{background:none;color:#E6E3F5;padding:0}
+.tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 30px -22px rgba(24,22,45,.3)}
+.doc table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--paper)}
+.doc th{background:var(--brand);color:#fff;text-align:left;padding:11px 13px;font-family:var(--b);font-weight:700;font-size:12.5px;white-space:nowrap}
+.doc td{padding:10px 13px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+.doc tr:nth-child(even) td{background:#FAF9FE}
+.doc td:first-child{color:var(--ink);font-weight:600}
+footer{background:#16142A;color:#B9B6CC;padding:40px 0;text-align:center;font-size:13px}
+footer a{color:var(--lime);text-decoration:none;font-weight:700}
+@media(max-width:600px){.doc h2{font-size:21px}}
+</style></head><body>
+<nav><div class="in"><a class="logo" href="index.html"><i></i>Troopool</a><a class="back" href="index.html">← Back</a></div></nav>
+<div class="docnav"><div class="in"><a href="user-stories.html" class="">User Stories</a><a href="business-analysis.html" class="">Business Analysis</a><a href="flow-audit.html" class="">Flow Audit</a><a href="concept.html" class="">The Concept</a><a href="case-study.html" class="">sRide Case Study</a><a href="research.html" class="on">Research</a><a href="presentation.html" class="">Presentation</a><a href="troopool-v4.html" class="">Prototype →</a></div></div>
+<header class="hero"><div class="in"><span class="eyebrow">Troopool · document</span><h1>R&D Research</h1><p>The full research blueprint, matching & verification.</p></div></header>
+<main class="doc"><blockquote>
+<p>R&amp;D and product blueprint for a corporate carpooling app modelled on <strong>sRide</strong> (https://sride.co/).<br />
+Companion file: <strong><code>prototype.html</code></strong> — an interactive, phone-framed mobile flow (open in any browser).</p>
+<p><em>Confidence tags:</em> <strong>[C]</strong> confirmed from sRide/store listings · <strong>[K]</strong> competitor-confirmed · <strong>[I]</strong> inference / industry-standard.</p>
+</blockquote>
+<hr />
+<h2 id="1-the-concept-in-one-line">1. The concept in one line</h2>
+<p>A <strong>peer-to-peer office-commute ride-<em>sharing</em></strong> app (not a taxi service) that matches daily commuters on overlapping home→office routes so they <strong>share the ride and split the cost</strong> — fuel + tolls only, no profit. <strong>[C]</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>sRide model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primary use</td>
+<td>Daily, intracity, <strong>recurring</strong> office commute <strong>[C]</strong></td>
+</tr>
+<tr>
+<td>Modes</td>
+<td>Carpool + <strong>bikepool</strong> + taxipool (split a cab) <strong>[C]</strong></td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>Distance + fuel + tolls ÷ confirmed riders → <strong>₹30–₹80/trip</strong>; ~70% cheaper than Ola/Uber <strong>[C]</strong></td>
+</tr>
+<tr>
+<td>Trust anchor</td>
+<td>Ride only with <strong>verified colleagues &amp; professionals</strong> <strong>[C]</strong></td>
+</tr>
+<tr>
+<td>Notable stat</td>
+<td>~60% of users are women → safety-first positioning <strong>[C]</strong></td>
+</tr>
+<tr>
+<td>Commission</td>
+<td>sRide takes <strong>6%</strong> of the contribution <strong>[C]</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>How it differs</strong><br />
+- <strong>vs Uber/Ola</strong> — not on-demand strangers; recurring corridor-matched colleagues, no surge, ~70% cheaper. <strong>[C]</strong><br />
+- <strong>vs BlaBlaCar</strong> — BlaBlaCar's core is long-distance one-off trips; its commute product (<em>BlaBlaCar Daily</em>) is a separate app using a fixed transit-"line" model + government subsidies. sRide is daily P2P intracity. <strong>[K]</strong></p>
+<hr />
+<h2 id="2-roles-one-account-two-modes">2. Roles — one account, two modes</h2>
+<p>A single verified profile <strong>toggles</strong> per trip — a user can be both. <strong>[C]</strong></p>
+<ul>
+<li><strong>Ride Giver (Driver):</strong> offers empty seats on an existing commute. Earnings → linked bank account or sRide wallet. Posts a ride in one step; can pick co-riders by their rating. <strong>[C]</strong></li>
+<li><strong>Ride Taker (Rider):</strong> books a seat; the per-head cost drops as more riders join (split equally). <strong>[C]</strong></li>
+</ul>
+<blockquote>
+<p><strong>UX implication:</strong> do <strong>not</strong> build two account types. Build one account + a prominent <strong>Find a Ride / Offer a Ride</strong> toggle on the home screen.</p>
+</blockquote>
+<hr />
+<h2 id="3-the-full-pool-flow-step-by-step">3. The full pool flow (step by step)</h2>
+<p><strong>A · Onboarding &amp; profile — "under 2 min, 4 steps" [C]</strong><br />
+1. Mobile number → <strong>OTP verify</strong><br />
+2. <strong>Sign up with work email</strong> (corporate verification)<br />
+3. Add <strong>home + office</strong> addresses + work timings<br />
+4. Verify profile → start</p>
+<p><strong>B · Matching — corridor-level, not city-level [C]</strong><br />
+- Finds riders whose routes <strong>overlap ≥70%</strong>, minimising detour vs driving solo.<br />
+- Marketed as a <strong>"60-second match."</strong><br />
+- Match keys: home→office corridor + departure-time window + recurring day pattern.</p>
+<p><strong>C · Giver offers a ride [C]</strong> — one-step post: route, <strong>available seats</strong>, departure time, <strong>recurring schedule</strong> (weekly with same co-riders, or one-off, flexible day selection) → instant match suggestions.</p>
+<p><strong>D · Taker finds a ride [C]</strong> — Find a Ride → corridor + preferred time → browse matched riders (rating, route-overlap %, price, gender) → confirm/request seat.</p>
+<p><strong>E · Request → accept → confirm [C]</strong> — rider requests; driver accepts; rider gets an acceptance notification.</p>
+<p><strong>F · During the ride [C]</strong> — real-time <strong>GPS live tracking</strong> (shareable trip status), <strong>in-app chat</strong>, one-tap <strong>SOS</strong>.</p>
+<p><strong>G · After the ride [C]</strong><br />
+- <strong>Settlement:</strong> auto-deducted on completion (no manual transfer). UPI / card / net-banking / wallet. <strong>Cash not supported.</strong><br />
+- <strong>Wallet / points:</strong> earnings → wallet/bank; rewards = badges, points, priority parking, <strong>10% referral credits</strong>.<br />
+- <strong>Ratings:</strong> compulsory <strong>two-way</strong> rating + review; visible before booking.</p>
+<pre><code>Splash → OTP → Work-email verify → Gov-ID/KYC → Home addr → Office+timings → (Giver: vehicle)
+   → HOME (toggle) ─┬─ Find a Ride → matches → detail → request → confirmed ─┐
+                    └─ Offer a Ride → schedule → requests → accept ──────────┤
+   → Active ride (map + SOS + chat) → Cost summary (auto-pay) → Two-way rating → Wallet/Points
+</code></pre>
+<hr />
+<h2 id="4-organization-corporate-login-the-b2b-core">4. Organization / corporate login (the B2B core)</h2>
+<p><strong>Employee verification [C]</strong><br />
+- Verify in ~2 min with <strong>work email</strong>.<br />
+- No corporate domain (freelancer/generic email) → verify via <strong>government ID (Aadhaar / PAN / DL) + workplace address</strong>.<br />
+- Result: <strong>colleague-only / company-scoped</strong> corridor circles — "ride only with verified colleagues."</p>
+<p><strong>Enterprise onboarding (≈5–7 business days) [C]</strong><br />
+1. Leadership alignment (ESG + employee experience + facility-cost story)<br />
+2. Employee enrollment via work email<br />
+3. <strong>Route/corridor mapping</strong> — cluster employees by area + timing<br />
+4. <strong>Pilot</strong> (one campus/zone) → scale<br />
+5. Incentives: reserved parking, recognition, allowances, leaderboards<br />
+6. Ongoing comms (savings milestones)</p>
+<p><strong>HR / admin dashboard metrics [C]</strong> — adoption rate, active poolers, rides/week, cars removed from roads, <strong>CO₂ avoided (ESG / BRSR Scope-3 reportable)</strong>, aggregated savings, satisfaction. Reference rollouts: Infosys (~800 emp.), Novartis, Capgemini.</p>
+<blockquote>
+<p><strong>Build note:</strong> sRide markets "free to companies / zero per-seat licensing" — likely sales positioning. A real B2B line monetises via the HR platform + ESG-reporting tier. <strong>[I]</strong></p>
+</blockquote>
+<hr />
+<h2 id="5-trust-safety">5. Trust &amp; safety</h2>
+<ul>
+<li><strong>Verification [C]:</strong> mobile OTP + work email + <strong>gov photo ID (Aadhaar/PAN/DL)</strong> + workplace address; LinkedIn verify mentioned. "Never accepts applications without background checking."</li>
+<li><strong>Gender preference [C]:</strong> women-only ride filter (matches 60% female base).</li>
+<li><strong>SOS [C]:</strong> one-tap in-app emergency button.</li>
+<li><strong>Live tracking [C]:</strong> real-time GPS, shareable trip status.</li>
+<li><strong>Ratings [C]:</strong> compulsory two-way, visible pre-booking.</li>
+<li><strong>RC / DL verification for givers [I]:</strong> industry-standard; confirm exact sRide behaviour in-app.</li>
+</ul>
+<hr />
+<h2 id="6-monetization">6. Monetization</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Lever</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Commission <strong>[C]</strong></td>
+<td><strong>6%</strong> of contribution (low; Orahi ~28%). Quick Ride also 6%, min ₹2 <strong>[K]</strong></td>
+</tr>
+<tr>
+<td>Wallet redeem <strong>[C]</strong></td>
+<td>→ Paytm (min ₹100) or bank (min ₹1,000)</td>
+</tr>
+<tr>
+<td>Points / rewards <strong>[C]</strong></td>
+<td>badges, points, priority parking, 10% referral credits</td>
+</tr>
+<tr>
+<td>Cost calc <strong>[C]</strong></td>
+<td>distance + fuel + tolls ÷ confirmed riders, auto-deducted</td>
+</tr>
+<tr>
+<td>B2B (industry) <strong>[I]</strong></td>
+<td>per-employee/month SaaS + ESG-reporting tier (highest-value line)</td>
+</tr>
+<tr>
+<td>Contrast: Quick Ride <strong>[K]</strong></td>
+<td>points-as-currency (1 pt = ₹1, ~4 pts/km), redeem to fuel cards/Paytm</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="7-screen-inventory-mirrored-in-prototypehtml">7. Screen inventory (mirrored in <code>prototype.html</code>)</h2>
+<p><strong>Auth / onboarding:</strong> Splash · Onboarding carousel · Phone+OTP · <strong>Work-email verify</strong> · Gov-ID/KYC · Home address · Office+timings · Vehicle (giver) · Location permission.<br />
+<strong>Home:</strong> Dashboard with <strong>Find/Offer toggle</strong>, bikepool &amp; taxipool entries, today's commute.<br />
+<strong>Taker:</strong> Find a Ride (corridor + time) → Matched riders list → Driver detail → Request → Pending → Confirmed.<br />
+<strong>Giver:</strong> Offer a Ride (route, seats, recurring days) → Match suggestions → Incoming requests (accept/decline) → Confirmed.<br />
+<strong>Active ride:</strong> Live map + ETA → Chat → <strong>SOS</strong> → Complete.<br />
+<strong>Post-ride:</strong> Cost summary + auto-pay → Two-way rating.<br />
+<strong>Money:</strong> Wallet (balance, earnings, redeem) → Points/badges → Referral.<br />
+<strong>Profile:</strong> Verification badges + ratings · Preferences (gender filter, max detour) · Recurring-rides manager · Trip history (savings + CO₂).<br />
+<strong>Corporate (web):</strong> HR dashboard — adoption, active poolers, rides/week, cars removed, CO₂/ESG, savings.</p>
+<hr />
+<h2 id="8-competitor-build-insight">8. Competitor &amp; build insight</h2>
+<p><strong>Quick Ride [K]</strong> (main rival) — ~3.5M users, points-as-currency, more customizable/feature-rich (group chat, location-share, vacation settings, multi-vehicle, company-domain filter). sRide wins on <strong>safety/verification + women-friendliness</strong>.</p>
+<p><strong>Carpool matching blueprint (Mobisoft, 2026) [I]</strong> — directly reusable:<br />
+- <strong>6-dimension match score:</strong> schedule 30–35% · route geometry 25–30% (PostGIS + Maps detour) · preferences 15–20% (<strong>gender = hard filter</strong>) · trust/history 10–15% · workplace proximity 5–10% · reliability 5–10%.<br />
+- <strong>Two-stage matching:</strong> coarse geo/time pre-filter (drops ~95% of pairs) → precise Maps detour scoring; daily batch + same-day incremental.<br />
+- <strong>Suggested stack:</strong> React Native app · React+TS admin · Node/NestJS API · <strong>Python FastAPI matching service</strong> · Socket.io+Redis for GPS · <strong>PostgreSQL 16 + PostGIS + TimescaleDB</strong>.<br />
+- <strong>UX wins:</strong> calendar integration (auto-detect office days), offline-first driver app, pre-ride message templates, same-department social context, trip-level cost+CO₂ transparency, multi-channel SOS.</p>
+<hr />
+<h2 id="9-automated-document-verification-digilocker-kyc-aggregators">9. Automated document verification — DigiLocker &amp; KYC aggregators</h2>
+<p><strong>Goal:</strong> verify Aadhaar (identity), Driving Licence and Vehicle RC (driver-eligibility gate), and PAN — <strong>fully automated, zero manual review.</strong> This is reflected in the prototype's KYC screen.</p>
+<h3 id="91-is-there-an-official-digilocker-api-yes-c">9.1 Is there an official DigiLocker API? — Yes [C]</h3>
+<p>DigiLocker (MeitY / NeGD) exposes a <strong>consent-based Partner / Requester API</strong> (OAuth 2.0 via <em>Meri Pehchaan</em>). Your app redirects the user to DigiLocker, they log in and <strong>consent</strong>, and you pull <strong>issuer-signed</strong> documents back — verified at source, not user-uploaded files.<br />
+- <strong>What you can pull (issuer-verified):</strong> Aadhaar (e-KYC XML), <strong>Driving Licence</strong> (from Sarathi/MoRTH), <strong>Vehicle RC</strong> (from VAHAN/MoRTH), <strong>PAN</strong> (CBDT), education &amp; other issued docs. Data is signed by the issuer → authentic, tamper-evident.<br />
+- <strong>Eligibility / onboarding:</strong> the <strong>direct</strong> DigiLocker partner programme (<code>partners.digitallocker.gov.in</code>, <code>apisetu.gov.in</code>) is geared to govt/regulated/large entities, has an approval process + sandbox→production, and is <strong>slow &amp; heavy for a small startup</strong>. [C/I]</p>
+<h3 id="92-aadhaar-reality-in-2026-c-material">9.2 Aadhaar reality in 2026 [C — material]</h3>
+<ul>
+<li><strong>Standalone Aadhaar OTP-OKYC has been largely discontinued across providers</strong> after UIDAI technical changes (e.g. Setu retired its OKYC product). → <strong>DigiLocker is now the de-facto industry route to Aadhaar data</strong>, not a co-equal alternative.</li>
+<li><strong>Aadhaar paperless offline e-KYC (XML/ZIP, user-generated, UIDAI-signed)</strong> still works and is offered by <strong>AuthBridge, Perfios/Karza, Digitap</strong>. So your real Aadhaar paths are <strong>DigiLocker</strong> or <strong>offline XML</strong> — you do <strong>not</strong> need to become an AUA/KUA.</li>
+</ul>
+<h3 id="93-the-practical-startup-path-aggregators-that-wrap-digilocker-ck">9.3 The practical startup path — aggregators that wrap DigiLocker [C/K]</h3>
+<p>Because direct partnership is hard, use an aggregator that fronts DigiLocker + VAHAN(RC) + Sarathi(DL) + PAN behind one REST API/SDK.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Covers</th>
+<th>Self-serve?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Setu</strong></td>
+<td>DigiLocker, PAN</td>
+<td>✅ sandbox + free credits</td>
+<td><strong>Only vendor with a public price: ₹4 / successful DigiLocker fetch.</strong> Cleanest docs. <strong>Narrow</strong> — no standalone DL/RC, OKYC dead.</td>
+</tr>
+<tr>
+<td><strong>Surepass</strong></td>
+<td>DigiLocker, <strong>DL, RC</strong>, PAN, offline Aadhaar</td>
+<td>✅</td>
+<td>Richest public <strong>SDKs (iOS/Android/React Native/Web)</strong>. Fullest coverage + self-serve.</td>
+</tr>
+<tr>
+<td><strong>Perfios / Karza (Perfios Hub)</strong></td>
+<td>DigiLocker, <strong>DL, RC</strong>, PAN, offline Aadhaar</td>
+<td>✅</td>
+<td>Fullest coverage + sandbox/free credits. Enterprise-grade.</td>
+</tr>
+<tr>
+<td><strong>Cashfree Verification</strong></td>
+<td>DigiLocker, <strong>RC</strong>, PAN, bank/UPI</td>
+<td>✅</td>
+<td>Public <strong>Python verification SDK</strong> on GitHub. Good if already using Cashfree payments.</td>
+</tr>
+<tr>
+<td><strong>Zoop.one / Digitap</strong></td>
+<td>DigiLocker, DL, RC, PAN, offline Aadhaar</td>
+<td>✅</td>
+<td>Credits visible post-signup (no public rate card).</td>
+</tr>
+<tr>
+<td><strong>Signzy · IDfy · HyperVerge · AuthBridge</strong></td>
+<td>Full + liveness/face-match</td>
+<td>❌ sales-gated</td>
+<td>Best liveness/face-match (HyperVerge/IDfy). Signzy may carry an annual platform min (~₹2–15 L/yr, third-party estimate — unverified).</td>
+</tr>
+<tr>
+<td><strong>Bureau</strong></td>
+<td>—</td>
+<td>—</td>
+<td><strong>Wrong tool:</strong> fraud/risk-decisioning, no public India doc-level KYC endpoints.</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>"Transparent pricing" for Surepass/Zoop/Digitap means <em>free trial + credits after signup</em>, <strong>not</strong> a public rate card. Only <strong>Setu</strong> publishes an INR per-call rate. [C]</p>
+</blockquote>
+<h3 id="94-dl-rc-specifically-the-driver-gate">9.4 DL &amp; RC specifically (the driver gate)</h3>
+<p>Beyond DigiLocker-issued copies, aggregators also expose <strong>live Sarathi (DL)</strong> and <strong>VAHAN (RC)</strong> lookups — better for "verify the driver before they can offer a ride," since you confirm the licence/registration is currently valid. <strong>Surepass, Cashfree, Perfios/Karza</strong> do these standalone; <strong>Setu does not.</strong> [C]</p>
+<h3 id="95-recommended-architecture-fully-automated-startup-friendly-i-grounded-in-9194">9.5 Recommended architecture (fully automated, startup-friendly) [I, grounded in 9.1–9.4]</h3>
+<ol>
+<li><strong>Identity:</strong> DigiLocker consent flow → issuer-signed <strong>Aadhaar e-KYC + PAN</strong> (also proves document ownership). Vendor: <strong>Setu</strong> (clean, ₹4/fetch) <em>or</em> <strong>Surepass/Cashfree</strong> if you want one vendor for everything.</li>
+<li><strong>Driver gate:</strong> live <strong>DL (Sarathi)</strong> + <strong>RC (VAHAN)</strong> checks via <strong>Surepass / Cashfree / Perfios</strong> before "Offer a ride" unlocks.</li>
+<li><strong>Identity binding:</strong> DigiLocker consent (strongest) or <strong>selfie-liveness + face-match to the DL photo</strong> (add <strong>HyperVerge/IDfy</strong> SDK for best-in-class liveness).</li>
+<li><strong>Fastest route:</strong> a single self-serve aggregator covering all five — <strong>Surepass</strong> or <strong>Perfios Hub</strong> — gets you a fully automated gate today; add <strong>Setu</strong> if you specifically want the transparent-priced clean DigiLocker fetch.</li>
+<li><strong>Compliance:</strong> explicit <strong>consent</strong> capture + audit log; <strong>DPDP Act 2023</strong> — collect minimum necessary, define retention, prefer storing <strong>verification result + reference ID</strong> over raw KYC payloads; encrypt at rest; honour erasure requests.</li>
+</ol>
+<p><strong>Bottom line:</strong> Yes — DigiLocker is exactly the right primitive, and you avoid manual review entirely. Don't chase direct DigiLocker partnership first; ship on <strong>Surepass or Perfios Hub</strong> (DigiLocker + DL + RC + PAN + offline Aadhaar, self-serve), optionally add <strong>Setu</strong> for clean priced DigiLocker fetches and <strong>HyperVerge/IDfy</strong> for liveness.</p>
+<hr />
+<h2 id="10-caveats-before-mirroring-sride-11">10. Caveats before mirroring sRide 1:1</h2>
+<ul>
+<li>sRide's own stats conflict across pages (users 1–3M, cities 9–20+, companies 300–50,000) — pick one internally consistent set.</li>
+<li>"Free to companies" is likely positioning — plan a real B2B revenue line.</li>
+<li>RC/DL-for-givers verification is industry-standard but not explicitly stated by sRide — confirm in-app.</li>
+<li>70% overlap and "60-second match" are sRide marketing figures — fine to clone as UX copy.</li>
+<li>KYC vendor prices (except Setu's ₹4/DigiLocker fetch) are signup-gated — get quotes before committing; Signzy's annual minimum estimate is third-party, unverified.</li>
+</ul>
+<hr />
+<h2 id="11b-sride-faq-confirmed-flow-verbatim-from-sridecofaqs-c">11b. sRide FAQ — confirmed flow (verbatim from sride.co/faqs) [C]</h2>
+<p>Pulled directly from the FAQ; the prototype mirrors all of this:<br />
+- <strong>Sign-up (&lt;2 min):</strong> download → mobile + <strong>OTP</strong> → add home &amp; office → complete verification → start matching.<br />
+- <strong>3-layer verification:</strong> Mobile OTP · <strong>work email / company ID</strong> · <strong>Government ID + selfie match</strong> (Aadhaar/PAN/DL). Freelancers verify via ID + workplace address.<br />
+- <strong>One account, both roles:</strong> "switch between Driver and Rider at any time."<br />
+- <strong>Matching:</strong> routes overlap <strong>≥70%</strong>, detours minimised. <strong>No match → added to "corridor waitlist", notified when a matching route joins.</strong> ← <em>add to prototype</em><br />
+- <strong>Booking:</strong> Find a Ride → select corridor + time → browse matches → confirm seat.<br />
+- <strong>Recurring:</strong> "weekly recurring rides with the same co-riders, or one-off rides." ✅ built.<br />
+- <strong>Fare:</strong> distance + fuel + tolls ÷ confirmed riders; <strong>auto-deducted after ride</strong>; UPI/card/netbanking/wallet; <strong>no cash</strong>. Saves ₹2,500–6,000/mo.<br />
+- <strong>Safety:</strong> women-only preference · live GPS shared with contacts · <strong>in-app SOS</strong> · <strong>"Report Ride"</strong> post-trip; Trust &amp; Safety reviews within 24h. ← <em>add Report Ride</em><br />
+- <strong>Cancellation:</strong> instant notification + <strong>auto-attempt to find an alternate match</strong>; frequent cancellers restricted.<br />
+- <strong>Corporate:</strong> enterprise solution at <strong>200+ companies</strong> — dashboards, bulk onboarding, analytics, subsidised rides; <strong>20–40% parking reduction in 3 months.</strong></p>
+<h2 id="12-similar-applications-competitor-landscape-ki">12. Similar applications (competitor landscape) [K/I]</h2>
+<p><strong>India — direct peers (office carpooling):</strong><br />
+- <strong>Quick Ride</strong> — sRide's main rival; ~3.5M users, points-as-currency (1pt=₹1, ~4pts/km), 6% fee, more configurable (group chat, vacation mode, multi-vehicle, company-domain filter). Strong Bengaluru/Chennai/Pune.<br />
+- <strong>Orahi</strong> — office/community carpooling; higher commission historically (~28%).<br />
+- <strong>Zify</strong> — dynamic carpooling on your route, intercity + intracity; large SE-Asia/India footprint.<br />
+- <strong>MoveInSync / Commute (enterprise)</strong> — employee-transport SaaS (managed cabs + carpool); strong corporate/HR angle.<br />
+- <strong>Ola/Uber</strong> — on-demand cabs (not cost-sharing); the price benchmark sRide undercuts ~70%.</p>
+<p><strong>Global — for feature inspiration:</strong><br />
+- <strong>Scoop</strong> (US) — "request the night before, paired for the morning"; as-needed corporate carpool, employer-funded. Great recurring/scheduling UX.<br />
+- <strong>Pave Commute</strong> — work carpool + rewards for sustainable commuting; ESG-led.<br />
+- <strong>Comovee</strong> — maps nearby colleagues geographically to form company carpools.<br />
+- <strong>Commute with Enterprise</strong> — vanpool (provided SUV/van, riders rotate driving).<br />
+- <strong>ShareSpace Carpool</strong> — co-worker ride-sharing, "save up to $300/mo."<br />
+- <strong>BlaBlaCar / BlaBlaCar Daily</strong> — long-distance marketplace; the Daily app uses a fixed transit-"line" + subsidies for commutes.<br />
+- <strong>Hitch</strong> — city-to-city long-distance rideshare.<br />
+- <strong>Waze Carpool</strong> — (discontinued 2022) Google's commute-matching experiment; useful cautionary case.</p>
+<p><strong>Takeaway for Troopool:</strong> sRide/Quick Ride/Orahi/Zify own the Indian P2P-cost-sharing model; Scoop/Pave/Comovee show the employer-funded + scheduling UX worth borrowing. Differentiate on <strong>verification/safety + women-friendliness + transparent CO₂/ESG</strong>, which is exactly sRide's wedge.</p>
+<hr />
+<h2 id="11-sources">11. Sources</h2>
+<p><strong>sRide &amp; competitors:</strong> sRide FAQs · homepage · corporate-carpooling guide · "Revolutionizing Carpooling" blog · App Store (<code>id921249819</code>) · Google Play (<code>co.sride</code>) · Novartis case page · Quick Ride help/how-it-works · sRide-vs-QuickRide (Quora, Smarther) · Citizen Matters carpool roundup · BlaBlaCar Daily (ZAG Daily, BlaBlaCar newsroom, Wikipedia) · <strong>Mobisoft carpool-app-development-2026 blueprint</strong> · sRide wallet-redemption (Quora) · Scoop (App Store id997978145) · Pave Commute (pavecommute.app) · Comovee (comovee.com) · Commute with Enterprise · Arka Softwares "Top 10 Ridesharing Apps 2025".<br />
+<strong>DigiLocker / KYC:</strong> DigiLocker Partner programme (<code>partners.digitallocker.gov.in</code>, <code>apisetu.gov.in</code>) · Setu DigiLocker docs/pricing (<code>docs.setu.co/data/digilocker</code>) · Surepass DigiLocker (<code>surepass.io/digilocker-api/</code>) · Perfios Hub (<code>perfios.ai/in/products/perfios-hub/</code>) · Cashfree DigiLocker/RC (<code>cashfree.com/docs/api-reference/vrs/v2/digilocker/</code>) · Zoop.one charges (<code>support.zoop.one</code>) · AuthBridge offline e-KYC via DigiLocker (<code>authbridge.com</code>) · HyperVerge DB-verification (<code>github.com/hyperverge</code>) · UIDAI Aadhaar paperless offline e-KYC · DPDP Act 2023.</p></main>
+<footer>Troopool — the network is the product · <a href="index.html">Back to home</a> · <a href="Troopool-Case-Study.pptx">Download the deck</a></footer>
+</body></html>

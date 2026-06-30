@@ -1,0 +1,176 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Troopool — The Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1F0F8;--paper:#FFFFFF;--soft:#ECEAF6;--ink:#181826;--ink-2:#54566B;--ink-3:#8E90A6;--brand:#5B4BD6;--brand-soft:#ECEAFB;--coral:#FF6A4D;--teal:#10A88F;--lime:#CBF24E;--line:#E6E3F1;
+ --d:'Bricolage Grotesque',sans-serif;--b:'Hanken Grotesk',sans-serif;--m:'JetBrains Mono',monospace;}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--b);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.7}
+::selection{background:var(--lime)}
+nav{position:sticky;top:0;z-index:50;background:rgba(241,240,248,.85);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line)}
+nav .in{max-width:980px;margin:0 auto;padding:0 22px;height:58px;display:flex;align-items:center;gap:16px}
+.logo{font-family:var(--d);font-weight:800;font-size:18px;display:flex;align-items:center;gap:8px;letter-spacing:-.02em;text-decoration:none;color:var(--ink)}
+.logo i{width:12px;height:12px;border-radius:50% 50% 50% 3px;background:var(--coral);transform:rotate(8deg);box-shadow:0 0 0 4px rgba(255,106,77,.2)}
+.back{margin-left:auto;font-size:13px;font-weight:700;color:#fff;background:var(--brand);padding:9px 15px;border-radius:10px;text-decoration:none}
+.docnav{background:var(--paper);border-bottom:1px solid var(--line)}
+.docnav .in{max-width:980px;margin:0 auto;padding:9px 22px;display:flex;gap:6px;overflow-x:auto}
+.docnav a{font-size:12.5px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:7px 12px;border-radius:9px;white-space:nowrap;transition:.15s}
+.docnav a:hover{background:var(--soft);color:var(--ink)}
+.docnav a.on{background:var(--brand);color:#fff}
+.hero{background:#16142A;color:#fff;padding:54px 0 46px;background-image:radial-gradient(circle at 12% 16%,rgba(110,93,236,.4),transparent 48%),radial-gradient(circle at 90% 80%,rgba(255,106,77,.2),transparent 46%)}
+.hero .in{max-width:980px;margin:0 auto;padding:0 22px}
+.hero .eyebrow{font-family:var(--m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);font-weight:700}
+.hero h1{font-family:var(--d);font-weight:800;font-size:clamp(30px,5vw,46px);letter-spacing:-.025em;line-height:1.05;margin:14px 0 10px}
+.hero p{color:#C4C1D6;font-size:17px;max-width:62ch}
+.doc{max-width:860px;margin:0 auto;padding:48px 22px 90px}
+.doc h1{font-family:var(--d);font-weight:800;font-size:30px;letter-spacing:-.02em;margin:34px 0 14px}
+.doc h2{font-family:var(--d);font-weight:700;font-size:25px;letter-spacing:-.02em;margin:40px 0 14px;padding-top:24px;border-top:2px solid var(--line)}
+.doc h3{font-family:var(--d);font-weight:700;font-size:18px;margin:26px 0 8px}
+.doc h4{font-weight:700;font-size:15px;margin:18px 0 6px;color:var(--ink)}
+.doc p{color:var(--ink-2);margin:12px 0;font-size:15.5px}
+.doc a{color:var(--brand);font-weight:600}
+.doc strong{color:var(--ink);font-weight:700}
+.doc ul,.doc ol{margin:12px 0 12px 4px;padding-left:22px;color:var(--ink-2);font-size:15.5px}
+.doc li{margin:7px 0}
+.doc li::marker{color:var(--brand)}
+.doc blockquote{margin:18px 0;padding:14px 18px;background:var(--brand-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;color:var(--ink)}
+.doc blockquote p{color:var(--ink);margin:4px 0}
+.doc hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+.doc code{font-family:var(--m);font-size:13px;background:var(--soft);padding:2px 6px;border-radius:6px;color:var(--brand)}
+.doc pre{background:#16142A;color:#E6E3F5;border-radius:14px;padding:16px 18px;overflow-x:auto;margin:18px 0;font-size:12.5px;line-height:1.6}
+.doc pre code{background:none;color:#E6E3F5;padding:0}
+.tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 30px -22px rgba(24,22,45,.3)}
+.doc table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--paper)}
+.doc th{background:var(--brand);color:#fff;text-align:left;padding:11px 13px;font-family:var(--b);font-weight:700;font-size:12.5px;white-space:nowrap}
+.doc td{padding:10px 13px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+.doc tr:nth-child(even) td{background:#FAF9FE}
+.doc td:first-child{color:var(--ink);font-weight:600}
+footer{background:#16142A;color:#B9B6CC;padding:40px 0;text-align:center;font-size:13px}
+footer a{color:var(--lime);text-decoration:none;font-weight:700}
+@media(max-width:600px){.doc h2{font-size:21px}}
+</style></head><body>
+<nav><div class="in"><a class="logo" href="index.html"><i></i>Troopool</a><a class="back" href="index.html">← Back</a></div></nav>
+<div class="docnav"><div class="in"><a href="user-stories.html" class="">User Stories</a><a href="business-analysis.html" class="">Business Analysis</a><a href="flow-audit.html" class="">Flow Audit</a><a href="concept.html" class="on">The Concept</a><a href="case-study.html" class="">sRide Case Study</a><a href="research.html" class="">Research</a><a href="presentation.html" class="">Presentation</a><a href="troopool-v4.html" class="">Prototype →</a></div></div>
+<header class="hero"><div class="in"><span class="eyebrow">Troopool · document</span><h1>The Concept</h1><p>Positioning, pillars and the connection loop.</p></div></header>
+<main class="doc"><blockquote>
+<p>The repositioning, the market case, the product, and the flow. Prototype: <strong><code>troopool-community.html</code></strong>.</p>
+</blockquote>
+<hr />
+<h2 id="1-the-one-line-shift">1. The one-line shift</h2>
+<p><strong>Old:</strong> "An app to share office commutes." (utility, competes with Quick Ride on price)<br />
+<strong>New:</strong> <strong>"Meet the people already on your way."</strong> A <em>verified</em> community that connects you with the people you cross paths with every day — on your <strong>route</strong>, in your <strong>neighborhood</strong>, on your <strong>wavelength</strong> — to carpool, walk to the metro, grab a coffee, share a hobby, or help a neighbor.</p>
+<p>Carpool is no longer the product. It's <strong>one of many ways to connect</strong>. The product is <strong>belonging</strong>.</p>
+<p>Think <strong>Bumble × Nextdoor × Meetup — but for your real daily orbit, and verified.</strong></p>
+<hr />
+<h2 id="2-why-now-market-analysis">2. Why now — market analysis</h2>
+<p><strong>Loneliness is the demand.</strong> ~<strong>35% of adults are chronically lonely</strong> (Global Solitude Report 2025). Local-friendship apps generated <strong>~$16M</strong> consumer spend and <strong>~4.3M downloads in 2025 (+28% YoY)</strong>. <strong>Remote/hybrid workers are 34% of new users</strong> — they lost the office as their social layer and want it back. Women-focused &amp; LGBTQ+-friendly social apps grew <strong>42%</strong>.</p>
+<p><strong>The incumbents each own one slice — nobody owns the orbit:</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>App</th>
+<th>Owns</th>
+<th>Gap we exploit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tinder/Hinge</strong></td>
+<td>Romance, strangers</td>
+<td>Not friendship; no daily real-world overlap</td>
+</tr>
+<tr>
+<td><strong>Bumble BFF</strong></td>
+<td>Friend-finding</td>
+<td>Still strangers citywide; no commute/neighborhood context</td>
+</tr>
+<tr>
+<td><strong>Meetup</strong> (60M)</td>
+<td>Interest events</td>
+<td>Event-first, not people-first; low trust/verification</td>
+</tr>
+<tr>
+<td><strong>Timeleft</strong></td>
+<td>Dinners with strangers</td>
+<td>One-off; no recurring daily connection</td>
+</tr>
+<tr>
+<td><strong>Peanut</strong> (5M)</td>
+<td>Moms</td>
+<td>Narrow niche</td>
+</tr>
+<tr>
+<td><strong>Nextdoor</strong></td>
+<td>Neighbors</td>
+<td>Transactional/notice-board, ageing, low delight</td>
+</tr>
+<tr>
+<td><strong>sRide / Quick Ride</strong></td>
+<td>Carpool utility</td>
+<td>Social is an afterthought; pure transport framing</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>The white space:</strong> <em>verified, daily-orbit social discovery</em> — the people you <strong>already</strong> overlap with (same route + same building/society + same workplace + same interests), made connectable with a delightful, safe, repeatable loop. Repeated real-world proximity is the strongest tie-former that exists — and no app productizes it.</p>
+<p><strong>Distribution moat:</strong> carpool/commute is the <strong>wedge</strong> (daily, habitual, money-saving, gets you in the door and gives a <em>reason</em> to first connect), and <strong>corporates pay</strong> for it — employee belonging + retention + ESG commute reporting in one. That's a B2B GTM no pure friendship app has.</p>
+<hr />
+<h2 id="3-the-product-three-pillars-of-your-orbit">3. The product — three pillars of "your orbit"</h2>
+<p>Every person you see is surfaced with a <strong>why-you-overlap</strong> reason:</p>
+<ol>
+<li><strong>On your way</strong> 🛣️ — same home→work corridor &amp; timing. <em>Connect to carpool, bikepool, walk to the metro, or just say hi.</em></li>
+<li><strong>In your neighborhood</strong> 🏠 — same society/building/locality (the <strong>sNeighbor</strong> layer). <em>Borrow a drill, share groceries, walk the dog, airport-run together.</em></li>
+<li><strong>On your wavelength</strong> 🎸 — shared interests/hobbies (running, books, photography, board games, a language, a profession). <em>Find a badminton partner, a book club, a co-founder.</em></li>
+</ol>
+<p><strong>Trust is the differentiator (vs Tinder/Bumble):</strong> every profile is <strong>work-email + ID verified</strong>, women-only mode, SOS, ratings. You connect with real, accountable people in your real orbit — not anonymous strangers.</p>
+<hr />
+<h2 id="4-the-connection-loop-the-cool-flow">4. The connection loop (the "cool flow")</h2>
+<pre><code>SET YOUR ORBIT            DISCOVER                 CONNECT                 DO SOMETHING
+home · work · route   →   feed/deck of people   →  express interest →    pick an action:
+interests · what          grouped by             mutual = match →        ▸ Carpool / bikepool
+you're &quot;open to&quot;          On-your-way /          chat (numbers           ▸ Walk to metro
+(carpool, coffee,         Nearby / Wavelength,    hidden)                 ▸ Coffee / lunch
+hobby, neighbor,          each card shows                                 ▸ Join a Circle
+friendship)               WHY you overlap                                 ▸ Help a neighbor
+                                                                          ▸ RSVP a Plan
+</code></pre>
+<ul>
+<li><strong>Discover</strong> = a swipeable deck <em>and</em> a grouped feed. Bumble-style "Connect / Skip," but every card explains the overlap ("88% same route · leaves 9:30" / "Building 7 · loves trail running" / "Both into film photography").</li>
+<li><strong>Match</strong> → chat opens with <strong>suggested actions</strong> as chips, so the connection turns into a <em>real plan</em>, not a dead "hey."</li>
+<li><strong>Circles</strong> = interest &amp; neighborhood groups (Running Club, Book Club, Society 7, New-in-City, sNeighbor Help). Group chat + recurring <strong>Plans</strong>.</li>
+<li><strong>Plans</strong> = lightweight "happening near you": <em>Carpool Mon 9:30 · Coffee Wed 5pm · 7am Sunday run · Book club Thu.</em> One-tap RSVP.</li>
+<li><strong>sNeighbor</strong> = a help feed: offers/requests (groceries, a ride to the airport, borrow something, a recommendation).</li>
+</ul>
+<hr />
+<h2 id="5-examples-personas">5. Examples (personas)</h2>
+<ul>
+<li><strong>Aisha, 26, new to Pune.</strong> Sets her orbit + interests (books, yoga). Discover shows 3 verified colleagues on her corridor and a <strong>Book Club in her society</strong>. She carpools with one, joins the club, has a friend-group in two weeks. <em>Retention: the commute makes it daily.</em></li>
+<li><strong>Rahul, 31, hybrid.</strong> Office only Tue/Thu. Finds a <strong>badminton partner two buildings away</strong> and a Tue/Thu carpool pool. Social + savings.</li>
+<li><strong>Meera, 42.</strong> Uses <strong>sNeighbor</strong>: offers her empty car seat to the airport, borrows a pressure cooker, joins the morning walking group. <em>Nextdoor, but delightful and verified.</em></li>
+<li><strong>A company (Infosys).</strong> Rolls it out for <strong>belonging + retention + ESG</strong>: employees connect across teams, carpool adoption rises, CO₂ drops, HR sees a community + commute dashboard.</li>
+</ul>
+<hr />
+<h2 id="6-monetization">6. Monetization</h2>
+<ul>
+<li><strong>Consumer freemium:</strong> premium discovery filters, "see who wants to connect," boosts, travel/intercity orbit.</li>
+<li><strong>B2B (the big one):</strong> per-employee community+commute+ESG platform; the retention/belonging story sells to HR, the carpool/CO₂ story sells to facilities/ESG.</li>
+<li><strong>Experiences:</strong> ticketed meetups, partner perks (cafés, gyms, events) where plans happen.</li>
+</ul>
+<hr />
+<h2 id="7-why-it-wins-moat">7. Why it wins (moat)</h2>
+<ol>
+<li><strong>Verified real-orbit</strong> beats anonymous citywide matching — higher trust, higher conversion to real meetings.</li>
+<li><strong>Repeated proximity</strong> (you literally keep seeing these people) is the best friendship engine; the app just unlocks it.</li>
+<li><strong>Multi-modal</strong> (ride, walk, coffee, hobby, neighbor) → many reasons to open daily, not one.</li>
+<li><strong>B2B distribution + ESG</strong> funds growth that pure social apps can't match.</li>
+<li><strong>Women-first safety</strong> in a category where safety is the #1 blocker.</li>
+</ol>
+<hr />
+<h2 id="8-what-the-prototype-shows-troopool-communityhtml">8. What the prototype shows (<code>troopool-community.html</code>)</h2>
+<p>Onboarding (verify → set orbit → interests → what you're open to) · <strong>Discover</strong> (grouped feed + swipe deck, every card shows the overlap) · person profile · <strong>It's a connection!</strong> match · <strong>Chats</strong> with action chips (Carpool / Coffee / Walk / Plan) · quick carpool confirm · <strong>Circles</strong> (interest + neighborhood groups) + circle detail · <strong>Plans</strong> (happening near you) · <strong>sNeighbor</strong> help feed · <strong>You</strong> profile.</p>
+<hr />
+<h2 id="sources">Sources</h2>
+<p>TechCrunch "apps to make new friends" (2026) · UBOS / GreyJournal / LyncMe friendship-apps 2026 round-ups · Global Solitude Report 2025 (35% chronically lonely) · Bumble BFF, Meetup (60M), Peanut (5M), Timeleft, Nextdoor · sRide "Meet People Locally" (sride.co/sride-meet-people-locally) · sRide <strong>sNeighbour</strong> launch (Business Standard, 2021) · sRide "Carpool — the new way of socializing."</p></main>
+<footer>Troopool — the network is the product · <a href="index.html">Back to home</a> · <a href="Troopool-Case-Study.pptx">Download the deck</a></footer>
+</body></html>

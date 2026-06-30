@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Troopool v4 — the network is the product</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Troopool v3 "Connect" theme — indigo primary · coral action · teal trust/rides · lime success ===== */
+:root{
+  --bg:#F1F0F8;--paper:#FFFFFF;--soft:#ECEAF6;--ink:#181826;--ink-2:#54566B;--ink-3:#8E90A6;
+  --brand:#5B4BD6;--brand-d:#4A3BC0;--brand-soft:#ECEAFB;--brand-2:#7C6CF0;
+  --coral:#FF6A4D;--coral-d:#E85535;--coral-soft:#FFE7E1;
+  --teal:#10A88F;--teal-d:#0C8A75;--teal-soft:#DCF3EE;
+  --lime:#CBF24E;--gold:#C2961E;--silver:#8A8F96;--bronze:#AE7644;
+  --line:#E9E7F2;--line-2:#DBD8EA;--ok:#10A88F;
+  --g-brand:linear-gradient(135deg,#6E5DEC,#4A39C4);--g-coral:linear-gradient(135deg,#FF8064,#F04E2C);--g-teal:linear-gradient(135deg,#18BFA4,#0B8773);--g-ink:linear-gradient(135deg,#2B2942,#15151F);
+  --sh-1:0 1px 2px rgba(24,22,45,.05);--sh-2:0 2px 6px rgba(24,22,45,.05),0 14px 30px -18px rgba(24,22,45,.22);--sh-3:0 18px 40px -20px rgba(24,22,45,.32);
+  --d:'Bricolage Grotesque',sans-serif;--b:'Hanken Grotesk',sans-serif;--m:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:var(--b);color:var(--ink);display:flex;align-items:center;justify-content:center;gap:44px;min-height:100vh;padding:28px 16px;flex-wrap:wrap;
+  background:#16142A;background-image:radial-gradient(circle at 20% 10%,#332C66,transparent 52%),radial-gradient(circle at 86% 90%,#3C1C46,transparent 48%),radial-gradient(circle at 92% 8%,#1B3A57,transparent 44%)}
+::selection{background:var(--lime)}
+
+/* side guide */
+.aside{width:300px;max-width:300px;color:#CFCBDD}
+.aside .logo{font-family:var(--d);font-weight:800;font-size:24px;color:#fff;display:flex;align-items:center;gap:9px;letter-spacing:-.02em}
+.aside .logo i{width:15px;height:15px;border-radius:50% 50% 50% 4px;background:var(--coral);transform:rotate(8deg);box-shadow:0 0 0 4px rgba(255,106,77,.25)}
+.aside-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:16px;margin-top:15px}
+.aside .k{font-family:var(--m);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);display:block;margin-bottom:8px}
+.aside p{font-size:12.5px;line-height:1.55;color:#AAA7BC;margin:0}
+.steps{list-style:none;display:flex;flex-direction:column}
+.steps li{display:flex;gap:11px;font-size:12px;color:#C2BFD2;line-height:1.4;padding:9px 0;border-top:1px solid rgba(255,255,255,.07)}
+.steps li:first-child{border-top:none;padding-top:2px}
+.steps .n{flex:0 0 auto;width:24px;height:24px;border-radius:8px;background:rgba(203,242,78,.14);color:var(--lime);font-family:var(--m);font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center}
+.steps em{font-style:normal;color:#fff;font-weight:600;background:rgba(255,255,255,.09);padding:1px 6px;border-radius:5px}
+
+/* device */
+.device{position:relative;width:390px;height:844px;background:#0b0c12;border-radius:56px;padding:13px;flex:0 0 auto;
+  box-shadow:0 0 0 2px #3a3850,0 0 0 13px #14131c,0 50px 90px -30px rgba(0,0,0,.8)}
+.device .bl{position:absolute;left:-3px;top:215px;width:3px;height:62px;background:#26243a;border-radius:3px}
+.device .br{position:absolute;right:-3px;top:200px;width:3px;height:90px;background:#26243a;border-radius:3px}
+.viewport{position:relative;width:100%;height:100%;background:var(--bg);border-radius:44px;overflow:hidden}
+.island{position:absolute;top:13px;left:50%;transform:translateX(-50%);width:118px;height:33px;background:#000;border-radius:20px;z-index:95}
+.statusbar{position:absolute;top:0;left:0;right:0;height:54px;z-index:90;display:flex;align-items:center;justify-content:space-between;
+  padding:18px 30px 0;font-family:var(--m);font-weight:700;font-size:14px;color:var(--ink);pointer-events:none;transition:color .35s}
+.statusbar .r{display:flex;align-items:center;gap:6px}
+.device.bar-light .statusbar{color:#fff}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:5px;background:var(--ink);opacity:.85;z-index:95;transition:background .35s}
+.device.bar-light .homebar{background:#fff}
+
+/* screens + transitions */
+.stage{position:absolute;inset:0}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);
+  background-image:radial-gradient(circle at -5% 0%,rgba(91,75,214,.07),transparent 36%),radial-gradient(circle at 105% 10%,rgba(255,106,77,.055),transparent 34%),radial-gradient(circle at 50% 108%,rgba(16,168,143,.055),transparent 42%);
+  transform:translateX(100%);opacity:0;pointer-events:none;transition:transform .34s cubic-bezier(.32,.72,0,1),opacity .34s;will-change:transform}
+.screen.active{transform:translateX(0);opacity:1;pointer-events:auto;z-index:10}
+.screen.past{transform:translateX(-24%);opacity:.5;pointer-events:none;z-index:5}
+@media(prefers-reduced-motion:reduce){.screen{transition:opacity .2s}.screen,.screen.past{transform:none}}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.body::-webkit-scrollbar{width:0}
+.pt{padding-top:54px}.px{padding-left:20px;padding-right:20px}.pb{padding-bottom:24px}
+.navbar{height:50px;display:flex;align-items:center;gap:6px;padding:0 12px;flex:0 0 auto;margin-top:54px}
+.iconbtn{width:44px;height:44px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);transition:background .15s}
+.iconbtn:active{background:rgba(0,0,0,.06)}
+.navbar .ttl{font-family:var(--d);font-weight:700;font-size:17px}
+
+/* atoms */
+.eyebrow{font-family:var(--m);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.h1{font-family:var(--d);font-weight:700;letter-spacing:-.025em;line-height:1.05;font-size:27px}
+.h2{font-family:var(--d);font-weight:700;letter-spacing:-.02em;font-size:20px}
+.muted{color:var(--ink-2)}.tnum{font-family:var(--m);font-weight:700}
+.btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:52px;border-radius:16px;border:none;
+  font-family:var(--b);font-weight:700;font-size:15px;cursor:pointer;transition:transform .12s,background .2s}
+.btn:active{transform:scale(.975)}
+.btn>svg{width:19px;height:19px;flex:0 0 auto}
+.iconbtn>svg{width:24px;height:24px;flex:0 0 auto}
+.btn{box-shadow:inset 0 1px 0 rgba(255,255,255,.16)}
+.btn-brand{background:var(--g-brand);color:#fff;box-shadow:0 12px 26px -10px rgba(91,75,214,.6),inset 0 1px 0 rgba(255,255,255,.22)}
+.btn-coral{background:var(--g-coral);color:#fff;box-shadow:0 12px 26px -10px rgba(255,106,77,.6),inset 0 1px 0 rgba(255,255,255,.24)}
+.btn-teal{background:var(--g-teal);color:#fff;box-shadow:0 12px 26px -12px rgba(16,168,143,.55),inset 0 1px 0 rgba(255,255,255,.2)}
+.btn-ink{background:var(--g-ink);color:#fff;box-shadow:0 12px 26px -14px rgba(24,22,45,.7)}
+.btn-ghost{background:rgba(255,255,255,.55);border:1.5px solid var(--line-2);color:var(--ink);box-shadow:none;backdrop-filter:blur(6px)}
+.cta-dock{padding:12px 20px calc(20px + env(safe-area-inset-bottom));flex:0 0 auto;background:linear-gradient(180deg,transparent,var(--bg) 32%)}
+.card{background:var(--paper);border:1px solid rgba(24,22,45,.05);border-radius:20px;padding:15px;box-shadow:var(--sh-2)}
+.row{display:flex;align-items:center;gap:11px}.between{display:flex;align-items:center;justify-content:space-between}
+.spacer{flex:1}.hr{height:1px;background:var(--line);margin:13px 0}
+.av{border-radius:14px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-family:var(--d);font-weight:700;color:#fff;width:46px;height:46px;font-size:17px;box-shadow:0 6px 14px -6px rgba(24,22,45,.4)}
+.field{background:var(--paper);border:1.5px solid var(--line);border-radius:15px;padding:13px 15px;display:flex;align-items:center;gap:11px;margin-bottom:11px;box-shadow:var(--sh-1)}
+.field .ic{width:21px;flex:0 0 auto;color:var(--brand)}
+.lab{font-family:var(--m);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
+.val{font-size:14.5px;font-weight:600}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;background:var(--soft);color:var(--ink-2);cursor:pointer;border:1px solid transparent;transition:.15s}
+.chip:active{transform:scale(.95)}
+.chip.brand,.chip.on{background:var(--g-brand);color:#fff;border-color:transparent}.chip.brand-soft{background:var(--brand-soft);color:var(--brand)}
+.chip.coral{background:var(--g-coral);color:#fff;border-color:transparent}.chip.teal{background:var(--g-teal);color:#fff;border-color:transparent}
+.chip.lime{background:var(--lime);color:var(--ink);border-color:transparent}
+.chip.out{background:transparent;border-color:var(--line-2);color:var(--ink-2)}
+.vok{font-family:var(--m);font-size:10px;font-weight:700;color:var(--teal);display:inline-flex;align-items:center;gap:4px}
+.tier{font-family:var(--m);font-size:9.5px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.tier::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.tier.gold{color:var(--gold)}.tier.silver{color:var(--silver)}.tier.bronze{color:var(--bronze)}
+.desig{font-size:12px;color:var(--ink-2);font-weight:600}
+.stars{color:var(--gold);font-size:12px}
+.why{display:inline-flex;align-items:center;gap:5px;font-family:var(--m);font-size:10px;font-weight:700;padding:4px 9px;border-radius:8px}
+.why.way{background:var(--teal-soft);color:var(--teal-d)}.why.near{background:#FBEEDD;color:var(--bronze)}.why.wave{background:var(--brand-soft);color:var(--brand)}
+.ringnum{font-family:var(--m);font-weight:700;fill:var(--ink)}
+.seg{display:flex;background:var(--soft);border-radius:15px;padding:4px;gap:3px}
+.seg button{flex:1;border:none;background:transparent;font-family:var(--b);font-weight:700;font-size:12.5px;min-height:42px;border-radius:12px;cursor:pointer;color:var(--ink-2);transition:.2s}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 6px 16px -9px rgba(24,22,45,.45),inset 0 0 0 1px rgba(24,22,45,.03)}
+.seg.brand button.on{background:var(--g-brand);color:#fff;box-shadow:0 8px 18px -8px rgba(91,75,214,.55)}
+.bar{height:9px;border-radius:6px;background:var(--soft);overflow:hidden}.bar>span{display:block;height:100%;background:var(--teal);border-radius:6px}
+.day{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:1.6px solid var(--line-2);color:var(--ink-3)}
+.day.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.mlegend{display:flex;gap:13px;flex-wrap:wrap;font-family:var(--m);font-size:10px;color:var(--ink-2)}
+.mlegend i{width:14px;height:4px;border-radius:3px;display:inline-block;vertical-align:middle;margin-right:4px}
+
+/* map */
+.map{position:relative;background:linear-gradient(150deg,#E7EEEA,#D9E6E0);overflow:hidden}
+.pin{position:absolute;font-family:var(--m);font-size:9.5px;font-weight:700;background:var(--ink);color:#fff;padding:4px 8px;border-radius:8px;transform:translate(-50%,-50%);white-space:nowrap}
+.pin.c{background:var(--coral)}.carmark{position:absolute;transform:translate(-50%,-50%);background:#fff;padding:5px 10px;border-radius:11px;font-family:var(--m);font-size:10px;font-weight:700;box-shadow:0 8px 20px -10px rgba(0,0,0,.5)}
+.walk{position:absolute;transform:translate(-50%,-50%);background:#fff;color:var(--ink);font-family:var(--m);font-size:9px;font-weight:700;padding:3px 8px;border-radius:8px;border:1px solid var(--line);white-space:nowrap}
+
+/* deck */
+.deck{position:relative;height:418px;margin-top:8px}
+.deckcard{position:absolute;inset:0;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 26px 50px -24px rgba(0,0,0,.45);color:#fff}
+.deckcard .grad{position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(15,12,30,.92));z-index:1}
+.deckcard .info{position:relative;z-index:2;padding:20px}.deckcard .nm{font-family:var(--d);font-weight:700;font-size:24px}
+.deckact{display:flex;gap:14px;justify-content:center;margin-top:16px}
+.deckbtn{width:60px;height:60px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s;box-shadow:0 12px 26px -12px rgba(0,0,0,.5)}
+.deckbtn:active{transform:scale(.9)}.deckbtn.skip{background:#fff;color:var(--ink-2)}.deckbtn.like{background:var(--brand);color:#fff;width:68px;height:68px}
+
+/* tabbar */
+.tabbar{height:76px;flex:0 0 auto;border-top:1px solid rgba(24,22,45,.06);background:rgba(255,255,255,.78);backdrop-filter:blur(22px) saturate(1.5);display:flex;align-items:flex-start;justify-content:space-around;padding:9px 6px 0}
+.tab{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9.5px;font-weight:600;color:var(--ink-3);background:none;border:none;cursor:pointer;min-width:56px;min-height:44px}
+.tab svg{width:23px;height:23px;transition:.2s}.tab.on{color:var(--brand)}.tab.on svg{filter:drop-shadow(0 5px 9px rgba(91,75,214,.42));transform:translateY(-1px)}
+
+/* sheet + toast */
+.scrim{position:absolute;inset:0;background:rgba(20,18,30,.5);opacity:0;pointer-events:none;transition:.3s;z-index:60}
+.scrim.show{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--paper);border-radius:28px 28px 0 0;padding:10px 20px calc(26px + env(safe-area-inset-bottom));
+  transform:translateY(102%);transition:transform .36s cubic-bezier(.32,.72,0,1);z-index:70;box-shadow:0 -20px 50px -20px rgba(0,0,0,.4)}
+.sheet.show{transform:translateY(0)}
+.grab{width:40px;height:5px;border-radius:5px;background:var(--line-2);margin:4px auto 14px}
+.toast{position:absolute;left:18px;right:18px;bottom:92px;background:var(--ink);color:#fff;padding:13px 16px;border-radius:15px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;z-index:80;opacity:0;transform:translateY(12px);transition:.3s;pointer-events:none}
+.toast.show{opacity:1;transform:none}
+@keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
+.pulse{position:relative}.pulse::after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid var(--coral);animation:pg 1.6s ease-out infinite}
+@keyframes pg{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.7);opacity:0}}
+@media(max-width:1160px){.aside{display:none}}
+
+/* ===== Figma-style comments ===== */
+#cLayer{position:absolute;inset:0;z-index:80;pointer-events:none}
+#cLayer.on{pointer-events:auto;cursor:crosshair}
+.cpin{position:absolute;transform:translate(-3px,-100%);width:30px;height:30px;border-radius:50% 50% 50% 5px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;font-family:var(--m);box-shadow:0 5px 14px rgba(0,0,0,.45);cursor:pointer;pointer-events:auto;border:2px solid #fff;transition:transform .14s;animation:pop .2s ease-out}
+.cpin:hover{transform:translate(-3px,-100%) scale(1.14);z-index:2}
+.cpin.sel{transform:translate(-3px,-100%) scale(1.14);box-shadow:0 0 0 3px rgba(255,255,255,.55),0 6px 16px rgba(0,0,0,.5)}
+.cpin.res{opacity:.4}
+.cpin .rc{position:absolute;right:-3px;top:-4px;width:13px;height:13px;border-radius:50%;background:var(--lime);color:#0E0D18;font-size:8px;display:flex;align-items:center;justify-content:center;border:1.5px solid #fff;font-weight:800}
+
+/* right panel */
+.cpanel{width:322px;max-width:322px;display:flex;flex-direction:column;height:844px;color:#CFCBDD;font-family:var(--b)}
+.cpanel .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.cpanel .ct{font-family:var(--d);font-weight:800;font-size:21px;color:#fff;display:flex;align-items:center;gap:9px;letter-spacing:-.02em}
+.cpanel .ct .dot{width:9px;height:9px;border-radius:50%;background:#3a3850;transition:.3s}
+.cpanel .ct .dot.live{background:var(--lime);box-shadow:0 0 0 4px rgba(203,242,78,.18);animation:pg2 2s ease-out infinite}
+@keyframes pg2{0%{box-shadow:0 0 0 0 rgba(203,242,78,.4)}100%{box-shadow:0 0 0 7px rgba(203,242,78,0)}}
+.cbadge{font-family:var(--m);font-size:11px;color:#0E0D18;background:var(--lime);font-weight:700;border-radius:20px;padding:3px 10px}
+.cpanel .glass{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:13px;margin-bottom:11px}
+.cpanel .lbl{font-family:var(--m);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--lime);display:block;margin-bottom:9px}
+.merow{display:flex;align-items:center;gap:10px}
+.pav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex:0 0 auto;background:#5B4BD6}
+.meinput{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:8px 11px;color:#fff;font-family:var(--b);font-size:13.5px;outline:none}
+.meinput:focus{border-color:var(--lime)}
+.meinput::placeholder{color:#8A879C}
+.swatches{display:flex;gap:7px;margin-top:11px}
+.swatches i{width:21px;height:21px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.12s}
+.swatches i.on{border-color:#fff;transform:scale(1.12)}
+.cmode{width:100%;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px 14px;color:#CFCBDD;font-family:var(--b);font-size:14px;font-weight:600;cursor:pointer;transition:.16s;margin-bottom:11px}
+.cmode:hover{background:rgba(255,255,255,.09)}
+.cmode.on{background:var(--lime);border-color:var(--lime);color:#10120A}
+.cmode .ci{width:18px;height:18px;display:block;flex:0 0 auto}
+.cmode #cmodeLbl{flex:1;text-align:left}
+.cmode .kbd{font-family:var(--m);font-size:10px;padding:2px 7px;border-radius:6px;background:rgba(255,255,255,.12);color:inherit}
+.cmode.on .kbd{background:rgba(0,0,0,.14)}
+.cfilter{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;min-height:28px}
+.presence{display:flex;align-items:center}
+.pav.sm{width:27px;height:27px;border:2px solid #16142A;margin-left:-8px;font-size:11px}
+.pav.sm:first-child{margin-left:0}
+.pmore{font-size:11px;color:#9C99AE;margin-left:7px;font-family:var(--m)}
+.resw{display:flex;align-items:center;gap:7px;font-size:12px;color:#9C99AE;cursor:pointer;user-select:none}
+.resw input{accent-color:var(--lime);width:14px;height:14px}
+.cthreads{flex:1;overflow:auto;display:flex;flex-direction:column;gap:9px;padding-right:3px;margin:0 -3px 11px 0}
+.cthreads::-webkit-scrollbar{width:5px}.cthreads::-webkit-scrollbar-thumb{background:rgba(255,255,255,.13);border-radius:4px}
+.cempty{text-align:center;color:#7E7B90;font-size:12.5px;padding:34px 14px;line-height:1.6}
+.cempty b{color:#B6B3C6;display:block;margin-bottom:4px;font-size:13px}
+.cthread{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:11px 12px;cursor:pointer;transition:.14s}
+.cthread:hover{background:rgba(255,255,255,.09);border-color:rgba(203,242,78,.35)}
+.cthread.res{opacity:.5}
+.cthread .crow{display:flex;align-items:center;gap:9px}
+.cpin-mini{width:23px;height:23px;border-radius:50% 50% 50% 4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex:0 0 auto;font-family:var(--m)}
+.cthread .cwho{font-weight:700;font-size:13px;color:#fff}
+.cthread .cmeta{font-size:11px;color:#8E8BA0;font-family:var(--m);margin-left:auto;flex:0 0 auto}
+.cthread .cbody{font-size:13px;color:#C7C4D6;margin-top:7px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cthread .cscreen{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:#9C99AE;font-family:var(--m);margin-top:8px;background:rgba(255,255,255,.06);padding:3px 8px;border-radius:7px}
+.cthread .crep{font-size:11px;color:var(--lime);font-family:var(--m);margin-top:8px;margin-left:8px}
+.cshare{margin-bottom:0!important}
+.shint{font-size:11.5px;color:#9C99AE;line-height:1.5;margin:0 0 10px}
+.sharebtn{width:100%;background:rgba(203,242,78,.14);border:1px solid rgba(203,242,78,.3);color:var(--lime);font-family:var(--b);font-weight:700;font-size:13px;border-radius:11px;padding:10px;cursor:pointer;transition:.14s}
+.sharebtn:hover{background:rgba(203,242,78,.22)}
+
+/* floating thread popover */
+.cpop{position:fixed;z-index:9999;width:312px;background:#fff;border-radius:17px;box-shadow:0 28px 70px -14px rgba(10,8,30,.6),0 0 0 1px rgba(20,18,45,.07);font-family:var(--b);color:var(--ink);overflow:hidden;animation:cpopin .16s ease-out}
+@keyframes cpopin{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+.cpop .ph{display:flex;align-items:center;gap:9px;padding:13px 14px;border-bottom:1px solid var(--line)}
+.cpop .ph .pn{width:24px;height:24px;border-radius:50% 50% 50% 4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;font-family:var(--m);flex:0 0 auto}
+.cpop .ph .pscr{font-size:11px;color:var(--ink-3);font-family:var(--m);flex:1}
+.cpop .ph button{background:none;border:none;cursor:pointer;color:var(--ink-3);padding:5px;border-radius:7px;display:flex;line-height:0}
+.cpop .ph button:hover{background:var(--soft);color:var(--ink)}
+.cpop .ph button.act{color:var(--teal)}
+.cpop .plist{max-height:280px;overflow:auto;padding:5px 0}
+.cpop .pc{padding:10px 14px;display:flex;gap:10px}
+.cpop .pc .av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex:0 0 auto}
+.cpop .pc .pcwho{font-size:12.5px;font-weight:700;color:var(--ink)}
+.cpop .pc .pctime{font-size:10.5px;color:var(--ink-3);font-family:var(--m);margin-left:6px;font-weight:500}
+.cpop .pc .pctext{font-size:13.5px;line-height:1.46;color:var(--ink);margin-top:3px;word-break:break-word}
+.cpop .pc .del{margin-left:auto;background:none;border:none;color:var(--ink-3);font-size:11px;cursor:pointer;opacity:0;padding:2px 5px;border-radius:5px}
+.cpop .pc:hover .del{opacity:1}
+.cpop .pc .del:hover{background:var(--coral-soft);color:var(--coral-d)}
+.cpop .pf{padding:11px 12px;border-top:1px solid var(--line);background:var(--bg)}
+.cpop .nameq{width:100%;border:1px solid var(--line-2);border-radius:10px;padding:9px 11px;font-family:var(--b);font-size:13px;outline:none;margin-bottom:8px;color:var(--ink)}
+.cpop .nameq:focus{border-color:var(--brand)}
+.cpop .pfrow{display:flex;gap:8px;align-items:flex-end}
+.cpop textarea{flex:1;border:1px solid var(--line-2);border-radius:11px;padding:9px 11px;font-family:var(--b);font-size:13.5px;outline:none;resize:none;max-height:96px;color:var(--ink);line-height:1.4}
+.cpop textarea:focus{border-color:var(--brand)}
+.cpop .send{width:38px;height:38px;flex:0 0 auto;border-radius:11px;border:none;background:var(--brand);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cpop .send:disabled{opacity:.4;cursor:default}
+.cpop .send:not(:disabled):hover{background:var(--brand-d)}
+.cresolved-tag{font-size:11px;color:var(--teal-d);background:var(--teal-soft);padding:3px 9px;border-radius:7px;font-weight:700;text-align:center;margin:0 14px 11px}
+@media(max-width:880px){.cpanel{display:none}}
+</style>
+</head>
+<body>
+
+<div class="device" id="device">
+  <span class="bl"></span><span class="br"></span>
+  <div class="viewport">
+    <div class="island"></div>
+    <div class="statusbar"><span id="clock">9:41</span><span class="r">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1" opacity=".4"/></svg>
+      <svg width="26" height="13" viewBox="0 0 26 13" fill="none"><rect x=".7" y=".7" width="21" height="11.6" rx="3" stroke="currentColor" stroke-opacity=".5"/><rect x="2.4" y="2.4" width="16" height="8.2" rx="1.6" fill="currentColor"/></svg>
+    </span></div>
+    <div class="stage" id="stage"></div>
+    <div class="scrim" id="scrim" onclick="closeSheet()"></div>
+    <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
+    <div class="toast" id="toast"></div>
+    <div id="cLayer"></div>
+    <div class="homebar"></div>
+  </div>
+</div>
+
+<!-- ===== Figma-style review / comments panel ===== -->
+<aside class="cpanel" id="cpanel">
+  <div class="ch">
+    <div class="ct"><span class="dot" id="liveDot"></span>Comments</div>
+    <span class="cbadge" id="cCount">0</span>
+  </div>
+
+  <div class="glass" id="meCard">
+    <span class="lbl">You are commenting as</span>
+    <div class="merow">
+      <span class="pav" id="meAv">?</span>
+      <input id="meName" class="meinput" placeholder="Add your name…" maxlength="24" autocomplete="off">
+    </div>
+    <div class="swatches" id="meSwatches"></div>
+  </div>
+
+  <button class="cmode" id="cmodeBtn" onclick="Comments.toggleMode()">
+    <span class="ci" id="cmodeIcon"></span>
+    <span id="cmodeLbl">Comment mode</span>
+    <span class="kbd">C</span>
+  </button>
+
+  <div class="cfilter">
+    <span class="presence" id="presence"></span>
+    <label class="resw"><input type="checkbox" id="showRes" onchange="Comments.render()"> <span>Show resolved</span></label>
+  </div>
+
+  <div class="cthreads" id="cthreads"></div>
+</aside>
+
+<script>
+/* ===== registry ===== */
+const SCREENS={};function reg(id,bar,html){SCREENS[id]={bar,html};}
+
+/* ===== icons ===== */
+const I_BACK=`<svg width="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>`;
+const I_X=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
+const I_CONNECT=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 13.4l7.4 4.2M15.7 6.4l-7.4 4.2"/></svg>`;
+const I_CAR=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-5a2.5 2.5 0 0 1 2.4-1.7h9.2A2.5 2.5 0 0 1 19 8l2 5"/><path d="M5 13h14v4H5z"/><circle cx="7.5" cy="17.5" r="1.3"/><circle cx="16.5" cy="17.5" r="1.3"/></svg>`;
+const I_BIKE=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5.5" cy="17" r="3"/><circle cx="18.5" cy="17" r="3"/><path d="M5.5 17l4-9h4l2 4h-7"/><path d="M13.5 8h3"/></svg>`;
+const I_TAXI=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 11l1.5-4h11L19 11"/><rect x="3" y="11" width="18" height="6" rx="1.5"/><path d="M9 7V5h6v2"/></svg>`;
+const I_REPEAT=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>`;
+const I_CHAT=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12Z"/></svg>`;
+const I_PHONE=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8a13 13 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11 11 0 0 0 3.4.55 1 1 0 0 1 1 1V21a1 1 0 0 1-1 1A18 18 0 0 1 3 5a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .55 3.4 1 1 0 0 1-.25 1Z"/></svg>`;
+const I_ROUTE=`<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8 18h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7"/></svg>`;
+const I_RIDER=`<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="6" r="3"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>`;
+function tIcon(n){return ({
+  home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',
+  network:'<circle cx="6" cy="7" r="2.3"/><circle cx="18" cy="7" r="2.3"/><circle cx="12" cy="18" r="2.3"/><path d="M7.8 8.7l3 7.2M16.2 8.7l-3 7.2M8.2 6.6h7.6"/>',
+  commute:'<path d="M3 13l2-5a2.5 2.5 0 0 1 2.4-1.7h9.2A2.5 2.5 0 0 1 19 8l2 5"/><path d="M5 13h14v4H5z"/><circle cx="7.5" cy="17.5" r="1.2"/><circle cx="16.5" cy="17.5" r="1.2"/>',
+  community:'<circle cx="9" cy="9" r="3.2"/><circle cx="16" cy="9" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M14 14a5.5 5.5 0 0 1 6.5 5"/>',
+  profile:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'})[n];}
+function TABBAR(a){const t=[['home','Home'],['network','Network'],['commute','Commute'],['community','Community'],['profile','Profile']];
+  return `<div class="tabbar">${t.map(([id,l])=>`<button class="tab ${id===a?'on':''}" onclick="switchTab('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${tIcon(id)}</svg>${l}</button>`).join('')}</div>`;}
+
+/* ===== data ===== */
+const PEOPLE={
+  rahul:{n:'Rahul Mehta',a:'R',c:'var(--teal)',role:'Sr. Software Engineer · Infosys',tier:'gold',pct:92,route:1,pro:1,why:{k:'way',t:'88% same route · leaves 9:30'},int:['Running','Photography','Coffee'],open:['Carpool','Coffee'],bio:'Hinjawadi by 10. Up for a post-work coffee or a weekend trail run.'},
+  sneha:{n:'Sneha Kapoor',a:'S',c:'var(--coral)',role:'UX Designer · Infosys',tier:'silver',w:1,pct:84,route:1,why:{k:'wave',t:'Both love books & yoga'},int:['Books','Yoga','Coffee'],open:['Book club','Walk to metro'],bio:'Reading the Booker list. Same Infosys corridor — happy to pool too.'},
+  aman:{n:'Aman Verma',a:'A',c:'#3E5C8A',role:'Data Analyst · TCS',tier:'',pct:74,route:1,why:{k:'way',t:'74% same route · TCS'},int:['Football','Coding'],open:['Carpool','Football'],bio:'5-a-side every Saturday. Need one more for the carpool too.'},
+  priya:{n:'Priya Sharma',a:'P',c:'var(--bronze)',role:'Product Manager · Infosys',tier:'gold',w:1,pct:90,route:1,why:{k:'near',t:'Your society · Building 7'},int:['Travel','Cooking','Films'],open:['Coffee','Carpool','Neighbour help'],bio:'New to Society 7 — same Wakad→Hinjawadi route. Happy to pool or split an airport cab.',gx:45,gy:62},
+  karan:{n:'Karan Singh',a:'K',c:'#3E5C8A',role:'DevOps Engineer · Infosys',tier:'silver',pct:81,route:1,why:{k:'near',t:'Your society · Building 4'},int:['Cricket','Travel','Music'],open:['Carpool','Airport pool'],bio:'Society 7, Building 4. Frequent airport runs — always happy to split a cab.',gx:30,gy:40},
+  divya:{n:'Divya Nair',a:'D',c:'var(--coral)',role:'HR Partner · Infosys',tier:'gold',w:1,pct:86,why:{k:'near',t:'Your society · Building 7'},int:['Yoga','Cooking','Films'],open:['Coffee','Neighbour help'],bio:'Building 7, same as you. Runs the morning yoga group + loves a recipe swap.',gx:61,gy:50},
+  neha:{n:'Neha Joshi',a:'N',c:'var(--teal)',role:'QA Lead · Wipro',tier:'',w:1,pct:79,why:{k:'wave',t:'Both into photography'},int:['Photography','Music','Coffee'],open:['Hobby buddy','Coffee'],bio:'Weekend photo walks around Pune. Looking for a shutter buddy nearby.',gx:74,gy:34}
+};
+const CIRCLES={
+  runners:{e:'🏃',n:'Hinjawadi Runners',c:'var(--brand)',members:240,joined:true,cat:'Wavelength · Running',about:'Runs Tue, Thu & Sun · all paces welcome. Verified colleagues & neighbours.',m3:[['R','var(--teal)'],['P','var(--coral)'],['A','#3E5C8A']],plans:[['Sunday trail run','6:30 AM · Hinjawadi hill','12 going']],chat:[['R','var(--teal)','Anyone up for 5k tomorrow morning?'],['P','var(--coral)','In! Gate at 6:25?']]},
+  society:{e:'🏠',n:'Society 7 Neighbours',c:'var(--bronze)',members:310,joined:true,cat:'Nearby · Society 7',about:'Your building — carpools, help, plans & recommendations.',m3:[['P','var(--bronze)'],['D','var(--coral)'],['M','#3E5C8A']],plans:[['Airport cab pool','Sat 6 AM · split 50%','Karan · 2 seats'],['Diwali potluck','Sat 7 PM · clubhouse','40 going']],chat:[['D','var(--coral)','Anyone have a pressure cooker to lend?']]},
+  books:{e:'📚',n:'Wakad Book Club',c:'var(--coral)',members:86,joined:false,cat:'Wavelength · Books',about:'Meets every Wednesday over coffee. On the Booker shortlist now.',m3:[['S','var(--coral)'],['P','var(--bronze)'],['R','var(--teal)']],plans:[['Book club coffee','CCD Wakad · Wed 5:30 PM','9 going']],chat:[['S','var(--coral)','This week: Prophet Song — loved it!']]},
+  shutter:{e:'📷',n:'Pune Shutterbugs',c:'var(--teal)',members:130,joined:false,cat:'Wavelength · Photography',about:'Weekend photo walks around Pune. Film & digital welcome.',m3:[['R','var(--teal)'],['A','#3E5C8A'],['S','var(--coral)']],plans:[['Old city photo walk','Sun 7 AM · Shaniwar Wada','15 going']],chat:[['R','var(--teal)','Golden-hour shots from last week!']]},
+  newcity:{e:'✨',n:'New in Pune',c:'#6C5CE0',members:1200,joined:false,cat:'Community · Newcomers',about:'Just moved to Pune? Find friends, tips & meetups.',m3:[['A','#3E5C8A'],['P','var(--bronze)'],['S','var(--coral)']],plans:[['Newcomers meetup','Fri 7 PM · Koregaon Park','60 going']],chat:[['A','#3E5C8A','Best areas near Hinjawadi?']]}
+};
+let PLANS=[
+  {e:'🚗',t:'Morning carpool',sub:'Wakad → Hinjawadi · Mon 9:30',who:'Rahul +2',cta:'RSVP'},
+  {e:'☕',t:'Book club coffee',sub:'CCD Wakad · Wed 5:30 PM',who:'Wakad Book Club',cta:'RSVP'},
+  {e:'🏃',t:'Sunday trail run',sub:'Hinjawadi hill · 6:30 AM',who:'12 going',cta:'Going'}
+];
+const PLAN_TYPES={carpool:['🚗','Carpool','Wakad → Hinjawadi','Tomorrow · 9:30 AM','Wakad Chowk'],coffee:['☕','Coffee','Coffee catch-up','Today · 5:30 PM','CCD Wakad'],run:['🏃','Activity','Morning run','Sunday · 6:30 AM','Hinjawadi hill'],meal:['🍽️','Meal','Team lunch','Fri · 1:00 PM','Cafe near office'],custom:['📅','Custom','New plan','Pick a time','Pick a place']};
+
+/* ===== helpers (hoisted) ===== */
+function overlap(k,t){return `<span class="why ${k}">${k==='way'?'🛣️':k==='near'?'🏠':'🎸'} ${t}</span>`;}
+function ints(a){return a.map(i=>`<span class="chip out" style="font-size:11px;padding:5px 10px">${i}</span>`).join('');}
+function openTags(a){return a.map(o=>`<span class="chip brand-soft" style="font-size:11px;padding:5px 10px">${o}</span>`).join('');}
+function tierTag(t){return t?`<span class="tier ${t}">${t[0].toUpperCase()+t.slice(1)}</span>`:'';}
+function matchRing(pct,sz,color){sz=sz||44;color=color||'var(--brand)';const r=sz/2-4,c=2*Math.PI*r,off=c*(1-pct/100),cx=sz/2;
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" style="flex:0 0 auto"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--soft)" stroke-width="4"/><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 ${cx} ${cx})"/><text class="ringnum" x="${cx}" y="${cx+0.5}" text-anchor="middle" dominant-baseline="middle" font-size="${sz>40?12:10}">${pct}</text></svg>`;}
+function mapScene(o){o=o||{};const h=o.h||300;const route=o.route||`M52 ${h-34} C 120 ${h-58} 150 ${Math.round(h*0.5)} 250 ${Math.round(h*0.30)} S 305 86 312 60`;const yA=Math.round(h*0.62),yB=Math.round(h*0.28);
+  const pins=(o.pins||[]).map(p=>{if(p.t==='av')return `<div class="av" style="position:absolute;left:${p.x}%;top:${p.y}%;transform:translate(-50%,-50%);width:34px;height:34px;font-size:13px;background:${p.c||'var(--teal)'};border:2.5px solid #fff;border-radius:50% 50% 50% 5px">${p.l}</div>`;
+    if(p.t==='walk')return `<div class="walk" style="left:${p.x}%;top:${p.y}%">${p.l}</div>`;
+    return `<div class="pin ${p.k||''}" style="left:${p.x}%;top:${p.y}%">${p.l}</div>`;}).join('');
+  return `<svg viewBox="0 0 360 ${h}" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%">
+    <path d="M296 -10 H372 V${Math.round(h*0.5)} Q334 ${Math.round(h*0.34)} 296 ${Math.round(h*0.42)} Z" fill="#C6DCE4"/>
+    <rect x="30" y="${h-84}" width="88" height="64" rx="12" fill="#D6E8CF"/>
+    <g stroke="#DDE6DC" stroke-width="14" fill="none" stroke-linecap="round"><path d="M-10 ${yA} H380"/><path d="M118 -10 V${h+10}"/><path d="M256 -10 V${h+10}"/><path d="M-10 ${yB} H380"/></g>
+    <g stroke="#EEF4EF" stroke-width="9" fill="none" stroke-linecap="round"><path d="M-10 ${yA} H380"/><path d="M118 -10 V${h+10}"/><path d="M256 -10 V${h+10}"/></g>
+    <path d="${route}" fill="none" stroke="var(--teal)" stroke-width="5.5" stroke-linecap="round"/>
+    ${o.overlap!==false?`<path d="${route}" fill="none" stroke="var(--lime)" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 12"/>`:''}
+    ${o.car?`<circle cx="${o.car[0]}" cy="${o.car[1]}" r="9.5" fill="var(--coral)" stroke="#fff" stroke-width="3.5"/>`:''}
+  </svg>${pins}`;}
+function pcard(id){const p=PEOPLE[id];return `
+<div class="card" style="cursor:pointer" onclick="openPerson('${id}')">
+  <div class="row" style="gap:11px">${matchRing(p.pct)}
+    <div style="flex:1"><div class="row" style="gap:7px"><b style="font-size:15px">${p.n}</b>${tierTag(p.tier)}${p.pro?proChip():''}${p.w?'<span class="vok" style="color:var(--coral)">♀</span>':''}</div>
+      <div class="desig">${p.role}</div><div style="margin-top:7px">${overlap(p.why.k,p.why.t)}</div></div></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:11px">${openTags(p.open)}</div>
+  <div class="row" style="gap:9px;margin-top:12px">
+    <button class="btn btn-ghost" style="min-height:44px" onclick="event.stopPropagation();toast('Maybe later')"><span style="width:18px;height:18px;display:inline-block">${I_X}</span>Skip</button>
+    <button class="btn btn-brand" style="min-height:44px" onclick="event.stopPropagation();connect('${id}')"><span style="width:18px;height:18px;display:inline-block">${I_CONNECT}</span>Connect</button></div>
+</div>`;}
+
+/* =================== SCREENS =================== */
+
+/* splash */
+reg('splash','light',`
+<div class="body" style="background:linear-gradient(160deg,#7C6CF0,#4A39C4 55%,#2C1A58);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;position:relative;overflow:hidden">
+  <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(203,242,78,.22),transparent 65%);top:16%"></div>
+  <div style="position:relative;z-index:2;text-align:center">
+    <div style="width:96px;height:96px;border-radius:50% 50% 50% 16px;background:var(--coral);transform:rotate(8deg);box-shadow:0 0 0 12px rgba(255,106,77,.16);display:flex;align-items:center;justify-content:center;margin:0 auto;animation:pop .7s cubic-bezier(.25,1.3,.5,1)">
+      <svg width="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 13.4l7.4 4.2M15.7 6.4l-7.4 4.2"/></svg></div>
+    <div style="font-family:var(--d);font-weight:800;font-size:40px;margin-top:22px;letter-spacing:-.02em">Troopool</div>
+    <div class="eyebrow" style="color:var(--lime);margin-top:8px">meet the people on your way</div>
+  </div>
+  <div style="position:absolute;bottom:50px;z-index:2" class="eyebrow">tap to begin</div>
+</div>`);
+
+/* onboarding carousel */
+reg('onboard','dark',`
+<div class="body pt px pb" style="display:flex;flex-direction:column">
+  <div style="height:236px;border-radius:24px;background:linear-gradient(150deg,var(--brand-soft),#DCD7F6);display:flex;align-items:center;justify-content:center;margin-top:8px">
+    <div style="display:flex"><div class="av" style="width:62px;height:62px;font-size:23px;background:var(--teal);border:3px solid #fff;border-radius:50%">R</div><div class="av" style="width:62px;height:62px;font-size:23px;background:var(--coral);border:3px solid #fff;margin-left:-16px;border-radius:50%">S</div><div class="av" style="width:62px;height:62px;font-size:23px;background:#3E5C8A;border:3px solid #fff;margin-left:-16px;border-radius:50%">A</div></div>
+  </div>
+  <div style="margin-top:26px"><span class="chip lime" id="ob-k">Your daily orbit</span>
+    <div class="h1" style="margin-top:14px" id="ob-t">The people you cross paths with — finally connectable.</div>
+    <p class="muted" style="margin-top:10px;font-size:14.5px" id="ob-b">Same route, same neighbourhood, same wavelength. Verified colleagues & neighbours, not strangers.</p></div>
+  <div class="spacer"></div>
+  <div style="display:flex;gap:7px;justify-content:center;margin-bottom:16px" id="ob-d"><i style="width:24px;height:7px;border-radius:5px;background:var(--brand)"></i><i style="width:7px;height:7px;border-radius:50%;background:var(--line-2)"></i><i style="width:7px;height:7px;border-radius:50%;background:var(--line-2)"></i></div>
+</div>
+<div class="cta-dock"><button class="btn btn-brand" id="ob-c" onclick="obNext()">Next</button>
+  <div style="text-align:center;margin-top:10px"><button class="iconbtn" style="width:auto;padding:6px 14px;font-weight:700;color:var(--ink-3);font-size:13px" onclick="go('login')">Skip</button></div></div>`);
+
+/* login + otp */
+reg('welcome','light',`
+<div class="body" style="background:linear-gradient(160deg,#6E5DEC,#4A39C4 55%,#2C1A58);color:#fff;display:flex;flex-direction:column;padding:30px;position:relative;overflow:hidden">
+  <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(203,242,78,.16),transparent 65%);top:4%;right:-26%"></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2">
+    <div style="display:flex;margin-bottom:24px">${[['R','var(--teal)'],['S','var(--coral)'],['A','#3E5C8A'],['P','var(--bronze)']].map((a,i)=>`<div class="av" style="width:54px;height:54px;font-size:20px;background:${a[1]};border:3px solid #4A39C4;${i?'margin-left:-16px':''};border-radius:50%">${a[0]}</div>`).join('')}</div>
+    <div class="h1" style="color:#fff;font-size:33px;line-height:1.08">Meet professionals already in your daily orbit.</div>
+    <p style="opacity:.85;font-size:15px;margin-top:14px;max-width:30ch">Same route. Same office corridor. Same interests. The commute is the reason to meet — the <b style="color:var(--lime)">network is the point</b>.</p>
+  </div>
+  <button class="btn" style="background:var(--lime);color:var(--ink);position:relative;z-index:2" onclick="go('login')">Start</button>
+</div>`);
+reg('login','dark',`
+<div class="body pt px pb" style="display:flex;flex-direction:column">
+  <div style="margin-top:16px"><span class="eyebrow">Welcome</span><div class="h1" style="margin-top:8px">Verify your<br>number</div>
+  <p class="muted" style="margin-top:10px;font-size:14px">Every member is phone + work-email verified. That is why Troopool feels safe.</p></div>
+  <div class="field" style="margin-top:24px;border-color:var(--brand)"><span style="font-family:var(--m);font-weight:700">🇮🇳 +91</span><div style="width:1px;height:22px;background:var(--line-2)"></div><div><div class="lab">Mobile</div><div class="val tnum">98••• ••210</div></div></div>
+  <div class="spacer"></div>
+</div>
+<div class="cta-dock"><button class="btn btn-brand" onclick="go('otp')">Send code</button></div>`);
+reg('otp','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Verify number</span></div>
+<div class="body px pb"><span class="eyebrow">Step 1 / 4</span><div class="h1" style="margin-top:8px">Enter the code</div>
+  <p class="muted" style="margin-top:9px;font-size:14px">Sent to <b style="color:var(--ink)" class="tnum">+91 98••• ••210</b></p>
+  <div style="display:flex;gap:9px;margin-top:24px"><div class="field val tnum" style="flex:1;justify-content:center;margin:0;font-size:22px">4</div><div class="field val tnum" style="flex:1;justify-content:center;margin:0;font-size:22px">8</div><div class="field val tnum" style="flex:1;justify-content:center;margin:0;font-size:22px;border-color:var(--brand)">1</div><div class="field val tnum" style="flex:1;justify-content:center;margin:0;font-size:22px;color:var(--ink-3)">–</div></div>
+  <div class="spacer"></div></div>
+<div class="cta-dock"><button class="btn btn-brand" onclick="go('verify')">Verify & continue</button></div>`);
+
+/* verification + Trust Score (dynamic) */
+reg('verify','dark',`<div class="body"></div>`);
+function verifyHTML(){const row=(k,emoji,title,sub,pts)=>TRUST[k]?`<div class="card row" style="gap:11px"><div style="font-size:20px">${emoji}</div><div style="flex:1"><b style="font-size:13.5px">${title}</b><div class="muted" style="font-size:11.5px">${sub}</div></div><span class="vok">✓ +${pts}</span></div>`:`<div class="card row" style="gap:11px;cursor:pointer" onclick="addTrust('${k}',${pts})"><div style="font-size:20px">${emoji}</div><div style="flex:1"><b style="font-size:13.5px">${title}</b><div class="muted" style="font-size:11.5px">${sub}</div></div><span class="chip">Add +${pts}</span></div>`;
+  return `<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Verification</span></div>
+<div class="body px pb"><span class="eyebrow">Step 2 / 4 · trust</span><div class="h1" style="margin-top:8px">Build your<br>Trust Score</div>
+  <p class="muted" style="margin-top:9px;font-size:14px">Phone & work email are required. Add more to raise your <b style="color:var(--ink)">Trust Score</b> — higher trust means more & better matches.</p>
+  <div class="card" style="margin-top:16px;text-align:center"><div style="font-family:var(--d);font-weight:800;font-size:42px;color:var(--brand)" id="tsNum">${TRUST.score}</div><div class="lab">/ 100 Trust Score</div><div class="bar" style="height:8px;margin-top:10px"><span id="tsBar" style="width:${TRUST.score}%;background:var(--brand)"></span></div></div>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
+    <div class="card row" style="gap:11px;background:var(--teal-soft);border-color:#CFE9E2"><div style="font-size:20px">✅</div><div style="flex:1"><b style="font-size:13.5px">Phone + work email</b><div class="muted" style="font-size:11.5px">t.pankhaniya@infosys.com · required</div></div><span class="vok">✓ Done</span></div>
+    ${row('digilocker','🪪','DigiLocker Gov-ID','Aadhaar / licence via DigiLocker',18)}
+    ${row('selfie','🤳','Selfie + face match','liveness check',14)}
+  </div>
+</div>
+<div class="cta-dock"><button class="btn btn-brand" onclick="finishVerify()">Continue</button></div>`;}
+function addTrust(k,pts){if(TRUST[k])return;TRUST[k]=true;TRUST.score=Math.min(100,TRUST.score+pts);if(elements.verify)elements.verify.innerHTML=verifyHTML();toast('Trust Score → '+TRUST.score);}
+function finishVerify(){VERIFIED=true;go('orbit');}
+
+/* role choice (fixes onboarding P2) */
+reg('role','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">How will you ride?</span></div>
+<div class="body px pb"><span class="eyebrow">Step 3 / 4</span><div class="h2" style="margin-top:6px">Pick your starting mode</div>
+  <p class="muted" style="font-size:13px;margin-top:5px">You can switch anytime — riders need nothing extra, hosts verify a licence once.</p>
+  <div class="card" style="margin-top:16px;cursor:pointer;border-color:var(--brand)" onclick="pickRole('rider')">
+    <div class="row" style="gap:12px"><div class="av" style="background:var(--brand);border-radius:14px">${I_RIDER}</div><div style="flex:1"><b style="font-size:15px">I will ride</b><div class="muted" style="font-size:12.5px">Find a seat & meet people. Just phone + work email.</div></div><span class="chip brand-soft">Fast</span></div>
+  </div>
+  <div class="card" style="margin-top:12px;cursor:pointer" onclick="pickRole('host')">
+    <div class="row" style="gap:12px"><div class="av" style="background:var(--teal);border-radius:14px">${I_CAR}</div><div style="flex:1"><b style="font-size:15px">I will host rides</b><div class="muted" style="font-size:12.5px">Offer seats in your car/bike. Verify licence + RC once.</div></div><span class="chip out">+ KYC</span></div>
+  </div>
+</div>`);
+
+/* orbit + interests + open-to */
+reg('orbit','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Your orbit</span></div>
+<div class="body px pb"><span class="eyebrow">Step 4 / 4 · where is your day?</span><div class="h2" style="margin-top:6px">Home & office</div>
+  <div class="field" style="margin-top:14px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><div><div class="lab">Home</div><div class="val">Wakad · Society 7, Pune</div></div></div>
+  <div class="field"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6"/></svg><div><div class="lab">Office</div><div class="val">Infosys, Hinjawadi Ph 2</div></div></div>
+  <div class="row" style="gap:10px"><div class="field" style="flex:1;margin:0"><div><div class="lab">Go in</div><div class="val tnum">9:30 AM</div></div></div><div class="field" style="flex:1;margin:0"><div><div class="lab">Back</div><div class="val tnum">6:45 PM</div></div></div></div>
+</div>
+<div class="cta-dock"><button class="btn btn-brand" onclick="go('interests')">Next: your vibe</button></div>`);
+reg('interests','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Your vibe</span></div>
+<div class="body px pb"><div class="h2">What are you into?</div><p class="muted" style="font-size:13px;margin-top:5px">Pick a few — we match on wavelength too.</p>
+  <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:16px" data-multi>
+    ${['🏃 Running','📚 Books','📷 Photography','🎬 Films','⚽ Football','🎮 Gaming','☕ Coffee','✈️ Travel','🍳 Cooking','🧘 Yoga','🎸 Music','💻 Coding','🏸 Badminton','🐕 Pets'].map((x,i)=>`<span class="chip ${i<3?'on':'out'}" style="font-size:13px;padding:9px 14px" onclick="this.classList.toggle('on');this.classList.toggle('out')">${x}</span>`).join('')}
+  </div></div>
+<div class="cta-dock"><button class="btn btn-brand" onclick="finishV4()">Enter Troopool</button></div>`);
+reg('openfor','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Open to</span></div>
+<div class="body px pb"><div class="h2">How do you want<br>to connect?</div><p class="muted" style="font-size:13px;margin-top:5px">You are in control. Change anytime.</p>
+  <div style="display:flex;flex-direction:column;gap:11px;margin-top:16px">
+    ${[['🚗','Carpool & bikepool','share the ride, split the cost'],['🚶','Walk / metro buddy','commute together'],['☕','Coffee & lunch','meet near work'],['🎯','Hobby buddy','run, play, shoot, read'],['🤝','Just friendship','grow your circle'],['🏠','Neighbour help','sNeighbour — give & get a hand']].map((x,i)=>`
+    <div class="card row" style="cursor:pointer;${i<3?'border-color:var(--brand)':''}" onclick="this.classList.toggle('sel');this.style.borderColor=this.classList.contains('sel')?'var(--brand)':'var(--line)'"><div style="font-size:22px">${x[0]}</div><div style="flex:1"><b style="font-size:14px">${x[1]}</b><div class="muted" style="font-size:12px">${x[2]}</div></div><div style="width:22px;height:22px;border-radius:50%;border:2px solid ${i<3?'var(--brand)':'var(--line-2)'};display:flex;align-items:center;justify-content:center;color:var(--brand)">${i<3?'✓':''}</div></div>`).join('')}
+  </div></div>
+<div class="cta-dock"><button class="btn btn-ink" onclick="finishOnboard()">Enter Troopool</button></div>`);
+
+/* host KYC + vehicle */
+reg('kyc','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Become a host</span></div>
+<div class="body px pb"><span class="eyebrow">Host verification</span><div class="h1" style="margin-top:8px">Verify your<br>licence to drive</div>
+  <p class="muted" style="margin-top:10px;font-size:14px">Riders skip this. To host, verify your licence & RC via DigiLocker — instant, no manual review.</p>
+  <div style="display:flex;flex-direction:column;gap:11px;margin-top:14px">
+    <div class="card row" onclick="kycDone(this)" style="cursor:pointer"><div class="av" style="background:var(--coral)">DL</div><div style="flex:1"><b style="font-size:13.5px">Driving licence</b><div class="muted" style="font-size:11.5px">Sarathi · required to drive</div></div><span class="chip coral">Fetch</span></div>
+    <div class="card row" onclick="kycDone(this)" style="cursor:pointer"><div class="av" style="background:var(--teal)"><svg width="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9"><path d="M7 17l-2-2 5-5a3 3 0 0 1 4 0l1 1"/><rect x="3" y="13" width="9" height="8" rx="1.5" transform="rotate(-45 7.5 17)"/></svg></div><div style="flex:1"><b style="font-size:13.5px">Vehicle RC</b><div class="muted" style="font-size:11.5px">VAHAN · confirms your car/bike</div></div><span class="chip coral">Fetch</span></div>
+    <div class="card row" onclick="kycDone(this)" style="cursor:pointer"><div class="av" style="background:var(--brand)"><svg width="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9"><circle cx="12" cy="9" r="3.4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg></div><div style="flex:1"><b style="font-size:13.5px">Selfie + face match</b><div class="muted" style="font-size:11.5px">Liveness · matched to licence photo</div></div><span class="chip out">Scan</span></div>
+  </div></div>
+<div class="cta-dock"><button class="btn btn-ink" onclick="go('vehicle')">Continue · add vehicle</button></div>`);
+reg('vehicle','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Your vehicle</span></div>
+<div class="body px pb"><span class="eyebrow">Host setup · last step</span><div class="h2" style="margin-top:6px">Add your vehicle</div>
+  <div class="seg" style="margin-top:16px"><button class="on">Car</button><button>Bike</button></div>
+  <div class="field" style="margin-top:14px"><div><div class="lab">Model & colour</div><div class="val">Hyundai i20 · White</div></div></div>
+  <div class="field"><div><div class="lab">Number plate</div><div class="val tnum">MH 12 RT 4408</div></div></div>
+  <div class="card row" style="background:var(--teal-soft);border-color:#CFE9E2;gap:11px"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg><div style="font-size:12px"><b>RC verified via VAHAN</b><br><span class="muted">You can offer up to 3 seats.</span></div></div>
+</div>
+<div class="cta-dock"><button class="btn btn-ink" onclick="becomeHost()">Become a verified host</button></div>`);
+
+/* person + match + chat are dynamic (filled by fillDynamic) */
+reg('person','dark',`<div class="body"></div>`);
+reg('match','light',`<div class="body"></div>`);
+reg('chat','dark',`<div class="body"></div>`);
+function personHTML(id){const p=PEOPLE[id];return `
+<div class="body pb"><div style="height:230px;background:linear-gradient(150deg,${p.c},#221a3a);position:relative">
+  <div class="navbar" style="margin-top:54px;position:absolute;top:0;left:0;z-index:5"><button class="iconbtn" style="background:rgba(255,255,255,.18);color:#fff" onclick="back()">${I_BACK}</button></div>
+  <div style="position:absolute;bottom:18px;left:20px;color:#fff"><div class="h1" style="color:#fff">${p.n}${p.w?' ♀':''}</div><div style="opacity:.85;font-size:13.5px">${p.role}</div></div></div>
+  <div class="px" style="margin-top:16px">
+    <div style="margin-bottom:14px">${overlap(p.why.k,p.why.t)} <span class="vok" style="margin-left:6px">✓ Verified</span> ${tierTag(p.tier)} ${p.pro?proChip():''}</div>
+    <p style="font-size:14px;line-height:1.6">${p.bio}</p>
+    <div class="lab" style="margin:18px 0 9px">Into</div><div style="display:flex;gap:7px;flex-wrap:wrap">${ints(p.int)}</div>
+    <div class="lab" style="margin:18px 0 9px">Open to</div><div style="display:flex;gap:7px;flex-wrap:wrap">${openTags(p.open)}</div>
+  </div></div>
+<div class="cta-dock">
+  ${p.route?`<button class="btn btn-teal" style="margin-bottom:10px" onclick="requestJoinCarpool('${id}')">${I_CAR} Request to join carpool · same route</button>`:''}
+  <div class="row" style="gap:10px"><button class="btn btn-ghost" onclick="back()"><span style="width:18px;height:18px;display:inline-block">${I_X}</span>Skip</button><button class="btn btn-brand" onclick="connect('${id}')"><span style="width:18px;height:18px;display:inline-block">${I_CONNECT}</span>Connect</button></div>
+</div>`;}
+function matchHTML(id){const p=PEOPLE[id];return `
+<div class="body" style="background:linear-gradient(165deg,var(--brand),#3A2E9E);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px">
+  <div style="font-family:var(--d);font-weight:800;font-size:32px;animation:pop .5s cubic-bezier(.3,1.4,.5,1)">It's a match! 🎉</div>
+  <p style="opacity:.9;font-size:14px;margin-top:8px">You and ${p.n.split(' ')[0]} both liked each other.</p>
+  <div class="row" style="gap:0;margin-top:26px"><div class="av" style="width:84px;height:84px;font-size:30px;border-radius:50%;background:var(--teal);border:3px solid #fff">T</div><div class="av" style="width:84px;height:84px;font-size:30px;border-radius:50%;background:${p.c};border:3px solid #fff;margin-left:-18px">${p.a}</div></div>
+  <div style="margin-top:18px">${overlap(p.why.k,p.why.t)}</div></div>
+<div class="cta-dock" style="background:#3A2E9E">
+  ${p.route?`<button class="btn" style="background:var(--lime);color:var(--ink)" onclick="requestJoinCarpool('${id}')">${I_CAR} Request to join carpool</button>`:''}
+  <button class="btn" style="background:#fff;color:var(--brand);${p.route?'margin-top:10px':''}" onclick="openChat('${id}')">Send a message</button>
+  <button class="btn" style="background:rgba(255,255,255,.16);color:#fff;margin-top:10px" onclick="switchTab('network')">Keep swiping</button></div>`;}
+function chatHTML(){const id=CTX.chatWith;const cp=CARPOOLS[id];const who=id&&PEOPLE[id]?PEOPLE[id]:PEOPLE.rahul;const onroute=who.route;return `
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button>
+  <div class="row" style="gap:10px"><div class="av" style="width:36px;height:36px;font-size:14px;background:${who.c};border-radius:50%">${who.a}</div><div><b style="font-size:14px">${who.n.split(' ')[0]} ${who.n.split(' ')[1]||''}</b><div class="lab" style="color:var(--teal)">● ${cp?(cp.status==='confirmed'?'carpool confirmed':'carpool pending'):(onroute?'on your route':'connected')}</div></div></div>
+  <div class="spacer"></div><button class="iconbtn" style="color:var(--teal-d)" onclick="requestCall('${id}')"><span style="width:20px;height:20px;display:block">${I_PHONE}</span></button><span class="chip out" style="margin-right:6px;font-size:10px">🔒</span></div>
+<div class="body px" style="display:flex;flex-direction:column;gap:9px;padding-top:8px">
+  ${cp?carpoolCard(cp,id):''}
+  <div style="align-self:center;background:var(--soft);color:var(--ink-2);font-size:10.5px;font-weight:600;padding:6px 13px;border-radius:999px;text-align:center">You connected · numbers stay hidden</div>
+  <div style="align-self:flex-start;max-width:80%"><div style="background:#fff;border:1px solid var(--line);padding:11px 14px;border-radius:16px 16px 16px 5px;font-size:13.5px">${onroute?'Hi! Saw we are on the same corridor 🙂':'Hi! Saw we overlap — coffee this week?'}</div></div>
+  <div id="chatLog" style="display:flex;flex-direction:column;gap:9px"></div>
+  <div style="align-self:flex-start;width:100%;margin-top:4px"><div class="lab" style="margin-bottom:8px">Turn it into a plan</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      ${cp?'':`<span class="chip" onclick="requestJoinCarpool('${id}')">${I_CAR} ${onroute?'Request to join carpool':'Ask to carpool'}</span>`}
+      <span class="chip out" onclick="sendChat('Coffee at 5? ☕')">☕ Coffee</span>
+      <span class="chip out" onclick="sendChat('Walk to the metro?')">🚶 Walk</span>
+      <span class="chip out" onclick="newPlan()">📅 Make a plan</span>
+    </div></div>
+</div>
+<div class="cta-dock"><div class="field" style="margin:0"><div class="val muted" style="font-weight:400">Message…</div></div></div>`;}
+/* production carpool card — scoped to ONE conversation; request-to-join → host accepts → confirmed co-passenger */
+function carpoolCard(cp,id){const taken=cp.members.length,avs=cp.members.map((m,i)=>`<div class="av" style="width:26px;height:26px;font-size:10px;background:${m.c};border:2px solid #fff;border-radius:50%;${i?'margin-left:-8px':''}">${m.a}</div>`).join('');
+  const pending=cp.status==='pending';return `
+<div class="card" style="border-color:${pending?'var(--coral)':'var(--teal)'};width:100%">
+  <div class="between"><div class="row" style="gap:8px"><span style="font-size:17px">🚗</span><b style="font-size:13.5px">${cp.host} is hosting</b></div><span class="chip ${pending?'coral':'lime'}" style="cursor:default">${pending?'Request pending':'You are in'}</span></div>
+  <div class="hr" style="margin:10px 0"></div>
+  <div class="between"><span class="muted" style="font-size:12.5px">Route</span><b style="font-size:12.5px">Wakad → Hinjawadi</b></div>
+  <div class="between" style="margin-top:7px"><span class="muted" style="font-size:12.5px">When</span><b class="tnum" style="font-size:12.5px">Tomorrow · 9:30 AM</b></div>
+  <div class="between" style="margin-top:7px"><span class="muted" style="font-size:12.5px">Pickup</span><b style="font-size:12.5px">Wakad Chowk</b></div>
+  <div class="between" style="margin-top:7px"><span class="muted" style="font-size:12.5px">Co-passengers</span><div class="row" style="gap:0">${avs}<span class="lab" style="margin-left:8px">${taken}/${cp.seats} · ${cp.seatsLeft} left</span></div></div>
+  <div class="between" style="margin-top:7px"><span class="muted" style="font-size:12.5px">Your share · auto-pay</span><b class="tnum" style="font-size:12.5px;color:var(--coral)">₹${cp.fare}</b></div>
+  <div class="hr" style="margin:10px 0"></div>
+  ${pending?`<div class="row" style="gap:8px;align-items:flex-start;margin-bottom:11px"><svg width="15" style="margin-top:1px;flex:0 0 auto" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5l3 1.8"/></svg><span class="muted" style="font-size:11.5px">Seat request sent — waiting for ${cp.host} to accept you as a co-passenger.</span></div>
+    <div class="row" style="gap:10px"><button class="btn btn-ghost" style="min-height:46px" onclick="cancelJoinRequest()">Cancel request</button><button class="btn btn-coral" style="min-height:46px" onclick="simulateHostAccept()">▶ ${cp.host} accepts (demo)</button></div>`
+   :`<div class="row" style="gap:10px"><button class="btn btn-ghost" style="min-height:46px" onclick="go('routemap')">${I_ROUTE} Route</button><button class="btn btn-teal" style="min-height:46px" onclick="go('active')">Track ride</button></div>`}
+</div>`;}
+
+/* ===== TROOPOOL PRO (freemium) ===== */
+function proChip(){return '';}
+reg('wholiked','dark',`<div class="body"></div>`);
+function whoLikedHTML(){const ppl=[['R','var(--teal)','Rahul M.','same route · 88%'],['P','var(--coral)','Priya S.','works nearby'],['A','#3E5C8A','Aman V.','same route · TCS'],['S','var(--coral)','Sneha K.','AI circle'],['K','var(--teal)','Karan S.','same corridor']];return `
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Liked you</span></div>
+<div class="body px pb"><div class="card" style="background:linear-gradient(150deg,#2d2856,#1b1830);border:none;color:#fff"><div class="between"><div><span class="eyebrow" style="color:var(--lime)">This week</span><div class="h2" style="color:#fff;margin-top:3px">${ppl.length} people liked you</div></div><div style="font-size:26px">❤</div></div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:13px">
+    ${ppl.map(p=>`<div class="card" style="text-align:center;cursor:pointer" onclick="openPerson('rahul')"><div class="av" style="width:54px;height:54px;border-radius:50%;background:${p[1]};margin:0 auto;font-size:20px">${p[0]}</div><b style="font-size:13px;display:block;margin-top:8px">${p[2]}</b><span class="lab">${p[3]}</span></div>`).join('')}
+  </div>
+</div>`;}
+
+/* ===== CARPOOL (Commute) ===== */
+reg('find','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Find a ride</span></div>
+<div class="body px pb">
+  <div class="card" style="padding:6px 15px;margin-top:4px">
+    <div class="row" style="padding:12px 0;border-bottom:1px solid var(--line)"><span style="width:10px;height:10px;border-radius:50%;background:var(--coral)"></span><div><div class="lab">From</div><div class="val" style="font-size:14px">Wakad, Pune</div></div></div>
+    <div class="row" style="padding:12px 0"><span style="width:10px;height:10px;border-radius:2px;background:var(--teal)"></span><div><div class="lab">To</div><div class="val" style="font-size:14px">Hinjawadi Ph 2</div></div></div></div>
+  <div class="row" style="gap:10px;margin-top:11px"><div class="field" style="flex:1;margin:0"><div><div class="lab">Date</div><div class="val">Today</div></div></div><div class="field" style="flex:1;margin:0"><div><div class="lab">Leave by</div><div class="val tnum">9:30 AM</div></div></div></div>
+  <div class="lab" style="margin:14px 0 8px">Preferences</div>
+  <div style="display:flex;gap:7px;flex-wrap:wrap"><span class="chip lime" onclick="this.classList.toggle('lime');this.classList.toggle('out')">♀ Women only</span><span class="chip out">🚗 Car</span><span class="chip out">≤ 5 min detour</span></div>
+</div>
+<div class="cta-dock"><button class="btn btn-coral" onclick="go('matches')">Search corridor</button></div>`);
+reg('matches','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">7 matches</span><div class="spacer"></div><span class="chip lime" style="margin-right:8px">⚡ 38s</span></div>
+<div class="body px pb">
+  <div class="card row" style="background:var(--teal);border:none;color:#fff;gap:10px"><div style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-family:var(--d);font-weight:800;font-size:13px">In</div><div style="flex:1;font-size:12px"><b>Infosys · Hinjawadi corridor</b><br><span style="opacity:.85">812 verified colleagues pool here</span></div></div>
+  <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:11px"><span class="chip on">All verified</span><span class="chip out">♀ Women</span><span class="chip out">Same company</span></div>
+  ${['rahul','sneha','aman'].map(id=>{const p=PEOPLE[id];return `
+  <div class="card" style="margin-top:12px;cursor:pointer${id==='rahul'?';border-color:var(--coral)':''}" onclick="openDetail('${id}')">
+    <div class="row" style="gap:11px">${matchRing(p.pct,44,id==='rahul'?'var(--teal)':id==='sneha'?'var(--coral)':'#8A938C')}
+      <div style="flex:1"><div class="row" style="gap:8px"><b style="font-size:15px">${p.n}</b>${tierTag(p.tier)}${p.w?'<span class="vok" style="color:var(--coral)">♀</span>':''}</div><div class="desig">${p.role}</div></div>
+      <div style="text-align:right"><div class="h2 tnum" style="color:var(--coral)">₹${id==='rahul'?58:id==='sneha'?64:61}</div><div class="lab">${id==='aman'?'full':'1 seat'}</div></div></div>
+    <div class="mlegend" style="margin-top:10px"><span><i style="background:var(--teal)"></i>${p.why.t}</span></div></div>`;}).join('')}
+  <div class="card between" style="margin-top:12px;background:transparent;border-style:dashed" onclick="toast('Added to the Wakad–Hinjawadi waitlist')"><div class="row" style="gap:10px"><span style="color:var(--teal)">${I_REPEAT}</span><div><b style="font-size:12.5px">No perfect match?</b><div class="lab">Join the corridor waitlist</div></div></div><span class="chip">Join</span></div>
+</div>`);
+reg('detail','dark',`<div class="body"></div>`);
+function openDetail(id){CTX.person=id;go('detail');}
+function detailHTML(){const p=PEOPLE[CTX.person]||PEOPLE.rahul;return `
+<div class="map" style="height:230px;position:relative" onclick="go('routemap')">
+  <div class="navbar" style="margin-top:54px;position:absolute;top:-54px;left:0;z-index:5"><button class="iconbtn" style="background:#fff;box-shadow:0 6px 16px -8px rgba(0,0,0,.4)" onclick="event.stopPropagation();back()">${I_BACK}</button></div>
+  ${mapScene({h:230,pins:[{t:'label',k:'c',x:15,y:84,l:'YOU'},{t:'av',x:40,y:62,l:p.a,c:p.c},{t:'label',k:'w',x:84,y:24,l:'WORK'}]})}
+  <div class="carmark" style="left:50%;bottom:12px;top:auto">Tap to view route ↗</div></div>
+<div class="body px pb" style="background:var(--bg);border-radius:24px 24px 0 0;margin-top:-22px;position:relative;z-index:4">
+  <div class="row" style="margin-top:18px"><div class="av" style="background:${p.c};width:52px;height:52px">${p.a}</div>
+    <div style="flex:1"><div class="row" style="gap:8px"><b style="font-size:17px">${p.n}</b>${tierTag(p.tier)}</div><div class="desig">${p.role}</div><div class="stars" style="margin-top:2px">★★★★★ <span class="muted" style="font-family:var(--b);font-size:12.5px">4.9 · 240 rides</span></div></div></div>
+  <div class="card" style="margin-top:14px">
+    <div class="between"><b style="font-size:14px">Why you matched</b>${matchRing(p.pct,40)}</div>
+    <div class="hr"></div>
+    <div class="between"><span style="font-size:12.5px" class="muted">Route overlap</span><b style="font-size:12.5px;color:var(--teal)">${p.why.t}</b></div>
+    <div class="between" style="margin-top:7px"><span style="font-size:12.5px" class="muted">Same organisation</span><b style="font-size:12.5px;color:var(--teal)">Infosys ✓</b></div>
+    <div class="between" style="margin-top:7px"><span style="font-size:12.5px" class="muted">Designation</span><b style="font-size:12.5px">${p.role.split(' · ')[0]}</b></div></div>
+  <div class="card" style="margin-top:12px">
+    <div class="between"><span class="muted" style="font-size:13px">Fuel + tolls ÷ 4</span><b class="tnum">₹232 ÷ 4</b></div>
+    <div class="between" style="margin-top:7px"><span class="muted" style="font-size:13px">Platform fee 6%</span><b class="tnum">₹3.5</b></div>
+    <div class="hr"></div><div class="between"><b>Your share</b><span class="h2 tnum" style="color:var(--coral)">₹58</span></div></div>
+  <button class="btn btn-ghost" style="margin-top:12px" onclick="go('routemap')">${I_ROUTE} View full route</button>
+</div>
+<div class="cta-dock"><button class="btn btn-coral" onclick="requestSeat()">Request this seat</button></div>`;}
+function requestSeat(){if(BOOKING&&BOOKING.slot===SLOT){openConflict('You already have a '+BOOKING.slot+' ride. Cancel it to book another.',()=>{BOOKING=null;_bookSeat();});return;}_bookSeat();}
+function _bookSeat(){BOOKING={type:'carpool',who:(PEOPLE[CTX.person]||PEOPLE.rahul).n.split(' ')[0],slot:SLOT,status:'confirmed'};toast('Request sent…');setTimeout(()=>go('confirmed'),900);}
+reg('routemap','light',`
+<div class="map" style="position:absolute;inset:0;height:100%">${mapScene({h:640,pins:[{t:'label',k:'c',x:16,y:82,l:'🏠 YOU'},{t:'walk',x:31,y:63,l:'Pickup · 3 min walk'},{t:'av',x:50,y:55,l:'R',c:'var(--teal)'},{t:'label',k:'w',x:84,y:22,l:'🏢 WORK'}]})}
+  <div class="navbar" style="margin-top:54px;position:absolute;top:0;left:0;z-index:5;width:100%"><button class="iconbtn" style="background:#fff;box-shadow:0 6px 16px -8px rgba(0,0,0,.4)" onclick="back()">${I_BACK}</button></div></div>
+<div class="cta-dock" style="background:transparent"><div class="card" style="box-shadow:0 18px 40px -22px rgba(0,0,0,.5)"><div class="between"><div class="row" style="gap:10px">${matchRing(92,42)}<div><b style="font-size:14px">88% route match</b><div class="lab">Wakad Chowk → Hinjawadi</div></div></div><div class="h2 tnum" style="color:var(--coral)">₹58</div></div><button class="btn btn-coral" style="margin-top:14px" onclick="requestSeat()">Request this seat</button></div></div>`);
+reg('confirmed','light',`
+<div class="body" style="background:var(--teal);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px">
+  <div style="width:84px;height:84px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;animation:pop .5s cubic-bezier(.3,1.4,.5,1)"><svg width="42" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4 10-10"/></svg></div>
+  <div class="h1" style="color:#fff;margin-top:22px">Seat confirmed!</div><p style="opacity:.85;font-size:14px;margin-top:9px;max-width:26ch">Pickup at Wakad Chowk, 9:35 AM tomorrow.</p>
+  <div class="card" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff;width:100%;margin-top:24px"><div class="between"><span style="opacity:.8;font-size:12.5px">Your share</span><b class="tnum">₹58 · auto-pay</b></div></div></div>
+<div class="cta-dock" style="background:var(--teal)"><button class="btn" style="background:var(--lime);color:var(--teal)" onclick="go('active')">Track today's ride</button><button class="btn" style="background:rgba(255,255,255,.16);color:#fff;margin-top:10px" onclick="switchTab('commute')">Done</button></div>`);
+reg('active','light',`
+<div class="map" style="height:430px;position:relative">
+  <div class="navbar" style="margin-top:54px;position:absolute;top:-54px;left:0;z-index:5"><button class="iconbtn" style="background:#fff;box-shadow:0 6px 16px -8px rgba(0,0,0,.4)" onclick="switchTab('commute')">${I_X}</button></div>
+  ${mapScene({h:430,car:[150,252],pins:[{t:'label',k:'c',x:17,y:84,l:'YOU'},{t:'label',k:'w',x:81,y:24,l:'WORK'}]})}
+  <div class="carmark" style="left:46%;top:56%">🚗 Rahul · ETA 9:35</div></div>
+<div class="body px pb" style="background:var(--bg);border-radius:24px 24px 0 0;margin-top:-22px;position:relative;z-index:4">
+  <div class="between" style="margin-top:18px"><div class="row"><div class="av" style="background:var(--teal)">R</div><div><b style="font-size:14.5px">Rahul is 4 min away</b><div class="lab tnum">MH 12 RT 4408 · White i20</div></div></div>
+    <button class="iconbtn pulse" style="width:54px;height:54px;background:var(--coral);color:#fff;font-family:var(--d);font-weight:800;font-size:13px" onclick="openSOS()">SOS</button></div>
+  <div class="card" style="margin-top:14px"><div class="between" style="margin-bottom:10px"><span class="lab">Co-passengers in this ride</span><span class="lab" style="color:var(--brand);cursor:pointer" onclick="go('poolchat')">${I_CHAT} Ride chat →</span></div>
+    <div class="row" style="gap:8px;flex-wrap:wrap">${[['priya'],['aman']].map(([pid])=>{const p=PEOPLE[pid];return `<div class="row" style="gap:7px;background:var(--soft);padding:5px 12px 5px 5px;border-radius:999px;cursor:pointer" onclick="openPerson('${pid}')"><div class="av" style="width:28px;height:28px;font-size:11px;border-radius:50%;background:${p.c}">${p.a}</div><b style="font-size:12.5px">${p.n.split(' ')[0]}</b></div>`;}).join('')}</div></div>
+  <div class="row" style="gap:11px;margin-top:12px"><button class="btn btn-ghost" onclick="go('poolchat')">${I_CHAT} Pool chat</button><button class="btn btn-ink" onclick="toast('Live trip shared with your 3 contacts')">📍 Share trip</button></div>
+  <button class="btn btn-teal" style="margin-top:11px" onclick="go('cost')">Complete ride (demo)</button>
+</div>`);
+reg('cost','dark',`
+<div class="body pt px pb"><span class="chip lime" style="margin-top:8px">✓ Ride completed</span><div class="h1" style="margin-top:14px">Wakad → Hinjawadi</div><p class="muted" style="font-size:13px;margin-top:5px">14.2 km · 31 min · with Rahul +2</p>
+  <div class="card" style="margin-top:16px"><div class="between"><span class="muted" style="font-size:13px">Distance + fuel + tolls</span><b class="tnum">₹232</b></div><div class="between" style="margin-top:8px"><span class="muted" style="font-size:13px">Split 4 ways · fee 6%</span><b class="tnum">₹61</b></div><div class="hr"></div><div class="between"><b>Auto-paid · UPI</b><span class="h2 tnum" style="color:var(--coral)">₹61</span></div></div>
+  <div class="card row" style="margin-top:12px;background:var(--teal-soft);border-color:#CFE9E2;gap:11px"><span style="font-size:18px">🌱</span><div style="font-size:12px"><b>2.6 kg CO₂ saved</b> on this trip<br><span class="muted">vs driving solo</span></div></div>
+  <div style="text-align:center;margin-top:14px"><span class="vok" style="color:var(--ink-3);cursor:pointer" onclick="toast('Report sent — reviewed within 24h')">⚑ Report an issue</span></div></div>
+<div class="cta-dock"><button class="btn btn-coral" onclick="go('rating')">Rate Rahul</button></div>`);
+reg('rating','dark',`
+<div class="body pt px pb" style="text-align:center"><div class="av" style="background:var(--teal);width:66px;height:66px;margin:18px auto 0;border-radius:50%;font-size:24px">R</div>
+  <div class="h1" style="margin-top:14px">How was the ride<br>with Rahul?</div>
+  <div id="rateStars" style="font-size:36px;letter-spacing:8px;color:var(--line-2);margin-top:18px;cursor:pointer">${[1,2,3,4,5].map(n=>`<span onclick="rate(${n})">★</span>`).join('')}</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:20px"><span class="chip lime">On time</span><span class="chip out">Safe driving</span><span class="chip out">Friendly</span></div>
+  <p class="muted" style="font-size:11.5px;margin-top:14px">Two-way & compulsory — Rahul rates you too.</p></div>
+<div class="cta-dock"><button class="btn btn-coral" onclick="toast('Thanks! Rating submitted');setTimeout(()=>switchTab('commute'),700)">Submit rating</button></div>`);
+function rate(n){const s=document.querySelectorAll('#rateStars span');s.forEach((x,i)=>x.style.color=i<n?'var(--gold)':'var(--line-2)');}
+reg('offer','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Host a ride</span></div>
+<div class="body px pb"><div class="card" style="padding:6px 15px;margin-top:4px"><div class="row" style="padding:11px 0;border-bottom:1px solid var(--line)"><span style="width:10px;height:10px;border-radius:50%;background:var(--coral)"></span><div><div class="lab">From</div><div class="val" style="font-size:14px">Wakad → office</div></div></div><div class="row" style="padding:11px 0"><span style="width:10px;height:10px;border-radius:2px;background:var(--teal)"></span><div><div class="lab">To</div><div class="val" style="font-size:14px">Hinjawadi Ph 2</div></div></div></div>
+  <div class="lab" style="margin:16px 0 9px">Seats open</div><div class="seg"><button onclick="segPick(this)">1</button><button class="on" onclick="segPick(this)">2</button><button onclick="segPick(this)">3</button></div>
+  <div class="lab" style="margin:16px 0 9px">Recurring days</div><div style="display:flex;gap:6px">${['M','T','W','T','F','S','S'].map((d,i)=>`<span class="day ${i<5?'on':''}">${d}</span>`).join('')}</div>
+  <div class="card row" style="margin-top:16px;background:var(--teal-soft);border-color:#CFE9E2;gap:11px"><span style="font-size:18px">💸</span><div style="font-size:12px"><b>You recover ~₹174/day</b><br><span class="muted">Fuel + tolls, split with 2 riders</span></div></div></div>
+<div class="cta-dock"><button class="btn btn-coral" onclick="toast('Ride posted — finding riders');setTimeout(()=>go('requests'),800)">Post ride · instant match</button></div>`);
+function segPick(b){b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');}
+reg('requests','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Ride requests</span></div>
+<div class="body px pb"><p class="muted" style="font-size:12.5px">Tomorrow · 9:30 AM · 2 seats left</p>
+  <div class="card" style="margin-top:12px" id="req-p"><div class="row" style="gap:11px;cursor:pointer" onclick="openPerson('priya')">${matchRing(88)}<div style="flex:1"><div class="row" style="gap:8px"><b style="font-size:14.5px">Priya Sharma</b><span class="tier gold">Gold</span></div><div class="desig">Product Manager · Infosys</div></div></div><div class="row" style="gap:10px;margin-top:12px"><button class="btn btn-ghost" style="min-height:44px" onclick="declineReq('req-p')">Decline</button><button class="btn btn-coral" style="min-height:44px" onclick="acceptReq('req-p','priya')">Accept · ₹58</button></div></div>
+  <div class="card" style="margin-top:11px" id="req-a"><div class="row" style="gap:11px;cursor:pointer" onclick="openPerson('aman')">${matchRing(74,44,'#3E5C8A')}<div style="flex:1"><div class="row" style="gap:8px"><b style="font-size:14.5px">Aman Verma</b><span class="tier bronze">Bronze</span></div><div class="desig">Data Analyst · TCS</div></div></div><div class="row" style="gap:10px;margin-top:12px"><button class="btn btn-ghost" style="min-height:44px" onclick="declineReq('req-a')">Decline</button><button class="btn btn-ink" style="min-height:44px" onclick="acceptReq('req-a','aman')">Accept · ₹61</button></div></div></div>
+<div class="cta-dock"><button class="btn btn-teal" onclick="go('poolchat')">${I_CHAT} Open ride group chat</button></div>`);
+function acceptReq(id,pid){const c=document.getElementById(id);c.querySelector('.row:last-child').innerHTML=`<div class="chip lime" style="cursor:default;flex:1;justify-content:center">✓ Accepted · share updated</div><button class="btn btn-ghost" style="min-height:42px;flex:0 0 auto;padding:0 16px" onclick="openChat('${pid}')"><span style="width:18px;height:18px;display:inline-block">${I_CHAT}</span> Chat</button>`;toast('Rider accepted — say hi in the ride chat');}
+function declineReq(id){const c=document.getElementById(id);c.style.opacity='.4';c.querySelector('.row:last-child').innerHTML='<div class="muted" style="font-size:12px">Declined</div>';}
+/* ride group chat — driver + all co-passengers connect & network */
+reg('poolchat','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><div class="row" style="gap:9px"><div style="font-size:20px">🚗</div><div><b style="font-size:14px">Today's carpool</b><div class="lab" style="text-transform:none">Wakad → Hinjawadi · 9:30 AM</div></div></div></div>
+<div class="body px" style="display:flex;flex-direction:column;gap:10px;padding-top:8px">
+  <div class="card"><div class="lab" style="margin-bottom:11px">In this pool · tap to chat or call</div>
+    ${[['rahul','Driver'],['priya','Co-passenger'],['aman','Co-passenger']].map(([pid,role])=>{const p=PEOPLE[pid];return `<div class="between" style="margin-bottom:9px"><div class="row" style="gap:10px;flex:1;cursor:pointer;min-width:0" onclick="openPerson('${pid}')"><div class="av" style="border-radius:50%;background:${p.c};width:38px;height:38px;font-size:14px">${p.a}</div><div style="min-width:0"><div class="row" style="gap:6px"><b style="font-size:13px">${p.n.split(' ')[0]} ${p.n.split(' ')[1]||''}</b>${role==='Driver'?'<span class="chip teal" style="font-size:9px;padding:2px 7px;cursor:default">Driver</span>':''}</div><div class="desig" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.role}</div></div></div><div class="row" style="gap:6px;flex:0 0 auto"><button class="iconbtn" style="width:36px;height:36px;background:var(--soft);color:var(--ink-2)" onclick="requestCall('${pid}')"><span style="width:16px;height:16px;display:block">${I_PHONE}</span></button><button class="iconbtn" style="width:36px;height:36px;background:var(--brand-soft);color:var(--brand)" onclick="openChat('${pid}')"><span style="width:16px;height:16px;display:block">${I_CHAT}</span></button></div></div>`;}).join('')}
+  </div>
+  <div style="align-self:center;background:var(--soft);color:var(--ink-2);font-size:10.5px;font-weight:600;padding:6px 13px;border-radius:999px">Pool chat · everyone sees these messages</div>
+  <div style="align-self:flex-start;max-width:82%"><div class="lab" style="margin:0 0 3px 5px">Priya</div><div style="background:#fff;border:1px solid var(--line);padding:11px 14px;border-radius:16px 16px 16px 5px;font-size:13.5px">See you all at Wakad Chowk by 9:35 🙌</div></div>
+  <div style="align-self:flex-start;max-width:82%"><div class="lab" style="margin:0 0 3px 5px">Aman</div><div style="background:#fff;border:1px solid var(--line);padding:11px 14px;border-radius:16px 16px 16px 5px;font-size:13.5px">On my way 👍</div></div>
+  <div id="poolLog" style="display:flex;flex-direction:column;gap:9px"></div>
+  <div style="align-self:flex-start;display:flex;gap:7px;flex-wrap:wrap;margin-top:2px"><span class="chip" onclick="poolSend('On my way!')">On my way</span><span class="chip out" onclick="poolSend('Running 5 min late')">Running late</span><span class="chip out" onclick="toast('Live location shared with the pool')">📍 Share location</span></div>
+</div>
+<div class="cta-dock"><div class="field" style="margin:0"><div class="val muted" style="font-weight:400">Message the pool…</div></div></div>`);
+function poolSend(m){const l=document.getElementById('poolLog');if(!l)return;const d=document.createElement('div');d.style.cssText='align-self:flex-end;background:var(--brand);color:#fff;padding:11px 14px;border-radius:16px 16px 5px 16px;font-size:13.5px;max-width:80%';d.textContent=m;l.appendChild(d);toast('Sent to the pool');}
+let ER_TIME='9:30 AM';
+function openEditRecurring(){const b=document.getElementById('sheetBody');b.innerHTML=`<div class="h2">Edit recurring ride</div><p class="lab" style="text-transform:none;margin:2px 0 14px">Morning · to office</p>
+<div class="field"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8 18h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7"/></svg><div style="flex:1"><div class="lab">Route</div><div class="val">Wakad → Hinjawadi</div></div></div>
+<div class="lab" style="margin:6px 0 8px">Leave by</div><div style="display:flex;gap:7px;flex-wrap:wrap">${['9:00','9:15','9:30','9:45','10:00'].map(t=>`<span class="chip ${t==='9:30'?'on':'out'}" onclick="erPick(this,'${t} AM')">${t}</span>`).join('')}</div>
+<div class="lab" style="margin:14px 0 8px">Days</div><div style="display:flex;gap:6px">${['M','T','W','T','F','S','S'].map((d,i)=>`<span class="day ${i<5?'on':''}" style="cursor:pointer" onclick="this.classList.toggle('on')">${d}</span>`).join('')}</div>
+<button class="btn btn-coral" style="margin-top:18px" onclick="saveRecurring()">Save changes</button><button class="btn btn-ghost" style="margin-top:10px" onclick="closeSheet()">Cancel</button>`;document.getElementById('scrim').classList.add('show');document.getElementById('sheet').classList.add('show');}
+function erPick(el,t){el.parentElement.querySelectorAll('.chip').forEach(c=>{c.classList.add('out');c.classList.remove('on')});el.classList.add('on');el.classList.remove('out');ER_TIME=t;}
+function saveRecurring(){closeSheet();const r=elements.recurring&&elements.recurring.querySelector('#recTime');if(r)r.textContent='Wakad → Hinjawadi · '+ER_TIME;toast('Recurring ride updated · '+ER_TIME);}
+reg('recurring','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Recurring rides</span></div>
+<div class="body px pb"><div class="card row" style="background:var(--teal-soft);border-color:#CFE9E2;gap:11px"><div style="color:var(--teal)">${I_REPEAT}</div><div style="font-size:11.5px"><b>Pool with the same colleagues daily</b><br><span class="muted">Set once — auto-booked every working day.</span></div></div>
+  <div class="card" style="margin-top:14px"><div class="between"><div><b style="font-size:14px">Morning · to office</b><div class="lab tnum" id="recTime" style="margin-top:3px">Wakad → Hinjawadi · 9:30 AM</div></div><span class="chip lime" style="cursor:default">Active</span></div>
+    <div style="display:flex;gap:6px;margin-top:13px">${['M','T','W','T','F','S','S'].map((d,i)=>`<span class="day ${i<5?'on':''}">${d}</span>`).join('')}</div>
+    <div class="hr"></div><div class="between"><span class="lab">Next · Tomorrow 9:35 AM</span><div class="row" style="gap:7px"><span class="chip out" onclick="toast('Skipped tomorrow')">Skip</span><span class="chip out" onclick="toast('Recurring paused')">Pause</span></div></div>
+    <div class="row" style="gap:10px;margin-top:11px"><button class="btn btn-ghost" style="min-height:44px" onclick="openEditRecurring()">Edit</button><button class="btn btn-ghost" style="min-height:44px;color:var(--coral);border-color:#FFD3CB" onclick="toast('Recurring cancelled')">Cancel</button></div></div></div>`);
+/* taxipool — fixed with CTAs + history */
+reg('taxi','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Taxipool</span></div>
+<div class="body px pb"><div class="card" style="background:var(--teal);border:none;color:#fff;margin-top:4px"><span class="eyebrow" style="color:var(--lime)">Share a cab</span><div class="h2" style="color:#fff;margin-top:6px;font-size:20px">Split the fare, save up to 50%</div><p style="font-size:12.5px;opacity:.85;margin-top:7px">Match with verified people heading your way, meet at a point, then book any cab & split.</p></div>
+  <div class="seg brand" id="taxiSeg" style="margin-top:12px"><button class="on" onclick="taxiView(this,'send')">Send a request</button><button onclick="taxiView(this,'accept')">Accept a request</button></div>
+  <div id="taxi-send" style="margin-top:13px"><div class="card" style="padding:6px 15px"><div class="row" style="padding:12px 0;border-bottom:1px solid var(--line)"><span style="width:10px;height:10px;border-radius:50%;background:var(--coral)"></span><div><div class="lab">Pickup</div><div class="val" style="font-size:14px">Wakad</div></div></div><div class="row" style="padding:12px 0"><span style="width:10px;height:10px;border-radius:2px;background:var(--teal)"></span><div><div class="lab">Drop-off</div><div class="val" style="font-size:14px">Pune Airport</div></div></div></div>
+    <div class="card row" style="margin-top:12px;background:var(--teal-soft);border-color:#CFE9E2;gap:11px"><span style="font-size:18px">💸</span><div style="font-size:12px"><b>Est. ₹420 · your share ₹140</b><br><span class="muted">split 3 ways · save up to 50%</span></div></div>
+    <button class="btn btn-coral" style="margin-top:14px" onclick="go('taximatch')">Find co-riders</button></div>
+  <div id="taxi-accept" style="margin-top:13px;display:none"><div class="lab" style="margin-bottom:9px">People already heading your way</div>
+    <div class="card"><div class="row" style="gap:11px"><div class="av" style="background:var(--coral)">P</div><div style="flex:1"><b style="font-size:14px">Priya Sharma</b><div class="desig">Wakad → Airport · 5:30 PM</div></div></div><div class="between" style="margin-top:11px"><span class="lab">96% same route</span><button class="btn btn-coral btn-sm" style="width:auto;min-height:44px;padding:0 16px;border-radius:12px" onclick="go('taximatch')">Accept · ₹140</button></div></div></div>
+</div>`);
+function taxiView(b,v){b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('taxi-send').style.display=v==='send'?'block':'none';document.getElementById('taxi-accept').style.display=v==='accept'?'block':'none';}
+reg('taximatch','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Matched · 2 co-riders</span></div>
+<div class="body px pb"><div class="map" style="height:185px;position:relative;border-radius:18px;margin-top:4px">${mapScene({h:185,pins:[{t:'label',k:'c',x:15,y:80,l:'YOU'},{t:'walk',x:33,y:62,l:'Meet · Wakad Chowk'},{t:'av',x:54,y:48,l:'P',c:'var(--coral)'},{t:'label',k:'w',x:85,y:24,l:'✈ PNQ'}]})}</div>
+  <div class="card" style="margin-top:12px;border-color:var(--coral)"><div class="row" style="gap:10px"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.9"><path d="M12 21s-6-5.7-6-10a6 6 0 0 1 12 0c0 4.3-6 10-6 10Z"/><circle cx="12" cy="11" r="2"/></svg><div style="flex:1"><b style="font-size:13.5px">Meeting point · Wakad Chowk</b><div class="lab">3 min walk · be there by 5:30 PM</div></div></div></div>
+  <div class="card" style="margin-top:11px"><div class="between"><span class="muted" style="font-size:13px">Cab fare ÷ 3</span><b class="tnum">₹420 ÷ 3</b></div><div class="hr"></div><div class="between"><b>Your share</b><span class="h2 tnum" style="color:var(--coral)">₹140</span></div><div class="vok" style="margin-top:8px">You save ₹280 vs riding solo</div></div></div>
+<div class="cta-dock"><button class="btn btn-coral" onclick="toast('Matched! Head to the meeting point');setTimeout(()=>go('taxiconfirm'),800)">Confirm & get meeting point</button></div>`);
+reg('taxiconfirm','light',`
+<div class="body" style="background:var(--teal);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px 28px">
+  <div style="width:80px;height:80px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;animation:pop .5s cubic-bezier(.3,1.4,.5,1)"><svg width="38" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4 10-10"/></svg></div>
+  <div class="h1" style="color:#fff;margin-top:18px">You are matched!</div><p style="opacity:.85;font-size:14px;margin-top:8px;max-width:28ch">Meet Priya & Aman, then book any cab together and split.</p>
+  <div class="card" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff;width:100%;margin-top:20px;text-align:left"><div class="between"><span style="opacity:.8;font-size:12.5px">📍 Meeting point</span><b>Wakad Chowk · 5:30 PM</b></div><div class="hr" style="background:rgba(255,255,255,.15)"></div><div class="between"><span style="opacity:.85;font-size:12px">you + 2</span><b class="tnum">₹140 each</b></div></div></div>
+<div class="cta-dock" style="background:var(--teal)"><button class="btn" style="background:var(--lime);color:var(--teal)" onclick="toast('Opening cab booking — split fare with your pool')">Book a cab & split</button><div class="row" style="gap:10px;margin-top:10px"><button class="btn" style="background:rgba(255,255,255,.14);color:#fff" onclick="openChat('priya')">${I_CHAT} Chat</button><button class="btn" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.25)" onclick="go('myrides')">My rides</button></div></div>`);
+reg('ridestatus','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Upcoming ride</span></div>
+<div class="body px pb"><div class="map" style="height:175px;position:relative;border-radius:18px;margin-top:4px">${mapScene({h:175,pins:[{t:'label',k:'c',x:16,y:80,l:'YOU'},{t:'av',x:46,y:56,l:'R',c:'var(--teal)'},{t:'label',k:'w',x:84,y:24,l:'WORK'}]})}</div>
+  <div class="card" style="margin-top:12px"><div class="between"><b style="font-size:14px">Wakad → Hinjawadi</b><span class="chip lime" style="cursor:default">Confirmed</span></div><div class="lab tnum" style="margin-top:3px">Tomorrow · pickup 9:35 AM · Wakad Chowk</div></div>
+  <div class="card" style="margin-top:12px"><div class="between"><div class="row"><div class="av" style="background:var(--teal)">R</div><div><b style="font-size:13px">Rahul Mehta · driver</b><div class="desig">Sr. Software Engineer · Infosys · ★4.9</div></div></div><span class="chip out" onclick="openChat('rahul')">${I_CHAT} Chat</span></div></div>
+  <div class="card between" style="margin-top:12px"><span class="muted" style="font-size:13px">Your share · auto-pay</span><span class="h2 tnum" style="color:var(--coral)">₹58</span></div></div>
+<div class="cta-dock"><div class="row" style="gap:10px"><button class="btn btn-ghost" onclick="openChat('rahul')">${I_CHAT} Chat</button><button class="btn btn-teal" onclick="go('active')">Track ride</button></div><button class="btn btn-ghost" style="margin-top:10px;color:var(--coral);border-color:#FFD3CB" onclick="cancelBooking();toast('Seat cancelled — no charge');setTimeout(()=>switchTab('commute'),700)">Cancel my seat</button></div>`);
+reg('myrides','dark',`<div class="body"></div>`);
+function myridesHTML(){return `
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">My rides</span></div>
+<div class="body pb"><div class="px" style="padding-top:4px">
+  <div class="seg" style="margin-top:6px"><button class="${RIDES_ROLE==='rider'?'on':''}" onclick="setRidesRole('rider')">${I_RIDER} As rider</button><button class="${RIDES_ROLE==='driver'?'on':''}" onclick="setRidesRole('driver')">${I_CAR} As driver</button></div>
+  ${RIDES_ROLE==='rider'?`
+  <div class="lab" style="margin:16px 0 9px">Upcoming</div>
+  <div class="card between" onclick="go('ridestatus')" style="cursor:pointer"><div class="row"><div class="av" style="background:var(--teal)">R</div><div><b style="font-size:13.5px">Wakad → Hinjawadi</b><div class="lab tnum">Tomorrow · 9:35 AM · Rahul</div></div></div><span class="chip lime" style="cursor:default">Confirmed</span></div>
+  <div class="lab" style="margin:18px 0 9px">History</div>
+  <div class="card between"><div class="row"><div style="color:var(--teal)">${I_CAR}</div><div><b style="font-size:13px">Wakad → Hinjawadi</b><div class="lab">Today · Rahul · completed</div></div></div><b class="tnum" style="color:var(--coral)">₹61</b></div>
+  <div class="card between" style="margin-top:10px"><div class="row"><div style="color:var(--teal)">${I_TAXI}</div><div><b style="font-size:13px">Taxipool · Airport</b><div class="lab">Sat · Priya +1 · completed</div></div></div><b class="tnum" style="color:var(--coral)">₹140</b></div>`:`
+  <div class="row" style="gap:11px;margin-top:14px"><div class="card" style="flex:1;text-align:center;background:var(--coral);border:none;color:#fff"><div class="h2 tnum" style="color:#fff">128</div><div class="lab" style="color:#fff;opacity:.85">rides given</div></div><div class="card" style="flex:1;text-align:center"><div class="h2 tnum" style="color:var(--teal)">₹14.8k</div><div class="lab">recovered</div></div></div>
+  <div class="between" style="margin:18px 4px 9px"><span class="lab">Recurring pool · matched riders</span><span class="lab" style="color:var(--teal)">2 of 3</span></div>
+  <div class="card"><div class="row" style="gap:11px">${matchRing(88)}<div style="flex:1"><div class="row" style="gap:8px"><b style="font-size:14px">Priya Sharma</b><span class="tier gold">Gold</span></div><div class="desig">Product Manager · Infosys</div></div><span class="chip lime" style="cursor:default">Daily</span></div></div>
+  <div class="card between" style="margin-top:10px;cursor:pointer;background:var(--coral-soft);border-color:#FFD3CB" onclick="go('requests')"><div class="row" style="gap:10px"><div class="av" style="background:var(--coral);width:34px;height:34px;font-size:13px">2</div><div><b style="font-size:13px">2 new ride requests</b><div class="lab">Accept or decline</div></div></div><span class="chip coral">Review</span></div>`}
+</div></div>`;}
+
+/* ===== CIRCLES ===== */
+reg('circle','dark',`<div class="body"></div>`);
+reg('circleChat','dark',`<div class="body"></div>`);
+const CIRCLE_MEM={runners:['rahul','priya','aman','karan'],society:['priya','divya','karan'],books:['sneha','priya','neha'],shutter:['rahul','neha','aman'],newcity:['aman','priya','sneha']};
+const NMAP={R:'Rahul',P:'Priya',S:'Sneha',D:'Divya',M:'Manish',A:'Aman',K:'Karan',N:'Neha'};
+function circleHTML(id){const c=CIRCLES[id];const mem=CIRCLE_MEM[id]||['rahul','priya','aman'];const last=c.chat[c.chat.length-1];const pool=mem.filter(x=>PEOPLE[x]&&PEOPLE[x].route).length;return `
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">${c.cat.split(' · ')[0]}</span></div>
+<div class="body px pb">
+  <div class="card" style="background:${c.c};border:none;color:#fff"><div class="between"><div style="font-size:28px">${c.e}</div>${c.joined?'<span class="chip" style="background:rgba(255,255,255,.22);color:#fff;cursor:default">✓ Joined</span>':`<span class="chip" style="background:#fff;color:${c.c}" onclick="joinCircle('${id}')">Join</span>`}</div><div class="h2" style="color:#fff;margin-top:10px">${c.n}</div><p style="opacity:.9;font-size:13px;margin-top:6px">${c.about}</p>
+    <div class="row" style="margin-top:13px">${c.m3.map((a,i)=>`<div class="av" style="width:30px;height:30px;font-size:12px;background:${a[1]};${i?'margin-left:-10px':''};border:2px solid ${c.c}">${a[0]}</div>`).join('')}<span style="margin-left:9px;font-size:12px;opacity:.85">${c.members.toLocaleString()} members</span></div></div>
+
+  <div class="between" style="margin:18px 2px 9px"><span class="lab">Members</span><span class="lab" style="text-transform:none;color:var(--ink-3)">tap to chat or carpool</span></div>
+  ${mem.map(pid=>{const p=PEOPLE[pid];return `<div class="card between" style="margin-bottom:10px"><div class="row" style="gap:11px;flex:1;cursor:pointer;min-width:0" onclick="openPerson('${pid}')"><div class="av" style="border-radius:50%;background:${p.c};width:42px;height:42px;font-size:16px">${p.a}</div><div style="min-width:0"><div class="row" style="gap:6px"><b style="font-size:13.5px">${p.n}</b>${p.pro?proChip():''}${p.w?'<span class="vok" style="color:var(--coral)">♀</span>':''}</div><div class="desig" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.role}</div></div></div><div class="row" style="gap:7px;flex:0 0 auto">${p.route?`<button class="iconbtn" style="width:38px;height:38px;background:var(--teal-soft);color:var(--teal-d)" onclick="requestJoinCarpool('${pid}')"><span style="width:18px;height:18px;display:block">${I_CAR}</span></button>`:''}<button class="iconbtn" style="width:38px;height:38px;background:var(--soft);color:var(--ink-2)" onclick="requestCall('${pid}')"><span style="width:17px;height:17px;display:block">${I_PHONE}</span></button><button class="iconbtn" style="width:38px;height:38px;background:var(--brand-soft);color:var(--brand)" onclick="openChat('${pid}')"><span style="width:17px;height:17px;display:block">${I_CHAT}</span></button></div></div>`;}).join('')}
+
+  <div class="lab" style="margin:16px 2px 9px">Events</div>
+  ${c.plans.map(p=>`<div class="card between" style="margin-bottom:10px"><div><b style="font-size:13.5px">${p[0]}</b><div class="muted" style="font-size:12px">${p[1]}</div><div class="lab" style="margin-top:3px">${p[2]}</div></div><span class="chip" onclick="rsvpPlan(this)">RSVP</span></div>`).join('')}
+  <div class="lab" style="margin:16px 2px 9px">Poll</div>
+  <div class="card"><b style="font-size:13.5px">Best day for the next meetup?</b>
+    ${[['Thursday',62],['Friday',38]].map((o,i)=>`<div onclick="votePoll(this,${i})" style="cursor:pointer;margin-top:11px"><div class="between" style="font-size:12.5px"><span>${o[0]}</span><b class="tnum pollpct">${o[1]}%</b></div><div class="bar" style="margin-top:5px"><span style="width:${o[1]}%;background:var(--brand)"></span></div></div>`).join('')}
+    <div class="lab" style="margin-top:11px">128 votes · tap to vote</div></div>
+  <div class="lab" style="margin:16px 2px 9px">Carpool requests</div>
+  <div class="card between"><div class="row" style="gap:10px"><div class="av" style="background:var(--coral);border-radius:50%;width:38px;height:38px">P</div><div><b style="font-size:13px">Priya needs a ride Thu</b><div class="lab">Wakad → Hinjawadi · 9:30</div></div></div><span class="chip teal" onclick="requestJoinCarpool('priya')">Offer</span></div>
+
+  <div class="lab" style="margin:16px 2px 9px">Carpool in this circle</div>
+  <div class="card"><div class="row" style="gap:10px"><span style="font-size:20px">🚗</span><div style="flex:1"><b style="font-size:13.5px">${pool} members commute your way</b><div class="muted" style="font-size:12px">Wakad → Hinjawadi · ~9:30 AM</div></div></div><button class="btn btn-teal" style="margin-top:12px;min-height:44px" onclick="startCircleCarpool('${id}')">${I_CAR} Start a circle carpool</button></div>
+
+  <div class="lab" style="margin:16px 2px 9px">Group chat</div>
+  <div class="card between" style="cursor:pointer" onclick="openCircleChat('${id}')"><div class="row" style="gap:11px;min-width:0"><div class="av" style="border-radius:14px;background:${c.c};width:40px;height:40px;font-size:17px">${c.e}</div><div style="min-width:0"><b style="font-size:13px">All members</b><div class="muted" style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${last?((NMAP[last[0]]||last[0])+': '+last[2]):'Say hello to the circle'}</div></div></div><span class="chip brand-soft" style="flex:0 0 auto">Open</span></div>
+</div>
+<div class="cta-dock">${c.joined?`<button class="btn btn-teal" onclick="openCircleChat('${id}')">${I_CHAT} Open group chat</button>`:`<button class="btn btn-brand" onclick="joinCircle('${id}')">Join ${c.n}</button>`}</div>`;}
+function groupCarpoolCard(){const cp=CIRCLE_CARPOOL;return `<div class="card" style="border-color:var(--coral);width:100%"><div class="between"><div class="row" style="gap:8px"><span style="font-size:17px">🚗</span><b style="font-size:14px">Circle carpool</b></div><span class="chip ${cp.status==='confirmed'?'lime':'coral'}" style="cursor:default">${cp.status==='confirmed'?'Confirmed':'Proposed'}</span></div><div class="hr" style="margin:11px 0"></div><div class="between"><span class="muted" style="font-size:12.5px">Route · When</span><b style="font-size:12.5px">Wakad → Hinjawadi · 9:30</b></div><div class="between" style="margin-top:7px"><span class="muted" style="font-size:12.5px">Going · share</span><b class="tnum" style="font-size:12.5px;color:var(--coral)">You +1 · ₹58</b></div><div class="hr" style="margin:11px 0"></div>${cp.status==='proposed'?`<button class="btn btn-coral" style="min-height:46px" onclick="confirmCircleCarpool()">Confirm group carpool</button>`:`<button class="btn btn-teal" style="min-height:46px" onclick="go('active')">Track ride</button>`}</div>`;}
+function circleChatHTML(id){const c=CIRCLES[id];const nm={R:'Rahul',P:'Priya',S:'Sneha',D:'Divya',M:'Manish',A:'Aman'};return `
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><div class="row" style="gap:9px"><div style="font-size:20px">${c.e}</div><div><b style="font-size:14px">${c.n}</b><div class="lab">${c.members.toLocaleString()} members</div></div></div></div>
+<div class="body px" style="display:flex;flex-direction:column;gap:9px;padding-top:8px">
+  <div style="align-self:center;background:var(--soft);color:var(--ink-2);font-size:10.5px;font-weight:600;padding:6px 13px;border-radius:999px">${c.cat} · verified members only</div>
+  ${(CIRCLE_CARPOOL&&CIRCLE_CARPOOL.circle===id)?groupCarpoolCard():''}
+  ${c.chat.map(m=>`<div style="align-self:flex-start;max-width:82%"><div class="lab" style="margin:0 0 3px 5px">${nm[m[0]]||m[0]}</div><div style="background:#fff;border:1px solid var(--line);padding:11px 14px;border-radius:16px 16px 16px 5px;font-size:13.5px">${m[2]}</div></div>`).join('')}
+  <div id="ccLog" style="display:flex;flex-direction:column;gap:9px"></div>
+  <div style="align-self:flex-start;display:flex;gap:7px;flex-wrap:wrap;margin-top:2px"><span class="chip" onclick="startCircleCarpool('${id}')">🚗 Carpool</span><span class="chip out" onclick="newPlan()">📅 Make a plan</span><span class="chip out" onclick="ccSend('Count me in!')">Count me in</span></div>
+</div>
+<div class="cta-dock"><div class="field" style="margin:0"><div class="val muted" style="font-weight:400">Message the circle…</div></div></div>`;}
+reg('circleMatch','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Meet other circles</span></div>
+<div class="body px pb"><div class="card row" style="background:var(--brand);border:none;color:#fff;gap:11px"><div style="display:flex">${[['T','var(--teal)'],['R','var(--coral)'],['P','var(--bronze)']].map((a,i)=>`<div class="av" style="width:34px;height:34px;font-size:13px;background:${a[1]};border:2px solid var(--brand);${i?'margin-left:-12px':''};border-radius:50%">${a[0]}</div>`).join('')}</div><div style="font-size:12px"><b>Your circle · 4 people</b><br><span style="opacity:.85">Say hi to a circle — if they say hi back, a group chat opens.</span></div></div>
+  ${[['The Hinjawadi 3',[['R','var(--teal)'],['P','var(--coral)'],['A','#3E5C8A']],'☕ Coffee · 🏃 Running','matched'],['Wakad Foodies',[['S','var(--coral)'],['M','#3E5C8A'],['D','var(--bronze)']],'🍽️ Food · 🎬 Films',''],['Weekend Trekkers',[['K','var(--teal)'],['N','#6C5CE0'],['V','var(--coral)']],'⛰️ Treks · 📷 Photo','']].map(c=>`
+  <div class="card" style="margin-top:12px${c[3]==='matched'?';border-color:var(--lime)':''}"><div class="between"><div class="row" style="gap:10px"><div style="display:flex">${c[1].map((a,j)=>`<div class="av" style="width:36px;height:36px;font-size:13px;background:${a[1]};border:2px solid var(--paper);${j?'margin-left:-12px':''};border-radius:50%">${a[0]}</div>`).join('')}</div><div><b style="font-size:14px">${c[0]}</b><div class="muted" style="font-size:12px">${c[2]}</div></div></div>${c[3]==='matched'?`<span class="chip lime" onclick="openCircleChat('runners')">Group chat</span>`:`<button class="chip" style="border:none" onclick="circleHi(this)">Say hi 👋</button>`}</div>${c[3]==='matched'?'<div class="vok" style="margin-top:10px">✓ Both circles said hi — group chat is open</div>':''}</div>`).join('')}
+</div>`);
+
+/* ===== PLANS ===== */
+reg('plans','dark',`<div class="body"></div>`);
+reg('myplans','dark',`<div class="body"></div>`);
+reg('planNew','dark',`<div class="body"></div>`);
+reg('planCreated','light',`<div class="body"></div>`);
+function plansHTML(){return `
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Happening near you</span><div class="spacer"></div><span class="chip out" style="margin-right:8px" onclick="go('myplans')">My plans</span></div>
+<div class="body px pb">
+  ${PLANS.map(p=>`<div class="card between" style="margin-bottom:11px${p.mine?';border-color:var(--coral)':''}"><div class="row" style="gap:12px"><div style="font-size:22px">${p.e}</div><div><div class="row" style="gap:7px"><b style="font-size:14px">${p.t}</b>${p.mine?'<span class="chip coral" style="font-size:9px;padding:3px 7px;cursor:default">Your plan</span>':''}</div><div class="muted" style="font-size:12px">${p.sub}</div><div class="lab" style="margin-top:4px">${p.who}</div></div></div><span class="chip ${p.cta==='Going'?'lime':''}" onclick="rsvpPlan(this)">${p.cta}</span></div>`).join('')}
+  <div class="card row" style="background:transparent;border-style:dashed;gap:11px;cursor:pointer" onclick="newPlan()"><span style="font-size:20px;color:var(--coral)">＋</span><div style="font-size:12.5px"><b>Start a plan</b><br><span class="muted">Invite your matches & circles</span></div></div>
+</div>`;}
+function myplansHTML(){const mine=PLANS.filter(p=>p.mine||p.cta==='Going');return `
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">My plans</span></div>
+<div class="body px pb"><div class="seg" style="margin-top:4px"><button class="on">Going</button><button>Hosting</button><button>Invited</button></div>
+  <div class="lab" style="margin:16px 0 9px">You are going to</div>
+  ${mine.length?mine.map(p=>`<div class="card between" style="margin-bottom:10px"><div class="row" style="gap:12px"><div style="font-size:22px">${p.e}</div><div><b style="font-size:14px">${p.t}</b><div class="muted" style="font-size:12px">${p.sub}</div></div></div><div class="row" style="gap:7px"><span class="chip out" onclick="toast('Plan edited')">Edit</span><span class="chip out" style="color:var(--coral)" onclick="this.closest('.card').style.opacity='.4';toast('Cancelled')">Cancel</span></div></div>`).join(''):'<p class="muted" style="font-size:13px">No plans yet — RSVP one from Discover.</p>'}
+</div>`;}
+function planNewHTML(){const sel=NEWPLAN.type,d=PLAN_TYPES[sel];return `
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Start a plan</span></div>
+<div class="body px pb"><div class="lab" style="margin-bottom:9px">What kind of plan?</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">${Object.keys(PLAN_TYPES).map(k=>`<button onclick="pickPlanType('${k}')" style="border:1.6px solid ${k===sel?'var(--brand)':'var(--line)'};background:${k===sel?'var(--brand-soft)':'var(--paper)'};border-radius:14px;padding:12px 6px;cursor:pointer;text-align:center"><div style="font-size:22px">${PLAN_TYPES[k][0]}</div><div style="font-size:11px;font-weight:700;margin-top:5px;color:${k===sel?'var(--brand)':'var(--ink-2)'}">${PLAN_TYPES[k][1]}</div></button>`).join('')}</div>
+  <div class="field" style="margin-top:16px"><div style="flex:1"><div class="lab">Plan</div><div class="val">${d[2]}</div></div></div>
+  <div class="row" style="gap:10px"><div class="field" style="flex:1;margin:0"><div><div class="lab">When</div><div class="val" style="font-size:13.5px">${d[3]}</div></div></div><div class="field" style="flex:1;margin:0"><div><div class="lab">Where</div><div class="val" style="font-size:13.5px">${d[4]}</div></div></div></div>
+  <div class="lab" style="margin:18px 2px 9px">Invite your matches</div>
+  <div style="display:flex;gap:11px;overflow-x:auto;padding-bottom:4px">${['rahul','priya','aman','sneha'].map(k=>{const p=PEOPLE[k];return `<button onclick="toggleInvite(this,'${p.n.split(' ')[0]}')" data-on="0" style="border:none;background:none;cursor:pointer;text-align:center;flex:0 0 auto"><div class="av" style="width:50px;height:50px;border-radius:50%;background:${p.c};border:2.5px solid transparent">${p.a}</div><div style="font-size:11px;margin-top:5px;font-weight:600">${p.n.split(' ')[0]}</div></button>`;}).join('')}</div>
+  <div class="lab" style="margin:16px 2px 9px">Invite a circle</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">${['🏃 Runners','🏠 Society 7','📚 Book Club'].map(c=>`<span class="chip out" onclick="toggleInvite(this,'${c}')" data-on="0">${c}</span>`).join('')}</div>
+  <div class="vok" id="invCount" style="margin-top:14px;color:var(--ink-3)">No one invited yet</div></div>
+<div class="cta-dock"><button class="btn btn-brand" onclick="createPlan()">Create & send invites</button></div>`;}
+function planCreatedHTML(){const d=PLAN_TYPES[NEWPLAN.type],inv=(NEWPLAN.invited||[]).length;return `
+<div class="body" style="background:var(--brand);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px">
+  <div style="width:82px;height:82px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;animation:pop .5s cubic-bezier(.3,1.4,.5,1);font-size:36px">${d[0]}</div>
+  <div class="h1" style="color:#fff;margin-top:20px">Plan created!</div><p style="opacity:.85;font-size:14px;margin-top:8px;max-width:26ch">${inv?('Invites sent to '+inv+' people.'):'Share it so people can join.'}</p>
+  <div class="card" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff;width:100%;margin-top:22px;text-align:left"><div class="row" style="gap:11px"><div style="font-size:24px">${d[0]}</div><div><b>${d[2]}</b><div style="opacity:.8;font-size:12.5px" class="tnum">${d[3]} · ${d[4]}</div></div></div></div></div>
+<div class="cta-dock" style="background:var(--brand)"><button class="btn" style="background:var(--lime);color:var(--brand)" onclick="go('plans')">View in Plans</button><button class="btn" style="background:rgba(255,255,255,.16);color:#fff;margin-top:10px" onclick="switchTab('network')">Done</button></div>`;}
+
+/* ===== sNEIGHBOUR ===== */
+reg('neighbor','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">sNeighbour</span></div>
+<div class="body px pb"><div class="card row" style="background:#FBEEDD;border-color:#F0DDBE;gap:11px"><span style="font-size:20px">🏠</span><div style="font-size:12px"><b>Give & get a hand nearby</b><br><span class="muted">Verified neighbours in Wakad · Society 7</span></div></div>
+  ${[['P','var(--bronze)','Priya needs','a pediatrician recommendation','Help'],['K','var(--teal)','Karan offering','airport cab Sat 6 AM · 2 seats','Join'],['D','var(--coral)','Divya needs','to borrow a pressure cooker','Lend'],['M','#3E5C8A','Manish offering','spare cricket kit this weekend','Take']].map((n,i)=>`
+  <div class="card between" style="margin-top:11px;cursor:pointer" onclick="openNeighbor(${i})"><div class="row" style="gap:11px"><div class="av" style="background:${n[1]}">${n[0]}</div><div><b style="font-size:13.5px">${n[2]}</b><div class="muted" style="font-size:12.5px">${n[3]}</div></div></div><span class="chip">${n[4]}</span></div>`).join('')}
+</div>`);
+reg('neighborDetail','dark',`<div class="body"></div>`);
+const NEIGH=[['P','var(--bronze)','Priya Sharma','needs a pediatrician recommendation','Send a recommendation'],['K','var(--teal)','Karan Singh','offering an airport cab Sat 6 AM · 2 seats · split 50%','Join the cab'],['D','var(--coral)','Divya Rao','needs to borrow a pressure cooker for 2 days','Offer to lend'],['M','#3E5C8A','Manish Patel','offering a spare cricket kit this weekend','Ask for it']];
+function openNeighbor(i){CTX.neigh=i;go('neighborDetail');}
+function neighborDetailHTML(){const n=NEIGH[CTX.neigh||0];return `
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">sNeighbour</span></div>
+<div class="body px pb"><div class="card"><div class="row" style="gap:12px"><div class="av" style="background:${n[1]};width:50px;height:50px">${n[0]}</div><div><div class="row" style="gap:7px"><b style="font-size:15px">${n[2]}</b><span class="vok">✓ Society 7</span></div><div class="muted" style="font-size:12.5px">120 m away · verified neighbour</div></div></div><div class="hr"></div><p style="font-size:14px">${n[3]}.</p></div>
+  <div class="card row" style="margin-top:12px;background:var(--teal-soft);border-color:#CFE9E2;gap:11px"><span style="font-size:17px">🔒</span><div style="font-size:11.5px"><b>Safe & verified</b><br><span class="muted">Numbers stay hidden until you both agree.</span></div></div></div>
+<div class="cta-dock"><button class="btn btn-brand" onclick="toast('Message sent to neighbour');setTimeout(()=>openChat('priya'),700)">${n[4]}</button></div>`;}
+
+/* ===== YOU sub-screens ===== */
+reg('wallet','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Wallet</span></div>
+<div class="body pb"><div class="px" style="padding-top:4px">
+  <div class="card" style="background:var(--ink);border:none;color:#fff"><span class="eyebrow" style="color:var(--lime)">Troopool wallet</span><div style="font-family:var(--d);font-weight:700;font-size:38px;margin-top:6px;color:#fff" class="tnum">₹1,840</div><div class="row" style="gap:11px;margin-top:16px"><button class="btn" style="background:var(--lime);color:var(--ink)" onclick="toast('Redeem to Paytm / bank')">Redeem</button><button class="btn" style="background:rgba(255,255,255,.14);color:#fff" onclick="toast('Add money via UPI')">Add money</button></div></div>
+  <div class="row" style="gap:11px;margin-top:13px"><div class="card" style="flex:1;text-align:center"><div class="h2 tnum" style="color:var(--coral)">2,140</div><div class="lab">Troo points</div></div><div class="card" style="flex:1;text-align:center"><div class="h2 tnum" style="color:var(--teal)">₹38k</div><div class="lab">saved / yr</div></div></div>
+  <div class="card between" style="margin-top:13px;background:var(--coral-soft);border-color:#FFD3CB"><div class="row"><span style="font-size:18px">🎁</span><div style="font-size:12.5px"><b>Invite a colleague</b><br><span class="muted">Both get 10% extra savings</span></div></div><span class="chip coral">Share</span></div>
+</div></div>`);
+reg('hrdash','light',`
+<div class="navbar" style="background:var(--ink)"><button class="iconbtn" style="color:#fff" onclick="back()">${I_BACK}</button><span class="ttl" style="color:#fff">HR · ESG dashboard</span></div>
+<div class="body pb" style="background:var(--ink);color:#fff"><div class="px" style="padding-top:6px">
+  <span class="eyebrow" style="color:var(--lime)">Infosys · Hinjawadi · Q2 2026</span><div class="h1" style="color:#fff;margin-top:4px">Commute programme</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:16px">
+    <div class="card" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);color:#fff"><div class="lab" style="color:rgba(255,255,255,.6)">Adoption</div><div class="h2 tnum" style="color:var(--lime)">38%</div><div class="lab" style="color:var(--lime)">▲ 6% MoM</div></div>
+    <div class="card" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);color:#fff"><div class="lab" style="color:rgba(255,255,255,.6)">Active poolers</div><div class="h2 tnum" style="color:#fff">812</div></div>
+    <div class="card" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);color:#fff"><div class="lab" style="color:rgba(255,255,255,.6)">Cars off road / day</div><div class="h2 tnum" style="color:var(--coral)">186</div></div>
+    <div class="card" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);color:#fff"><div class="lab" style="color:rgba(255,255,255,.6)">CO₂ avoided · Scope 3</div><div class="h2 tnum" style="color:var(--lime)">71t</div><div class="lab" style="color:rgba(255,255,255,.6)">BRSR-ready</div></div>
+    <div class="card" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);color:#fff"><div class="lab" style="color:rgba(255,255,255,.6)">New connections / mo</div><div class="h2 tnum" style="color:#fff">3,400</div><div class="lab" style="color:var(--lime)">cross-team</div></div>
+    <div class="card" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);color:#fff"><div class="lab" style="color:rgba(255,255,255,.6)">Community participation</div><div class="h2 tnum" style="color:var(--lime)">46%</div></div></div>
+  <div class="card between" style="margin-top:13px;background:var(--brand);border:none;color:#fff"><div><div class="lab" style="color:rgba(255,255,255,.75)">Employee Engagement Score</div><div style="font-family:var(--d);font-weight:800;font-size:30px">8.4<span style="font-size:15px;opacity:.7">/10</span></div></div><div style="font-size:12px;opacity:.85;text-align:right">▲ 1.2 since<br>rollout</div></div>
+  <div class="card" style="margin-top:13px;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);color:#fff"><b style="font-size:13px">Adoption by corridor</b>
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:11px">
+      ${[['Wakad ↔ Hinjawadi',61],['Baner ↔ Hinjawadi',44],['Kothrud ↔ Hinjawadi',29]].map(r=>`<div><div class="between" style="font-size:11.5px"><span>${r[0]}</span><b class="tnum">${r[1]}%</b></div><div class="bar" style="background:rgba(255,255,255,.1);margin-top:5px"><span style="width:${r[1]}%;background:var(--lime)"></span></div></div>`).join('')}
+    </div></div>
+  <div class="card between" style="margin-top:13px;background:var(--teal);border:none;color:#fff"><div><div class="lab" style="color:rgba(255,255,255,.7)">Aggregate savings / yr</div><div style="font-family:var(--d);font-weight:700;font-size:26px">₹2.6 Cr</div></div><div style="font-size:12px;opacity:.85">4.2★ satisfaction</div></div>
+</div></div>`);
+/*__SCREENS_MARK__*/
+
+/* ===== tab functions ===== */
+let DTAB='way';
+const I_BELL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>';
+function homeHTML(){const liked=LIKES_YOU.size;return `<div class="body pt pb"><div class="px" style="padding-top:6px">
+  <div class="between"><div><span class="eyebrow">Good morning, Tushar</span><div class="h2">Home</div></div>
+    <div class="row" style="gap:8px"><button class="iconbtn" style="background:var(--soft);position:relative" onclick="go('notifs')"><span style="width:21px;height:21px;display:block">${I_BELL}</span><span style="position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--coral);border:1.5px solid var(--paper)"></span></button><button class="av" style="width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;background:var(--brand)" onclick="switchTab('profile')">T</button></div></div>
+  <div class="card" style="margin-top:13px;background:linear-gradient(135deg,#6E5DEC,#4A2EA8 55%,#36206E);border:none;color:#fff;cursor:pointer" onclick="go('notifs')"><div class="row" style="gap:11px"><span style="font-size:22px">🌅</span><div style="flex:1"><b style="font-size:14px">4 professionals on your route today</b><div style="opacity:.85;font-size:12px">See who's commuting your way →</div></div></div></div>
+  <div class="lab" style="margin:18px 2px 10px">Today's commute</div>
+  <div class="card between" style="cursor:pointer" onclick="go('ridestatus')"><div class="row"><div class="av" style="background:var(--teal)">R</div><div><b style="font-size:13.5px">Wakad → Hinjawadi</b><div class="lab tnum">9:35 AM · with Rahul · ₹58</div></div></div><span class="chip lime" style="cursor:default">Confirmed</span></div>
+  <div class="lab" style="margin:18px 2px 10px">People near your route</div>
+  <div class="card between" style="cursor:pointer;background:var(--brand-soft);border-color:#D9D4F7" onclick="switchTab('network')"><div class="row" style="gap:10px"><span style="font-size:18px">👋</span><div><b style="font-size:13px">3 new matches on your route</b><div class="muted" style="font-size:12px">Swipe to connect</div></div></div><span class="chip brand-soft">Network →</span></div>
+  <div class="lab" style="margin:18px 2px 10px">Circle updates</div>
+  <div class="card between" style="cursor:pointer" onclick="switchTab('community')"><div class="row" style="gap:11px"><div style="font-size:20px">🤖</div><div><b style="font-size:13px">Pune AI Circle</b><div class="muted" style="font-size:12px">Meetup tomorrow · 27 going</div></div></div><span class="chip">View</span></div>
+  <div class="lab" style="margin:18px 2px 10px">Coffee requests</div>
+  <div class="card between" style="cursor:pointer" onclick="openChat('sneha')"><div class="row" style="gap:11px"><div class="av" style="background:var(--coral);border-radius:50%">S</div><div><b style="font-size:13px">Sneha wants to meet for coffee ☕</b><div class="muted" style="font-size:12px">Tap to reply</div></div></div><span class="chip coral">Reply</span></div>
+  <div class="row" style="gap:11px;margin-top:18px"><div class="card" style="flex:1;text-align:center"><div class="h2 tnum" style="color:var(--brand)">${CONNECTIONS.size}</div><div class="lab">connections</div></div><div class="card" style="flex:1;text-align:center"><div class="h2 tnum" style="color:var(--coral)">${liked}</div><div class="lab">liked you</div></div><div class="card" style="flex:1;text-align:center"><div class="h2 tnum" style="color:var(--teal)">2</div><div class="lab">circles</div></div></div>
+</div></div>${TABBAR('home')}`;}
+function networkHTML(){const g={way:['rahul','aman','karan'],near:['priya','divya','karan'],wave:['sneha','neha','rahul']};
+  return `<div class="body pt pb"><div class="px" style="padding-top:6px">
+    <div class="between"><div><span class="eyebrow">People, not rides</span><div class="h2">Network</div></div>
+      <button onclick="go('wholiked')" style="border:none;background:var(--coral-soft);color:var(--coral-d);font-weight:700;font-size:12px;padding:9px 13px;border-radius:12px;cursor:pointer">❤ ${LIKES_YOU.size} liked you</button></div>
+    ${swipeCardHTML()}
+    <div class="seg" style="margin-top:18px">
+      <button class="${DTAB==='way'?'on':''}" onclick="setDTab('way')">🛣️ Route</button>
+      <button class="${DTAB==='near'?'on':''}" onclick="setDTab('near')">🏢 Nearby</button>
+      <button class="${DTAB==='wave'?'on':''}" onclick="setDTab('wave')">🎯 Interests</button></div>
+    <div class="lab" style="margin:16px 2px 11px">${DTAB==='way'?'On your route':DTAB==='near'?'Works nearby':'Shared interests'}</div>
+    <div style="display:flex;flex-direction:column;gap:13px">${g[DTAB].map(pcard).join('')}</div>
+    ${INTERACTIONS>=3?pmkSection():''}
+    ${CONNECTIONS.size?`<div class="lab" style="margin:18px 2px 11px">Your matches</div><div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px">${[...CONNECTIONS].map(k=>{const p=PEOPLE[k];return `<div style="flex:0 0 auto;text-align:center;cursor:pointer" onclick="openChat('${k}')"><div class="av" style="width:54px;height:54px;border-radius:50%;background:${p.c};border:2.5px solid var(--lime)">${p.a}</div><div style="font-size:11px;margin-top:5px;font-weight:600">${p.n.split(' ')[0]}</div></div>`;}).join('')}</div>`:''}
+  </div></div>${TABBAR('network')}`;}
+function swipeCardHTML(){const id=ORBIT[deckIdx];
+  if(!id)return `<div class="card" style="margin-top:14px;text-align:center;padding:28px 18px"><div style="font-size:34px">🎉</div><b style="font-size:15px;display:block;margin-top:8px">You're all caught up</b><div class="muted" style="font-size:12.5px;margin-top:4px">New professionals join your orbit daily.</div><button class="btn btn-ghost" style="margin-top:14px;width:auto;padding:0 18px;margin-left:auto;margin-right:auto" onclick="resetDeck()">Start over</button></div>`;
+  const p=PEOPLE[id];const grad={way:'linear-gradient(160deg,#16BCA4,#0A6B5B)',near:'linear-gradient(160deg,#E8884A,#9A5722)',wave:'linear-gradient(160deg,#7C6CF0,#3A2A8E)'}[p.why.k];
+  return `<div style="margin-top:14px">
+    <div class="deckcard" style="position:relative;height:320px;border-radius:24px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;background:${grad};box-shadow:var(--sh-3);cursor:pointer" onclick="openPerson('${id}')">
+      <div class="grad"></div>
+      <div class="info" style="position:relative;z-index:2;padding:18px">
+        <div style="margin-bottom:9px">${overlap(p.why.k,p.why.t)} ${p.pro?proChip():''}</div>
+        <div style="font-family:var(--d);font-weight:700;font-size:23px">${p.n}${p.w?' ♀':''}</div>
+        <div style="opacity:.92;font-size:13px">${p.role}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px">${p.int.slice(0,3).map(i=>`<span style="background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:600;padding:5px 10px;border-radius:999px">${i}</span>`).join('')}</div>
+      </div>
+    </div>
+    <div class="row" style="gap:14px;justify-content:center;margin-top:14px">
+      <button class="deckbtn skip" onclick="netPass('${id}')"><span style="width:24px;height:24px;display:inline-block">${I_X}</span></button>
+      <button class="deckbtn like" onclick="netLike('${id}')"><span style="width:28px;height:28px;display:inline-block">${I_CONNECT}</span></button>
+    </div>
+    <div style="text-align:center;margin-top:9px"><span class="lab" style="text-transform:none;color:var(--ink-3);font-size:11px">${deckIdx+1} of ${ORBIT.length}  ·  ✕ pass · ❤ connect</span></div>
+  </div>`;}
+function pmkSection(){const ids=['sneha','divya','neha'].filter(k=>!CONNECTIONS.has(k));return `<div class="card" style="margin-top:18px;background:var(--brand-soft);border-color:#D9D4F7"><div class="row" style="gap:8px"><span style="font-size:18px">🤝</span><b style="font-size:13.5px">People you may know</b></div><div class="muted" style="font-size:12px;margin-top:3px">From your commute network · same company, route or interest.</div><div style="display:flex;gap:11px;overflow-x:auto;margin-top:12px;padding-bottom:4px">${ids.map(k=>{const p=PEOPLE[k];return `<div class="card" style="min-width:142px;flex:0 0 auto;cursor:pointer;background:var(--paper)" onclick="openPerson('${k}')"><div class="av" style="width:40px;height:40px;border-radius:50%;background:${p.c}">${p.a}</div><b style="font-size:12.5px;display:block;margin-top:7px">${p.n.split(' ')[0]}</b><div class="lab" style="text-transform:none">${p.role.split(' · ')[1]||p.role}</div></div>`;}).join('')}</div></div>`;}
+function netLike(id){INTERACTIONS++;if(LIKES_YOU.has(id)){CONNECTIONS.add(id);CTX.person=id;CTX.chatWith=id;deckIdx++;go('match');}else{toast('Liked '+PEOPLE[id].n.split(' ')[0]+' — we will tell you if it is mutual');deckIdx++;reNet();}}
+function netPass(id){deckIdx++;reNet();}
+function resetDeck(){deckIdx=0;reNet();}
+function reNet(){if(current()==='tab-network'){const el=rebuildTab('network');el.classList.add('active');setBar('dark');}}
+reg('notifs','dark',`
+<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Notifications</span></div>
+<div class="body px pb">
+  ${[["🌅","Morning","4 professionals are travelling your route today","8:00 AM","net"],["🎯","It's a match","You and Rahul have a 93% commute overlap","9:12 AM","match"],["❤","Someone liked you","Someone liked your profile — see who","9:20 AM","liked"],["🚗","Ride request","Priya invited you to tomorrow's commute","Yest","ride"],["🤖","Community","Pune AI Circle meetup on Saturday","Yest","circle"],["📅","Event","27 professionals from your network are attending","Mon","event"],["👥","We miss you","11 new professionals joined your commute network","—","net"]].map(n=>`<div class="card between" style="margin-bottom:10px;cursor:pointer" onclick="${n[4]==='liked'?"go('wholiked')":n[4]==='match'?"openChat('rahul')":n[4]==='ride'?"go('ridestatus')":n[4]==='circle'||n[4]==='event'?"switchTab('community')":"switchTab('network')"}"><div class="row" style="gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:var(--brand-soft);display:flex;align-items:center;justify-content:center;font-size:18px">${n[0]}</div><div style="flex:1"><b style="font-size:13px">${n[1]}</b><div class="muted" style="font-size:12px">${n[2]}</div></div></div><div class="lab" style="flex:0 0 auto">${n[3]}</div></div>`).join('')}
+</div>`);
+function setDTab(t){DTAB=t;const el=rebuildTab('network');el.classList.add('active');setBar('dark');}
+function setNearView(v){NEARVIEW=v;const el=rebuildTab('discover');el.classList.add('active');setBar('dark');}
+function nearbyMapHTML(){const near=['priya','divya','karan'];return `
+<div class="map" style="height:312px;border-radius:20px;position:relative;box-shadow:var(--sh-2);overflow:hidden">
+  <svg viewBox="0 0 360 312" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%">
+    <rect width="360" height="312" fill="#E8ECF4"/>
+    <g stroke="#fff" stroke-width="13" fill="none" stroke-linecap="round"><path d="M-10 118 H370"/><path d="M-10 226 H370"/><path d="M120 -10 V322"/><path d="M252 -10 V322"/></g>
+    <g stroke="#DCE2EE" stroke-width="2" fill="none"><path d="M-10 118 H370"/><path d="M-10 226 H370"/><path d="M120 -10 V322"/><path d="M252 -10 V322"/></g>
+    <rect x="134" y="132" width="104" height="82" rx="9" fill="#D6E7CF"/><text x="186" y="178" text-anchor="middle" font-size="11" fill="#7E8C76" font-family="monospace" font-weight="bold">Society 7</text>
+    <rect x="22" y="20" width="78" height="74" rx="9" fill="#DCE7F2"/><rect x="272" y="238" width="74" height="60" rx="9" fill="#DCE7F2"/>
+  </svg>
+  <div style="position:absolute;left:50%;top:60%;transform:translate(-50%,-50%)" class="pulse"><div style="width:20px;height:20px;border-radius:50%;background:var(--brand);border:3px solid #fff;box-shadow:0 5px 12px -3px rgba(91,75,214,.7)"></div></div>
+  <div class="walk" style="left:50%;top:68%;background:var(--brand);color:#fff;border:none">You</div>
+  ${near.map(id=>{const p=PEOPLE[id];return `<div style="position:absolute;left:${p.gx}%;top:${p.gy}%;transform:translate(-50%,-50%);cursor:pointer;z-index:3" onclick="openPerson('${id}')"><div class="av" style="width:40px;height:40px;font-size:15px;background:${p.c};border:3px solid #fff;border-radius:50% 50% 50% 5px">${p.a}</div></div>`;}).join('')}
+  <div style="position:absolute;left:80%;top:74%;transform:translate(-50%,-50%);width:15px;height:15px;border-radius:50%;background:#fff;border:2.5px solid var(--brand-2)"></div>
+  <div style="position:absolute;left:18%;top:30%;transform:translate(-50%,-50%);width:15px;height:15px;border-radius:50%;background:#fff;border:2.5px solid var(--brand-2)"></div>
+  <div class="walk" style="left:22%;top:90%">📍 Approx · privacy-safe</div>
+</div>
+<div style="display:flex;gap:10px;overflow-x:auto;padding:12px 0 2px">
+  ${near.map(id=>{const p=PEOPLE[id];return `<div class="card" style="min-width:154px;flex:0 0 auto;cursor:pointer;padding:11px" onclick="openPerson('${id}')"><div class="row" style="gap:9px"><div class="av" style="width:40px;height:40px;border-radius:50%;background:${p.c}">${p.a}</div><div><b style="font-size:12.5px">${p.n.split(' ')[0]}${p.w?' ♀':''}</b><div class="lab" style="text-transform:none">${p.why.t}</div></div></div></div>`;}).join('')}
+</div>
+<div onclick="openHowNear()" style="text-align:center;margin-top:10px;font-size:12px;color:var(--brand);font-weight:700;cursor:pointer">🔒 How do we know you are neighbours? →</div>`;}
+function requestCall(id){const p=PEOPLE[id]||{n:'Them'};const nm=p.n.split(' ')[0];const b=document.getElementById('sheetBody');b.innerHTML=`<div style="text-align:center;padding:4px 0 2px"><div style="width:58px;height:58px;border-radius:50%;background:var(--teal-soft);margin:0 auto;display:flex;align-items:center;justify-content:center"><span style="width:26px;height:26px;color:var(--teal-d);display:block">${I_PHONE}</span></div><div class="h2" style="margin-top:12px">Request a call</div><p class="muted" style="font-size:12.5px;margin-top:6px;max-width:30ch;margin-left:auto;margin-right:auto">Numbers are never shared. ${nm} gets a call request — if they accept, you talk on a <b style="color:var(--ink)">masked in-app call</b>.</p></div><div class="card row" style="gap:10px;background:var(--teal-soft);border-color:#CFE9E2;margin-top:14px"><span style="font-size:16px">🔒</span><div style="font-size:11.5px">Both numbers stay hidden · either side can end or block anytime.</div></div><button class="btn btn-teal" style="margin-top:14px" onclick="closeSheet();toast('Call request sent to '+'${nm}')">Send call request</button><button class="btn btn-ghost" style="margin-top:10px" onclick="closeSheet()">Cancel</button>`;document.getElementById('scrim').classList.add('show');document.getElementById('sheet').classList.add('show');}
+function openHowNear(){const b=document.getElementById('sheetBody');b.innerHTML=`<div style="padding:2px 0"><div class="row" style="gap:11px"><div style="font-size:26px">🏠</div><div><div class="h2">How "same society" works</div><div class="lab" style="text-transform:none">privacy-first neighbourhood matching</div></div></div><div class="hr"></div>${[['1 · You set your home once','At signup you pick your society & building — Wakad · Society 7 · Building 7 — like saving a home address.'],['2 · We verify it (any one)','A society invite code from your RWA/admin · a geofence check when you are actually home · or your address on Gov-ID via DigiLocker.'],['3 · We group, never track','You are bucketed into Society 7 → Building 7. We never show live GPS — only the society/building label and an approximate pin on the map.'],['4 · Neighbours match','Same society/building people see each other with a ✓ Society 7 badge. Exact flat number & phone stay hidden until you both agree.']].map(s=>`<div style="margin-bottom:12px"><b style="font-size:13.5px">${s[0]}</b><div class="muted" style="font-size:12.5px;margin-top:3px">${s[1]}</div></div>`).join('')}<div class="card row" style="gap:10px;background:var(--teal-soft);border-color:#CFE9E2"><span style="font-size:16px">🔒</span><div style="font-size:11.5px"><b>The ✓ means "verified neighbour"</b> — not "I can see your location." Approximate only, always opt-in.</div></div></div><button class="btn btn-ink" style="margin-top:14px" onclick="closeSheet()">Got it</button>`;document.getElementById('scrim').classList.add('show');document.getElementById('sheet').classList.add('show');}
+/* swipe deck — your real orbit */
+reg('deck','dark',`<div class="body"></div>`);
+function deckHTML(){const id=ORBIT[deckIdx];
+  if(!id)return `<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Swipe to meet</span></div><div class="body px" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center"><div style="font-size:42px">🎉</div><div class="h2" style="margin-top:12px">That is everyone for today</div><p class="muted" style="font-size:13px;margin-top:6px;max-width:26ch">Fresh people in your orbit refresh every morning.</p><button class="btn btn-brand" style="margin-top:20px;width:auto;padding:0 22px" onclick="switchTab('network')">Back to Network</button></div>`;
+  const p=PEOPLE[id];const grad={way:'linear-gradient(160deg,#16BCA4,#0A6B5B)',near:'linear-gradient(160deg,#E8884A,#9A5722)',wave:'linear-gradient(160deg,#7C6CF0,#3A2A8E)'}[p.why.k];
+  return `<div class="navbar"><button class="iconbtn" onclick="back()">${I_BACK}</button><span class="ttl">Your orbit</span><div class="spacer"></div><span class="lab" style="margin-right:14px">${deckIdx+1} / ${ORBIT.length}</span></div>
+<div class="body px pb">
+  <div class="deck">
+    <div class="deckcard" style="background:${grad}">
+      <div class="grad"></div>
+      <div class="info">
+        <div style="margin-bottom:10px">${overlap(p.why.k,p.why.t)} ${p.pro?proChip():''}</div>
+        <div class="nm">${p.n}${p.w?' ♀':''}</div>
+        <div style="opacity:.92;font-size:13px;margin-top:2px">${p.role}</div>
+        <p style="font-size:12.5px;opacity:.85;margin-top:9px;line-height:1.5">${p.bio}</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:11px">${p.int.map(i=>`<span style="background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:600;padding:5px 11px;border-radius:999px">${i}</span>`).join('')}</div>
+      </div>
+    </div>
+  </div>
+  <div class="deckact">
+    <button class="deckbtn skip" onclick="deckNext()"><span style="width:24px;height:24px;display:inline-block">${I_X}</span></button>
+    <button class="deckbtn like" onclick="deckConnect('${id}')"><span style="width:28px;height:28px;display:inline-block">${I_CONNECT}</span></button>
+  </div>
+  <div style="text-align:center;margin-top:15px"><span class="lab" style="cursor:pointer;color:var(--brand);text-transform:none;font-size:12px" onclick="openPerson('${id}')">View full profile →</span></div>
+</div>`;}
+
+function commuteHTML(){return `
+<div class="body pt pb"><div class="px" style="padding-top:6px">
+  <div class="between"><div><span class="eyebrow">Your commute</span><div class="h2">Commute</div></div>
+    <button class="av" style="background:var(--brand);border-radius:50%;border:none;cursor:pointer" onclick="switchTab('profile')">T</button></div>
+  <div class="seg brand" style="margin-top:16px">
+    <button class="${HOME_MODE==='find'?'on':''}" onclick="setMode('find')">${I_RIDER} Ride</button>
+    <button class="${HOME_MODE==='offer'?'on':''}" onclick="setMode('offer')">${I_CAR} Host</button></div>
+  ${HOME_MODE==='find'?`
+  <div class="card" style="background:var(--teal);border:none;color:#fff;margin-top:14px">
+    <span class="eyebrow" style="color:var(--lime)">Today · to office</span>
+    <div class="row" style="margin-top:12px"><div style="flex:1"><div style="font-size:11.5px;opacity:.8">Wakad</div><div style="font-weight:700;font-size:15px" class="tnum">9:30 AM</div></div>
+      <svg width="42" viewBox="0 0 42 24" stroke="var(--lime)" stroke-width="2" fill="none"><path d="M2 12h34M30 6l8 6-8 6" stroke-linecap="round"/></svg>
+      <div style="flex:1;text-align:right"><div style="font-size:11.5px;opacity:.8">Hinjawadi</div><div style="font-weight:700;font-size:15px" class="tnum">7 matches</div></div></div>
+    <button class="btn btn-coral" style="margin-top:16px" onclick="go('find')">Find your match</button></div>`:(DRIVER_VERIFIED?`
+  <div class="card" style="background:var(--coral);border:none;color:#fff;margin-top:14px">
+    <span class="eyebrow" style="color:#fff;opacity:.85">You are hosting today</span><div class="h2" style="color:#fff;margin-top:6px">3 seats open · 9:30 AM</div>
+    <div class="row" style="gap:10px;margin-top:13px"><button class="btn" style="background:#fff;color:var(--coral)" onclick="goOffer()">Post your ride</button><button class="btn" style="background:rgba(255,255,255,.18);color:#fff" onclick="go('requests')">2 requests</button></div></div>`:`
+  <div class="card" style="background:var(--teal);border:none;color:#fff;margin-top:14px">
+    <span class="eyebrow" style="color:var(--lime)">Want to host rides?</span><div class="h2" style="color:#fff;margin-top:6px;font-size:19px">Become a verified host</div>
+    <p style="font-size:12.5px;opacity:.85;margin-top:7px">Riders need only phone + work email. To host, verify once.</p>
+    <button class="btn" style="background:var(--lime);color:var(--teal);margin-top:14px" onclick="goOffer()">Verify & start hosting</button></div>`)}
+  <div class="lab" style="margin:18px 2px 11px">Your carpool</div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:11px">
+    ${ctile('Find a ride',I_RIDER,"go('find')")}${ctile('Host a ride',I_CAR,"goOffer()")}
+    ${ctile('Recurring',I_REPEAT,"go('recurring')")}${ctile('My rides',I_ROUTE,"go('myrides')")}
+  </div>
+  <div class="lab" style="margin:18px 2px 10px">Tomorrow</div>
+  <div class="card between" onclick="go('ridestatus')" style="cursor:pointer"><div class="row"><div class="av" style="background:var(--teal)">R</div><div><b style="font-size:13.5px">Wakad → Hinjawadi</b><div class="lab tnum">9:35 AM · with Rahul · ₹58</div></div></div><span class="chip">Track →</span></div>
+  <div class="card between" style="margin-top:13px;background:var(--brand-soft);border-color:#D9D4F7;cursor:pointer" onclick="switchTab('network')"><div class="row" style="gap:10px"><span style="font-size:18px">👋</span><div><b style="font-size:13px">The commute is the reason to meet</b><div class="muted" style="font-size:12px">swipe to connect with people on your route</div></div></div><span class="chip brand-soft">Network</span></div>
+</div></div>${TABBAR('commute')}`;}
+function ctile(t,svg,act){return `<button class="card" style="text-align:center;padding:13px 6px;border:1.6px solid var(--line);background:var(--paper);cursor:pointer" onclick="${act}"><div style="display:flex;justify-content:center;color:var(--teal)">${svg}</div><div class="lab" style="margin-top:6px">${t}</div></button>`;}
+
+function communityHTML(){const ids=Object.keys(CIRCLES),mine=ids.filter(i=>CIRCLES[i].joined),sug=ids.filter(i=>!CIRCLES[i].joined);
+  return `<div class="body pt pb"><div class="px" style="padding-top:6px">
+  <div class="between"><div><span class="eyebrow">Your professional circles</span><div class="h2">Community</div></div><span class="chip" onclick="toast('Create a new circle')">＋ Create</span></div>
+  <div class="lab" style="margin:18px 2px 10px">Upcoming events near you</div>
+  <div style="display:flex;gap:11px;overflow-x:auto;padding-bottom:4px">
+    ${[['🤖','AI Builders Meetup','Sat 6 PM · 27 going','runners'],['🚀','Founder Coffee','Fri 9 AM · 12 going','society'],['💜','Women in Tech Mixer','Thu 7 PM · 40 going','books']].map(e=>`<div class="card" style="min-width:178px;flex:0 0 auto;cursor:pointer" onclick="openCircle('${e[3]}')"><div style="font-size:20px">${e[0]}</div><b style="font-size:13px;display:block;margin-top:6px">${e[1]}</b><div class="muted" style="font-size:11.5px">${e[2]}</div><span class="chip lime" style="margin-top:10px;font-size:10px" onclick="event.stopPropagation();rsvpPlan(this)">RSVP</span></div>`).join('')}
+  </div>
+  <div class="card" style="margin-top:16px;background:linear-gradient(150deg,#6E5DEC,#4A2EA8 60%,#2E1C5E);border:none;color:#fff;cursor:pointer" onclick="go('circleMatch')">
+    <span class="eyebrow" style="color:#fff;opacity:.85">Group to group</span><div class="h2" style="color:#fff;margin-top:3px">Meet other circles</div>
+    <p style="font-size:12px;opacity:.85;margin-top:5px">Your circle discovers another nearby — both say hi, a group chat opens.</p></div>
+  <div class="lab" style="margin:18px 2px 10px">Circles you are in</div>
+  ${mine.map(circleRow).join('')}
+  <div class="lab" style="margin:18px 2px 10px">Suggested for you</div>
+  ${sug.map(circleRow).join('')}
+</div></div>${TABBAR('community')}`;}
+function circleRow(id){const c=CIRCLES[id];return `<div class="card between" style="margin-bottom:10px;cursor:pointer" onclick="openCircle('${id}')"><div class="row" style="gap:12px"><div style="font-size:22px">${c.e}</div><div><b style="font-size:14px">${c.n}</b><div class="muted" style="font-size:12px">${c.members.toLocaleString()} members · ${c.plans[0][0]}</div></div></div>${c.joined?'<span class="chip lime" style="cursor:default">Joined</span>':`<span class="chip" onclick="event.stopPropagation();joinCircle('${id}');switchTab('community')">Join</span>`}</div>`;}
+
+function chatsHTML(){return `<div class="body pt pb"><div class="px" style="padding-top:6px">
+  <div class="h2">Chats</div>
+  <div class="lab" style="margin:16px 2px 10px">New connections</div>
+  <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px">
+    ${['rahul','sneha','priya','aman'].map(k=>`<div style="flex:0 0 auto;cursor:pointer" onclick="openChat('${k}')"><div class="av" style="width:54px;height:54px;border-radius:50%;background:${PEOPLE[k].c};border:2.5px solid var(--lime)">${PEOPLE[k].a}</div></div>`).join('')}</div>
+  <div class="lab" style="margin:16px 2px 10px">Messages</div>
+  ${[['rahul','Want to pool tomorrow? ☕','9:30','2'],['sneha','The book club meets Wed!','Yest',''],['priya','Thanks for the cooker 🙏','Mon','']].map(m=>{const p=PEOPLE[m[0]];return `
+  <div class="card between" style="margin-bottom:10px;cursor:pointer" onclick="openChat('${m[0]}')"><div class="row" style="gap:12px"><div class="av" style="border-radius:50%;background:${p.c}">${p.a}</div><div><b style="font-size:14px">${p.n}</b><div class="muted" style="font-size:12.5px">${m[1]}</div></div></div><div style="text-align:right"><div class="lab">${m[2]}</div>${m[3]?`<div style="margin-top:5px;width:20px;height:20px;border-radius:50%;background:var(--coral);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-left:auto">${m[3]}</div>`:''}</div></div>`;}).join('')}
+</div></div>${TABBAR('chats')}`;}
+
+function profileHTML(){const ts=TRUST.score;return `<div class="body pb">
+  <div style="background:linear-gradient(150deg,#6E5DEC,#4A2EA8 60%,#2E1C5E);padding:62px 20px 22px;color:#fff;text-align:center">
+    <div class="av" style="background:var(--lime);color:var(--brand);width:78px;height:78px;font-size:28px;border-radius:50%;margin:0 auto">T</div>
+    <div class="h2" style="color:#fff;margin-top:12px">Tushar P.</div>
+    <div style="opacity:.85;font-size:13px">Sr. Engineer · Infosys · Wakad</div>
+    <div class="row" style="gap:10px;justify-content:center;margin-top:12px"><div style="background:rgba(255,255,255,.15);border-radius:12px;padding:7px 13px"><span style="font-family:var(--m);font-weight:700;font-size:16px;color:var(--lime)">${ts}</span><span style="font-size:10px;opacity:.8">/100 Trust</span></div><div style="background:rgba(255,255,255,.15);border-radius:12px;padding:7px 13px"><span class="tnum" style="font-size:16px">${CONNECTIONS.size}</span><span style="font-size:10px;opacity:.8"> connections</span></div></div></div>
+  <div class="px" style="margin-top:16px">
+    <div class="lab" style="margin-bottom:9px">Trust Score · ${ts}/100</div>
+    <div class="bar" style="height:8px"><span style="width:${ts}%;background:var(--brand)"></span></div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:11px">${[['Phone',1],['Work email',VERIFIED],['DigiLocker',TRUST.digilocker],['Selfie',TRUST.selfie]].map(b=>`<span class="chip ${b[1]?'lime':'out'}" onclick="go('verify')">${b[1]?'✓ ':''}${b[0]}</span>`).join('')}</div>
+    <div class="lab" style="margin:18px 0 9px">Professional interests</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">${ints(['AI','Product','Engineering','Startups'])}</div>
+    <div class="lab" style="margin:18px 0 9px">Your stuff</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+      ${ytile('My rides',I_CAR,"go('myrides')",'upcoming · recurring')}${ytile('My matches',I_RIDER,"switchTab('network')",CONNECTIONS.size+' connections')}
+      ${ytile('Wallet',I_REPEAT,"go('wallet')",'₹1,840 · points')}${ytile('HR / ESG',I_ROUTE,"go('hrdash')",'corporate dashboard')}</div>
+    <div class="card between" style="margin-top:13px;cursor:pointer" onclick="go('wholiked')"><div class="row" style="gap:11px"><span style="font-size:18px">❤</span><div style="font-size:12px"><b>People who liked you</b><br><span class="muted">5 liked you this week</span></div></div><span class="chip">View</span></div>
+    ${VERIFIED?`<div class="card row" style="gap:11px;background:var(--teal-soft);border-color:#CFE9E2;margin-top:13px"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.9"><path d="M12 2 4 6v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-4Z"/><path d="M9 12l2 2 4-4"/></svg><div style="font-size:12px"><b>Fully verified profile</b><br><span class="muted">Phone · work email · Aadhaar · licence</span></div></div>`:`<div class="card between" style="margin-top:13px;cursor:pointer" onclick="go('verify')"><div class="row" style="gap:11px"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink-3)" stroke-width="1.9"><path d="M12 2 4 6v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-4Z"/></svg><div style="font-size:12px"><b>Verify your work email</b><br><span class="muted">phone verified · unlock colleague pools</span></div></div><span class="chip teal">Verify</span></div>`}
+    <div class="card" style="display:flex;flex-direction:column;gap:13px;margin-top:13px">
+      <div class="between"><span style="font-size:13.5px">♀ Women-only mode</span><span class="chip out">Off</span></div>
+      <div class="between"><span style="font-size:13.5px">Show me in Network</span><span class="chip lime">On</span></div>
+      <div class="between"><span style="font-size:13.5px">SOS & trusted contacts</span><span class="chip out">Set up</span></div></div>
+    <button class="btn btn-ghost" style="margin-top:16px" onclick="resetApp()">Restart prototype</button>
+  </div></div>${TABBAR('profile')}`;}
+function ytile(t,svg,act,sub){return `<button class="card" style="border:1.6px solid var(--line);background:var(--paper);cursor:pointer;text-align:left" onclick="${act}"><div style="color:var(--brand)">${svg}</div><b style="font-size:13px;display:block;margin-top:6px">${t}</b><span class="lab">${sub}</span></button>`;}
+
+/* ===== engine ===== */
+const stage=document.getElementById('stage'),device=document.getElementById('device');
+let elements={},visited=[],cursor=-1;
+const TABS={home:homeHTML,network:networkHTML,commute:commuteHTML,community:communityHTML,profile:profileHTML};
+const TAB_BAR={home:'dark',network:'dark',commute:'dark',community:'dark',profile:'light'};
+const NAMES={};
+function ensure(id){if(elements[id])return elements[id];const el=document.createElement('div');el.className='screen';el.id='s-'+id;el.innerHTML=SCREENS[id].html;stage.appendChild(el);elements[id]=el;return el;}
+function ensureDyn(id){if(elements['tab-'+id])return elements['tab-'+id];const el=document.createElement('div');el.className='screen';el.id='s-tab-'+id;stage.appendChild(el);elements['tab-'+id]=el;return el;}
+function rebuildTab(id){const el=ensureDyn(id);el.innerHTML=TABS[id]();return el;}
+function setBar(m){device.classList.toggle('bar-light',m==='light');}
+function entryEl(e){return e.isTab?rebuildTab(e.id.slice(4)):ensure(e.id);}
+function entryBar(e){return e.isTab?TAB_BAR[e.id.slice(4)]:SCREENS[e.id].bar;}
+function place(el,s){el.style.transition='none';el.classList.remove('active','past');if(s==='left')el.classList.add('past');else if(s==='center')el.classList.add('active');void el.offsetWidth;el.style.transition='';}
+function slide(el,s){el.classList.remove('active','past');if(s==='left')el.classList.add('past');else if(s==='center')el.classList.add('active');}
+function render(e,dir){const inEl=entryEl(e);fillDynamic(e);const outEl=document.querySelector('.screen.active');
+  if(outEl&&outEl!==inEl){if(dir==='back'){place(inEl,'left');slide(inEl,'center');slide(outEl,'right');}else{place(inEl,'right');slide(inEl,'center');slide(outEl,'left');}}else place(inEl,'center');
+  setBar(entryBar(e));}
+function fillDynamic(e){try{_fill(e);}catch(err){console.error('fill',e.id,err);}}
+function _fill(e){if(e.isTab)return;const id=e.id;
+  if(id==='person')elements.person.innerHTML=personHTML(CTX.person);
+  else if(id==='verify')elements.verify.innerHTML=verifyHTML();
+  else if(id==='match')elements.match.innerHTML=matchHTML(CTX.person);
+  else if(id==='chat')elements.chat.innerHTML=chatHTML();
+  else if(id==='detail')elements.detail.innerHTML=detailHTML();
+  else if(id==='myrides')elements.myrides.innerHTML=myridesHTML();
+  else if(id==='circle')elements.circle.innerHTML=circleHTML(CTX.circle);
+  else if(id==='circleChat')elements.circleChat.innerHTML=circleChatHTML(CTX.circle);
+  else if(id==='plans')elements.plans.innerHTML=plansHTML();
+  else if(id==='myplans')elements.myplans.innerHTML=myplansHTML();
+  else if(id==='planNew')elements.planNew.innerHTML=planNewHTML();
+  else if(id==='planCreated')elements.planCreated.innerHTML=planCreatedHTML();
+  else if(id==='neighborDetail')elements.neighborDetail.innerHTML=neighborDetailHTML();
+  else if(id==='wholiked')elements.wholiked.innerHTML=whoLikedHTML();
+  else if(id==='deck')elements.deck.innerHTML=deckHTML();}
+function push(entry){visited=visited.slice(0,cursor+1);if(visited.length&&visited[visited.length-1].id===entry.id){cursor=visited.length-1;render(entry,'fwd');return;}visited.push(entry);cursor=visited.length-1;render(entry,'fwd');}
+function go(id){push({id,isTab:false});}
+function switchTab(id){push({id:'tab-'+id,isTab:true});}
+function navPrev(){if(cursor<=0)return;cursor--;render(visited[cursor],'back');}
+function navNext(){if(cursor>=visited.length-1)return;cursor++;render(visited[cursor],'fwd');}
+function back(){navPrev();}
+function current(){return cursor>=0?visited[cursor].id:null;}
+
+/* ===== state + handlers ===== */
+let HOME_MODE='find',DRIVER_VERIFIED=false,VERIFIED=false,PRO=false;
+let TRUST={score:68,digilocker:false,selfie:false},CONNECTIONS=new Set(),INTERACTIONS=0;
+const LIKES_YOU=new Set(['rahul','sneha','priya']);
+function finishV4(){toast('Welcome to your network ✨');setTimeout(()=>switchTab('network'),550);}
+function finishQuickSignup(){toast('Welcome to Troopool');setTimeout(()=>switchTab('network'),600);}
+function verifyEmail(){VERIFIED=true;toast('Work email verified — colleague pools unlocked');setTimeout(()=>back(),700);}
+let BOOKING=null;            /* {type:'carpool'|'circle'|'taxi', who, slot, status} */
+let CARPOOLS={},CIRCLE_CARPOOL=null,CTX={person:'rahul',circle:'runners',chatWith:'rahul'},obStep=0;
+const ORBIT=['rahul','sneha','priya','aman','karan','divya','neha'];
+let deckIdx=0,NEARVIEW='list';
+function openDeck(){deckIdx=0;go('deck');}
+function deckNext(){deckIdx++;elements.deck.innerHTML=deckHTML();}
+function deckConnect(id){deckIdx++;connect(id);}
+const SLOT='9:30 AM';
+/* onboarding */
+const OB=[['Your daily orbit','The people you cross paths with — finally connectable.','Same route, same neighbourhood, same wavelength. Verified colleagues & neighbours, not strangers.'],['Connect your way','Carpool, walk to the metro, grab a coffee, share a hobby, or help a neighbour.','You choose how you want to connect — and with whom.'],['Belong, not just commute','Join circles, make plans, and turn your daily orbit into a real community.','Carpool is the daily habit. Belonging is the point.']];
+function obNext(){obStep++;if(obStep>2){go('login');return;}document.getElementById('ob-k').textContent=OB[obStep][0];document.getElementById('ob-t').textContent=OB[obStep][1];document.getElementById('ob-b').textContent=OB[obStep][2];document.querySelectorAll('#ob-d i').forEach((d,i)=>{d.style.width=i===obStep?'24px':'7px';d.style.borderRadius=i===obStep?'5px':'50%';d.style.background=i===obStep?'var(--brand)':'var(--line-2)';});if(obStep===2)document.getElementById('ob-c').textContent='Get started';}
+function pickRole(r){if(r==='host'){toast('Hosts verify once');setTimeout(()=>go('orbit'),400);CTX.willHost=true;}else{CTX.willHost=false;go('orbit');}}
+function finishOnboard(){if(CTX.willHost){go('kyc');}else{toast('Welcome to your orbit');setTimeout(()=>switchTab('network'),650);}}
+function kycDone(card){const c=card.querySelector('.chip');if(c){c.outerHTML='<span class="vok">✓ Verified</span>';toast('Verified via DigiLocker');}}
+function becomeHost(){DRIVER_VERIFIED=true;toast('You are a verified host');setTimeout(()=>switchTab('network'),700);}
+/* community */
+function openPerson(id){CTX.person=id;go('person');}
+function connect(id){CTX.person=id;CTX.chatWith=id;toast('Connecting…');setTimeout(()=>go('match'),650);}
+function openChat(id){CTX.chatWith=id;go('chat');}
+function sendChat(msg){const log=document.getElementById('chatLog');if(!log)return;const d=document.createElement('div');d.style.cssText='align-self:flex-end;background:var(--brand);color:#fff;padding:11px 14px;border-radius:16px 16px 5px 16px;font-size:13.5px;max-width:80%';d.textContent=msg;log.appendChild(d);toast('Sent');}
+/* carpool: request to join as co-passenger → host accepts → confirmed (scoped per conversation) */
+function requestJoinCarpool(id){const p=PEOPLE[id];CARPOOLS[id]={host:p.n.split(' ')[0],hostA:p.a,hostC:p.c,when:'Tomorrow · 9:30 AM',pickup:'Wakad Chowk',seats:3,seatsLeft:2,fare:58,status:'pending',members:[{a:p.a,c:p.c},{a:'T',c:'var(--brand)'}]};CTX.chatWith=id;toast('Seat request sent to '+p.n.split(' ')[0]);go('chat');}
+function cancelJoinRequest(){delete CARPOOLS[CTX.chatWith];if(elements.chat)elements.chat.innerHTML=chatHTML();toast('Request cancelled');}
+function simulateHostAccept(){const cp=CARPOOLS[CTX.chatWith];if(!cp)return;if(BOOKING&&BOOKING.slot===SLOT){openConflict('You already have a '+BOOKING.slot+' ride. Cancel it to join this carpool.',()=>{BOOKING=null;_confirmJoin();});return;}_confirmJoin();}
+function _confirmJoin(){const cp=CARPOOLS[CTX.chatWith];if(!cp)return;cp.status='confirmed';cp.seatsLeft=Math.max(0,cp.seatsLeft-1);BOOKING={type:'carpool',who:cp.host,slot:SLOT,status:'confirmed'};elements.chat.innerHTML=chatHTML();toast(cp.host+' accepted — you are a co-passenger 🚗');}
+function cancelBooking(){BOOKING=null;CARPOOLS={};CIRCLE_CARPOOL=null;}
+/* commute */
+function setMode(m){HOME_MODE=m;const el=rebuildTab('commute');el.classList.add('active');setBar('dark');}
+function goOffer(){if(BOOKING&&BOOKING.type==='carpool'){openConflict('You are booked as a rider for the '+BOOKING.slot+' slot. Cancel it to host instead.',()=>{BOOKING=null;_proceedOffer();});return;}_proceedOffer();}
+function _proceedOffer(){if(DRIVER_VERIFIED)go('offer');else{toast('Verify your licence to host');setTimeout(()=>go('kyc'),700);}}
+function setRidesRole(r){RIDES_ROLE=r;if(elements.myrides){elements.myrides.innerHTML=myridesHTML();elements.myrides.classList.add('active');}setBar('dark');}
+let RIDES_ROLE='rider';
+/* circles */
+function openCircle(id){CTX.circle=id;go('circle');}
+function openCircleChat(id){CTX.circle=id;go('circleChat');}
+function joinCircle(id){CIRCLES[id].joined=true;toast('Joined '+CIRCLES[id].n+' 🎉');if(elements.circle)elements.circle.innerHTML=circleHTML(id);}
+function rsvpPlan(el){el.textContent='Going ✓';el.classList.add('lime');toast('RSVP sent — see you there!');}
+function votePoll(el,i){const card=el.parentElement;card.querySelectorAll('.bar>span').forEach((b,j)=>b.style.width=(j===i?74:26)+'%');card.querySelectorAll('.pollpct').forEach((p,j)=>p.textContent=(j===i?74:26)+'%');toast('Vote counted');}
+function ccSend(msg){const log=document.getElementById('ccLog');if(!log)return;const d=document.createElement('div');d.style.cssText='align-self:flex-end;background:var(--brand);color:#fff;padding:11px 14px;border-radius:16px 16px 5px 16px;font-size:13.5px;max-width:82%';d.textContent=msg;log.appendChild(d);}
+function circleHi(btn){btn.outerHTML='<span class="vok" style="color:var(--teal)">👋 Hi sent</span>';toast('Hi sent! If their circle says hi back, a group chat opens.');}
+function startCircleCarpool(id){CIRCLE_CARPOOL={circle:id,status:'proposed'};CTX.circle=id;toast('Group carpool added to the circle');go('circleChat');}
+function confirmCircleCarpool(){if(CIRCLE_CARPOOL)CIRCLE_CARPOOL.status='confirmed';toast('Group carpool confirmed 🚗');elements.circleChat.innerHTML=circleChatHTML(CTX.circle);}
+/* plans */
+let NEWPLAN={type:'carpool'};
+function newPlan(){NEWPLAN={type:'carpool',invited:[]};go('planNew');}
+function pickPlanType(k){NEWPLAN.type=k;elements.planNew.innerHTML=planNewHTML();}
+function toggleInvite(el,name){NEWPLAN.invited=NEWPLAN.invited||[];const on=el.dataset.on==='1';if(on){el.dataset.on='0';NEWPLAN.invited=NEWPLAN.invited.filter(n=>n!==name);if(el.classList.contains('chip')){el.classList.add('out');el.classList.remove('on');}else el.querySelector('.av').style.borderColor='transparent';}else{el.dataset.on='1';NEWPLAN.invited.push(name);if(el.classList.contains('chip')){el.classList.add('on');el.classList.remove('out');}else el.querySelector('.av').style.borderColor='var(--brand)';}const c=NEWPLAN.invited.length;document.getElementById('invCount').textContent=c?(c+' invited · '+NEWPLAN.invited.join(', ')):'No one invited yet';}
+function createPlan(){const d=PLAN_TYPES[NEWPLAN.type];const inv=(NEWPLAN.invited||[]).length;PLANS.unshift({e:d[0],t:d[2],sub:d[3]+' · '+d[4],who:'You'+(inv?' · '+inv+' invited':''),cta:'Going',mine:true});go('planCreated');}
+/* sheets + toast */
+function openConflict(msg,onProceed){const b=document.getElementById('sheetBody');b.innerHTML=`<div style="text-align:center;padding:6px 0 4px"><div style="width:60px;height:60px;border-radius:50%;background:var(--coral-soft);margin:0 auto;display:flex;align-items:center;justify-content:center"><svg width="28" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2.2"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".4"/><circle cx="12" cy="12" r="9.5"/></svg></div><div class="h2" style="margin-top:12px">Already booked</div><p class="muted" style="font-size:13px;margin-top:6px">${msg}</p></div><button class="btn btn-coral" style="margin-top:14px" id="cfP">Cancel current & book this</button><button class="btn btn-ghost" style="margin-top:10px" onclick="closeSheet()">Keep current</button>`;document.getElementById('cfP').onclick=()=>{closeSheet();onProceed();};document.getElementById('scrim').classList.add('show');document.getElementById('sheet').classList.add('show');}
+function openSOS(){const b=document.getElementById('sheetBody');b.innerHTML=`<div style="text-align:center;padding:6px 0 4px"><div class="pulse" style="width:60px;height:60px;border-radius:50%;background:var(--coral);margin:0 auto;display:flex;align-items:center;justify-content:center"><svg width="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".4"/><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></div><div class="h2" style="margin-top:12px">Emergency SOS</div><p class="muted" style="font-size:13px;margin-top:6px">Live location + trip sent to your 3 contacts & Troopool safety.</p></div><button class="btn btn-coral" style="margin-top:14px" onclick="toast('SOS sent to contacts & safety');closeSheet()">Send alert now</button><button class="btn btn-ghost" style="margin-top:10px" onclick="closeSheet()">Cancel</button>`;document.getElementById('scrim').classList.add('show');document.getElementById('sheet').classList.add('show');}
+function closeSheet(){document.getElementById('scrim').classList.remove('show');document.getElementById('sheet').classList.remove('show');}
+let toastT;function toast(msg){const t=document.getElementById('toast');t.innerHTML='<svg width="18" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>'+msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2400);}
+function resetApp(){HOME_MODE='find';DRIVER_VERIFIED=false;VERIFIED=false;PRO=false;TRUST={score:68,digilocker:false,selfie:false};CONNECTIONS=new Set();INTERACTIONS=0;BOOKING=null;CARPOOLS={};CIRCLE_CARPOOL=null;DTAB='way';NEARVIEW='list';deckIdx=0;RIDES_ROLE='rider';obStep=0;CTX={person:'rahul',circle:'runners',chatWith:'rahul'};visited=[];cursor=-1;push({id:'splash',isTab:false});armSplash();}
+/* boot */
+function bindSplash(){ensure('splash').addEventListener('click',()=>{if(current()==='splash')go('welcome');});}
+function armSplash(){setTimeout(()=>{if(current()==='splash')go('welcome');},2200);}
+window.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')navPrev();else if(e.key==='ArrowRight')navNext();});
+function tick(){const d=new Date();let h=d.getHours()%12||12;let m=String(d.getMinutes()).padStart(2,'0');document.getElementById('clock').textContent=h+':'+m;}
+setInterval(tick,10000);tick();
+visited=[{id:'splash',isTab:false}];cursor=0;
+const first=ensure('splash');place(first,'center');setBar('light');bindSplash();armSplash();
+</script>
+
+<!-- ===== Figma-style comments — Supabase realtime ===== -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const Comments=(function(){
+  const SB_URL='https://tkoaktahnesjarmnrfnc.supabase.co';
+  const SB_KEY='sb_publishable_VuidTqDgr-ZyyvUfTsrMFA_DwXrAdR9';
+  const BOARD='troopool-v4';
+  const PALETTE=['#5B4BD6','#FF6A4D','#10A88F','#C2961E','#7C6CF0','#E0518A','#2E8BD6','#6BBF3A'];
+  const SCRLABEL={splash:'Splash',welcome:'Welcome',login:'Login · Phone',quick:'Quick signup',orbit:'Build your orbit',
+    interests:'Interests',verify:'Trust Score',kyc:'KYC · DigiLocker',person:'Profile',match:"It's a match",
+    chat:'1:1 Chat',detail:'Carpool detail',myrides:'My rides',offer:'Offer a ride',circle:'Circle',circleChat:'Circle chat',
+    plans:'Plans',myplans:'My plans',planNew:'New plan',planCreated:'Plan created',neighborDetail:'Neighbour',
+    wholiked:'Who liked you',deck:'Swipe deck'};
+
+  let sb=null, threads=new Map(), mode=false, popEl=null, selId=null, popAnchor=null, presenceMap={}, ready=false;
+  let me=loadMe(); const uid=loadUid();
+
+  /* ---------- identity ---------- */
+  function loadMe(){try{const m=JSON.parse(localStorage.getItem('tp_cmt_me')||'{}');return{name:m.name||'',color:m.color||PALETTE[0]};}catch(e){return{name:'',color:PALETTE[0]};}}
+  function saveMe(){localStorage.setItem('tp_cmt_me',JSON.stringify(me));}
+  function loadUid(){let u=sessionStorage.getItem('tp_cmt_uid');if(!u){u='u'+Math.abs(hash(String(performance.now())+':'+navigator.userAgent+':'+history.length)).toString(36)+(visited.length);sessionStorage.setItem('tp_cmt_uid',u);}return u;}
+  function hash(s){let h=0;for(let i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i)|0;}return h;}
+  function initial(n){n=(n||'').trim();return n?n[0].toUpperCase():'?';}
+
+  /* ---------- helpers ---------- */
+  const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  function curScreen(){try{return current()||'splash';}catch(e){return 'splash';}}
+  function scrLabel(id){if(!id)return 'Screen';if(id.indexOf('tab-')===0){id=id.slice(4);return id.charAt(0).toUpperCase()+id.slice(1);}return SCRLABEL[id]||(id.charAt(0).toUpperCase()+id.slice(1));}
+  function ago(ts){const s=(Date.now()-new Date(ts).getTime())/1000;if(s<45)return 'now';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';}
+  function orderedThreads(){return[...threads.values()].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));}
+  function numberOf(id){const o=orderedThreads();const i=o.findIndex(t=>t.id===id);return i<0?o.length+1:i+1;}
+  function lastCommentAt(t){return t.comments.length?t.comments[t.comments.length-1].created_at:t.created_at;}
+
+  /* ---------- state mutation (idempotent — shared by optimistic + realtime) ---------- */
+  function upThread(row){const ex=threads.get(row.id);threads.set(row.id,Object.assign({},ex||{},row,{comments:ex?ex.comments:[]}));}
+  function upComment(row){let t=threads.get(row.thread_id);if(!t){t={id:row.thread_id,board:BOARD,screen:'?',x:50,y:50,resolved:false,author:row.author,color:row.color,created_at:row.created_at,comments:[]};threads.set(t.id,t);}if(!t.comments.some(c=>c.id===row.id)){t.comments.push(row);t.comments.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));}}
+  function delThread(id){threads.delete(id);if(selId===id)closePop();}
+  function delCommentById(id){for(const t of threads.values()){const n=t.comments.length;t.comments=t.comments.filter(c=>c.id!==id);if(t.comments.length!==n)return t;}return null;}
+
+  /* ---------- Supabase ---------- */
+  async function init(){
+    if(!window.supabase){console.warn('supabase-js not loaded');renderPanel();return;}
+    sb=window.supabase.createClient(SB_URL,SB_KEY,{realtime:{params:{eventsPerSecond:8}}});
+    await load();
+    subscribe();
+    bindUI();
+    ready=true;
+    renderPanel();renderPins();
+  }
+  async function load(){
+    const [{data:ts,error:e1},{data:cs,error:e2}]=await Promise.all([
+      sb.from('comment_threads').select('*').eq('board',BOARD),
+      sb.from('comments').select('*').eq('board',BOARD)
+    ]);
+    if(e1||e2){console.warn('load',e1||e2);return;}
+    threads=new Map();(ts||[]).forEach(upThread);(cs||[]).forEach(upComment);
+  }
+  function subscribe(){
+    const ch=sb.channel('tp-comments-'+BOARD,{config:{presence:{key:uid}}});
+    ch.on('postgres_changes',{event:'*',schema:'public',table:'comment_threads',filter:'board=eq.'+BOARD},p=>{
+        if(p.eventType==='DELETE')delThread(p.old.id);else upThread(p.new);
+        renderPanel();renderPins();refreshPop();})
+      .on('postgres_changes',{event:'*',schema:'public',table:'comments',filter:'board=eq.'+BOARD},p=>{
+        if(p.eventType==='DELETE')delCommentById(p.old.id);else upComment(p.new);
+        renderPanel();renderPins();refreshPop();})
+      .on('presence',{event:'sync'},()=>{presenceMap=ch.presenceState();renderPresence();})
+      .subscribe(async st=>{if(st==='SUBSCRIBED')await ch.track({name:me.name,color:me.color,uid,at:curScreen()});});
+    window._cch=ch;
+  }
+  function trackPresence(){if(window._cch&&window._cch.state==='joined')window._cch.track({name:me.name,color:me.color,uid,at:curScreen()});}
+
+  /* ---------- writes ---------- */
+  async function createThread(x,y,screen,body){
+    if(!sb)return;
+    const {data:tr,error}=await sb.from('comment_threads').insert({board:BOARD,screen,x,y,author:me.name||'Guest',color:me.color}).select().single();
+    if(error){toast('Could not post — check connection');return null;}
+    upThread(tr);
+    const {data:c}=await sb.from('comments').insert({thread_id:tr.id,board:BOARD,author:me.name||'Guest',color:me.color,body}).select().single();
+    if(c)upComment(c);
+    renderPanel();renderPins();
+    return tr.id;
+  }
+  async function addReply(threadId,body){
+    if(!sb)return;
+    const {data:c,error}=await sb.from('comments').insert({thread_id:threadId,board:BOARD,author:me.name||'Guest',color:me.color,body}).select().single();
+    if(error){toast('Could not post reply');return;}
+    upComment(c);renderPanel();refreshPop();
+  }
+  async function setResolved(id,val){
+    const t=threads.get(id);if(t)t.resolved=val;renderPanel();renderPins();refreshPop();
+    if(sb)await sb.from('comment_threads').update({resolved:val}).eq('id',id);
+  }
+  async function removeComment(id){
+    const t=delCommentById(id);renderPanel();refreshPop();
+    if(sb)await sb.from('comments').delete().eq('id',id);
+    if(t&&t.comments.length===0){delThread(t.id);renderPanel();renderPins();if(sb)await sb.from('comment_threads').delete().eq('id',t.id);}
+  }
+
+  /* ---------- pins ---------- */
+  function renderPins(){
+    const layer=document.getElementById('cLayer');if(!layer)return;
+    layer.classList.toggle('on',mode);
+    const scr=curScreen(),showRes=resFilter();
+    layer.innerHTML='';
+    orderedThreads().forEach(t=>{
+      if(t.screen!==scr)return;if(t.resolved&&!showRes)return;
+      const n=numberOf(t.id);
+      const pin=document.createElement('div');
+      pin.className='cpin'+(t.resolved?' res':'')+(selId===t.id?' sel':'');
+      pin.dataset.id=t.id;pin.style.left=t.x+'%';pin.style.top=t.y+'%';pin.style.background=t.color;
+      pin.textContent=n;
+      if(t.comments.length>1){const r=document.createElement('span');r.className='rc';r.textContent=t.comments.length;pin.appendChild(r);}
+      pin.onclick=ev=>{ev.stopPropagation();openThread(t.id);};
+      layer.appendChild(pin);
+    });
+  }
+  function resFilter(){const c=document.getElementById('showRes');return c?c.checked:false;}
+
+  /* ---------- panel ---------- */
+  function renderPanel(){
+    const count=[...threads.values()].filter(t=>!t.resolved).length;
+    const cb=document.getElementById('cCount');if(cb)cb.textContent=count;
+    renderMe();renderThreadList();
+  }
+  function renderMe(){
+    const av=document.getElementById('meAv');if(av){av.textContent=initial(me.name);av.style.background=me.color;}
+    const inp=document.getElementById('meName');if(inp&&inp.value!==me.name&&document.activeElement!==inp)inp.value=me.name;
+    const sw=document.getElementById('meSwatches');
+    if(sw&&!sw.dataset.built){sw.dataset.built='1';sw.innerHTML=PALETTE.map(c=>'<i data-c="'+c+'" style="background:'+c+'"></i>').join('');
+      sw.querySelectorAll('i').forEach(i=>i.onclick=()=>{me.color=i.dataset.c;saveMe();renderMe();trackPresence();});}
+    if(sw)sw.querySelectorAll('i').forEach(i=>i.classList.toggle('on',i.dataset.c===me.color));
+  }
+  function renderThreadList(){
+    const box=document.getElementById('cthreads');if(!box)return;
+    const showRes=resFilter();
+    const list=orderedThreads().filter(t=>t.comments.length&&(showRes||!t.resolved))
+      .sort((a,b)=>new Date(lastCommentAt(b))-new Date(lastCommentAt(a)));
+    if(!list.length){box.innerHTML='<div class="cempty"><b>No comments yet</b>Turn on comment mode and tap anywhere on the prototype to leave the first note.</div>';return;}
+    box.innerHTML=list.map(t=>{
+      const n=numberOf(t.id),first=t.comments[0],last=t.comments[t.comments.length-1];
+      return '<div class="cthread'+(t.resolved?' res':'')+'" onclick="Comments.jumpTo(\''+t.id+'\')">'
+        +'<div class="crow"><span class="cpin-mini" style="background:'+t.color+'">'+n+'</span>'
+        +'<span class="cwho">'+esc(first.author)+'</span>'
+        +'<span class="cmeta">'+ago(lastCommentAt(t))+'</span></div>'
+        +'<div class="cbody">'+esc(last.body)+'</div>'
+        +'<div><span class="cscreen">◐ '+esc(scrLabel(t.screen))+'</span>'
+        +(t.comments.length>1?'<span class="crep">'+t.comments.length+' replies</span>':'')
+        +(t.resolved?'<span class="crep" style="color:var(--teal)">resolved</span>':'')+'</div></div>';
+    }).join('');
+  }
+  function renderPresence(){
+    const box=document.getElementById('presence');if(!box)return;
+    const seen={},people=[];
+    Object.values(presenceMap).forEach(arr=>arr.forEach(p=>{if(!seen[p.uid]){seen[p.uid]=1;people.push(p);}}));
+    const dot=document.getElementById('liveDot');if(dot)dot.classList.toggle('live',people.length>0);
+    const shown=people.slice(0,5);
+    box.innerHTML=shown.map(p=>'<span class="pav sm" title="'+esc(p.name||'Guest')+'" style="background:'+(p.color||'#5B4BD6')+'">'+initial(p.name)+'</span>').join('')
+      +(people.length>shown.length?'<span class="pmore">+'+(people.length-shown.length)+'</span>':'')
+      +(people.length?'<span class="pmore">'+(people.length===1?'just you':people.length+' here')+'</span>':'');
+  }
+
+  /* ---------- mode ---------- */
+  function toggleMode(force){
+    mode=(typeof force==='boolean')?force:!mode;
+    const b=document.getElementById('cmodeBtn');if(b)b.classList.toggle('on',mode);
+    const lbl=document.getElementById('cmodeLbl');if(lbl)lbl.textContent=mode?'Placing comment — tap the screen':'Comment mode';
+    renderPins();
+  }
+
+  /* ---------- popover ---------- */
+  function closePop(){if(popEl){popEl.remove();popEl=null;}selId=null;popAnchor=null;renderPins();}
+  function pinClientAnchor(id){const p=document.querySelector('.cpin[data-id="'+id+'"]');if(!p)return null;const r=p.getBoundingClientRect();return{x:r.right-4,y:r.top+6};}
+  function position(){if(!popEl||!popAnchor)return;const w=popEl.offsetWidth,h=popEl.offsetHeight;let L=popAnchor.x+16,T=popAnchor.y-24;
+    if(L+w>innerWidth-12)L=popAnchor.x-w-16;if(L<12)L=12;if(T+h>innerHeight-12)T=innerHeight-12-h;if(T<12)T=12;
+    popEl.style.left=L+'px';popEl.style.top=T+'px';}
+
+  function openThread(id){
+    const t=threads.get(id);if(!t)return;
+    selId=id;popAnchor=pinClientAnchor(id)||{x:innerWidth/2,y:innerHeight/2};
+    buildPop({mode:'thread'});renderPins();
+  }
+  function openComposer(x,y,screen,anchor){
+    selId='__new';popAnchor=anchor;buildPop({mode:'new',x,y,screen});
+  }
+  function buildPop(o){
+    if(popEl)popEl.remove();
+    popEl=document.createElement('div');popEl.className='cpop';
+    const isNew=o.mode==='new';
+    const t=isNew?null:threads.get(selId);
+    const num=isNew?orderedThreads().length+1:numberOf(selId);
+    const col=isNew?me.color:t.color;
+    const screen=isNew?o.screen:t.screen;
+    const needName=!me.name.trim();
+    popEl.innerHTML=
+      '<div class="ph"><span class="pn" style="background:'+col+'">'+num+'</span>'
+      +'<span class="pscr">'+esc(scrLabel(screen))+'</span>'
+      +(isNew?'':'<button class="'+(t.resolved?'act':'')+'" title="'+(t.resolved?'Reopen':'Resolve')+'" onclick="Comments.resolve(\''+selId+'\','+(!t.resolved)+')"><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button>')
+      +'<button title="Close" onclick="Comments.closePop()"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>'
+      +(!isNew&&t.resolved?'<div class="cresolved-tag">Resolved ✓ — reopen from the check above</div>':'')
+      +'<div class="plist" id="popList"></div>'
+      +'<div class="pf">'
+      +(needName?'<input class="nameq" id="popName" placeholder="Your name" maxlength="24" value="'+esc(me.name)+'">':'')
+      +'<div class="pfrow"><textarea id="popInput" rows="1" placeholder="'+(isNew?'Add a comment…':'Reply…')+'"></textarea>'
+      +'<button class="send" id="popSend" disabled><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg></button></div></div>';
+    document.body.appendChild(popEl);
+    popEl._ctx=o;
+    renderPopList();
+    const ta=popEl.querySelector('#popInput'),send=popEl.querySelector('#popSend'),nm=popEl.querySelector('#popName');
+    const sync=()=>{send.disabled=!ta.value.trim()||(nm&&!nm.value.trim());};
+    ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,96)+'px';sync();});
+    if(nm)nm.addEventListener('input',sync);
+    ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(!send.disabled)submit();}});
+    send.onclick=submit;
+    requestAnimationFrame(()=>{position();ta.focus();});
+    function submit(){
+      const body=ta.value.trim();if(!body)return;
+      if(nm){const nv=nm.value.trim();if(!nv){nm.focus();return;}me.name=nv;saveMe();renderMe();trackPresence();}
+      ta.value='';ta.style.height='auto';send.disabled=true;
+      if(isNew){const x=o.x,y=o.y,scr=o.screen;closePop();createThread(x,y,scr,body).then(id=>{if(id)openThread(id);});}
+      else addReply(selId,body);
+    }
+  }
+  function renderPopList(){
+    const box=popEl&&popEl.querySelector('#popList');if(!box)return;
+    const o=popEl._ctx;
+    if(o.mode==='new'){box.innerHTML='<div class="pc" style="color:var(--ink-3);font-size:12.5px;padding:16px 14px">Drop your first note here — everyone reviewing sees it live.</div>';return;}
+    const t=threads.get(selId);if(!t)return;
+    box.innerHTML=t.comments.map(c=>
+      '<div class="pc"><span class="av" style="background:'+c.color+'">'+initial(c.author)+'</span>'
+      +'<div style="flex:1;min-width:0"><div><span class="pcwho">'+esc(c.author)+'</span><span class="pctime">'+ago(c.created_at)+'</span>'
+      +(c.author===me.name?'<button class="del" onclick="Comments.del(\''+c.id+'\')">delete</button>':'')+'</div>'
+      +'<div class="pctext">'+esc(c.body)+'</div></div></div>').join('');
+  }
+  function refreshPop(){
+    if(!popEl||selId==='__new')return;
+    if(!threads.get(selId)){closePop();return;}
+    const o=popEl._ctx,t=threads.get(selId);
+    const tag=popEl.querySelector('.cresolved-tag');
+    const rb=popEl.querySelector('.ph button');
+    if(rb){rb.classList.toggle('act',t.resolved);rb.title=t.resolved?'Reopen':'Resolve';rb.setAttribute('onclick',"Comments.resolve('"+selId+"',"+(!t.resolved)+")");}
+    renderPopList();position();
+  }
+
+  /* ---------- nav / placement ---------- */
+  function onNav(){renderPins();if(popEl){if(selId==='__new'||(threads.get(selId)&&threads.get(selId).screen!==curScreen()))closePop();else position();}trackPresence();}
+  function placeAt(e){
+    if(!mode)return;
+    const layer=document.getElementById('cLayer'),r=layer.getBoundingClientRect();
+    const x=Math.max(2,Math.min(98,(e.clientX-r.left)/r.width*100));
+    const y=Math.max(3,Math.min(97,(e.clientY-r.top)/r.height*100));
+    toggleMode(false);
+    openComposer(+x.toFixed(2),+y.toFixed(2),curScreen(),{x:e.clientX,y:e.clientY});
+  }
+
+  /* ---------- share ---------- */
+  function share(){
+    const url=location.href;
+    const done=()=>{const b=document.getElementById('shareBtn');if(b){const o=b.textContent;b.textContent='Link copied ✓';setTimeout(()=>b.textContent=o,1600);}toast('Review link copied — share it to collect comments');};
+    if(navigator.clipboard&&location.protocol!=='file:')navigator.clipboard.writeText(url).then(done,()=>fallback(url,done));else fallback(url,done);
+  }
+  function fallback(url,done){const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){toast('Copy this link: '+url);}ta.remove();}
+
+  /* ---------- bind ---------- */
+  function bindUI(){
+    const layer=document.getElementById('cLayer');if(layer)layer.addEventListener('click',placeAt);
+    const nm=document.getElementById('meName');
+    if(nm){nm.value=me.name;nm.addEventListener('input',()=>{me.name=nm.value;saveMe();renderMe();});nm.addEventListener('change',trackPresence);}
+    window.addEventListener('keydown',e=>{
+      const tag=(e.target.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea')return;
+      if(e.key==='c'||e.key==='C'){toggleMode();}
+      else if(e.key==='Escape'){if(popEl)closePop();else if(mode)toggleMode(false);}
+    });
+    setInterval(()=>{if(threads.size)renderThreadList();},30000);
+  }
+
+  // wrap navigation so pins follow the current screen
+  const _render=window.render;
+  window.render=function(){const r=_render.apply(this,arguments);try{onNav();}catch(e){}return r;};
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+
+  return {toggleMode,share,render:renderPanel,jumpTo,resolve:setResolved,del:removeComment,closePop,_state:()=>threads};
+
+  function jumpTo(id){
+    const t=threads.get(id);if(!t)return;
+    if(t.screen===curScreen()){openThread(id);return;}
+    try{if(t.screen.indexOf('tab-')===0)switchTab(t.screen.slice(4));else go(t.screen);}catch(e){}
+    setTimeout(()=>{renderPins();openThread(id);},80);
+  }
+})();
+</script>
+</body>
+</html>

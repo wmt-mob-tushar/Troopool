@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Troopool — sRide Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1F0F8;--paper:#FFFFFF;--soft:#ECEAF6;--ink:#181826;--ink-2:#54566B;--ink-3:#8E90A6;--brand:#5B4BD6;--brand-soft:#ECEAFB;--coral:#FF6A4D;--teal:#10A88F;--lime:#CBF24E;--line:#E6E3F1;
+ --d:'Bricolage Grotesque',sans-serif;--b:'Hanken Grotesk',sans-serif;--m:'JetBrains Mono',monospace;}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--b);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.7}
+::selection{background:var(--lime)}
+nav{position:sticky;top:0;z-index:50;background:rgba(241,240,248,.85);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line)}
+nav .in{max-width:980px;margin:0 auto;padding:0 22px;height:58px;display:flex;align-items:center;gap:16px}
+.logo{font-family:var(--d);font-weight:800;font-size:18px;display:flex;align-items:center;gap:8px;letter-spacing:-.02em;text-decoration:none;color:var(--ink)}
+.logo i{width:12px;height:12px;border-radius:50% 50% 50% 3px;background:var(--coral);transform:rotate(8deg);box-shadow:0 0 0 4px rgba(255,106,77,.2)}
+.back{margin-left:auto;font-size:13px;font-weight:700;color:#fff;background:var(--brand);padding:9px 15px;border-radius:10px;text-decoration:none}
+.docnav{background:var(--paper);border-bottom:1px solid var(--line)}
+.docnav .in{max-width:980px;margin:0 auto;padding:9px 22px;display:flex;gap:6px;overflow-x:auto}
+.docnav a{font-size:12.5px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:7px 12px;border-radius:9px;white-space:nowrap;transition:.15s}
+.docnav a:hover{background:var(--soft);color:var(--ink)}
+.docnav a.on{background:var(--brand);color:#fff}
+.hero{background:#16142A;color:#fff;padding:54px 0 46px;background-image:radial-gradient(circle at 12% 16%,rgba(110,93,236,.4),transparent 48%),radial-gradient(circle at 90% 80%,rgba(255,106,77,.2),transparent 46%)}
+.hero .in{max-width:980px;margin:0 auto;padding:0 22px}
+.hero .eyebrow{font-family:var(--m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);font-weight:700}
+.hero h1{font-family:var(--d);font-weight:800;font-size:clamp(30px,5vw,46px);letter-spacing:-.025em;line-height:1.05;margin:14px 0 10px}
+.hero p{color:#C4C1D6;font-size:17px;max-width:62ch}
+.doc{max-width:860px;margin:0 auto;padding:48px 22px 90px}
+.doc h1{font-family:var(--d);font-weight:800;font-size:30px;letter-spacing:-.02em;margin:34px 0 14px}
+.doc h2{font-family:var(--d);font-weight:700;font-size:25px;letter-spacing:-.02em;margin:40px 0 14px;padding-top:24px;border-top:2px solid var(--line)}
+.doc h3{font-family:var(--d);font-weight:700;font-size:18px;margin:26px 0 8px}
+.doc h4{font-weight:700;font-size:15px;margin:18px 0 6px;color:var(--ink)}
+.doc p{color:var(--ink-2);margin:12px 0;font-size:15.5px}
+.doc a{color:var(--brand);font-weight:600}
+.doc strong{color:var(--ink);font-weight:700}
+.doc ul,.doc ol{margin:12px 0 12px 4px;padding-left:22px;color:var(--ink-2);font-size:15.5px}
+.doc li{margin:7px 0}
+.doc li::marker{color:var(--brand)}
+.doc blockquote{margin:18px 0;padding:14px 18px;background:var(--brand-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;color:var(--ink)}
+.doc blockquote p{color:var(--ink);margin:4px 0}
+.doc hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+.doc code{font-family:var(--m);font-size:13px;background:var(--soft);padding:2px 6px;border-radius:6px;color:var(--brand)}
+.doc pre{background:#16142A;color:#E6E3F5;border-radius:14px;padding:16px 18px;overflow-x:auto;margin:18px 0;font-size:12.5px;line-height:1.6}
+.doc pre code{background:none;color:#E6E3F5;padding:0}
+.tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 30px -22px rgba(24,22,45,.3)}
+.doc table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--paper)}
+.doc th{background:var(--brand);color:#fff;text-align:left;padding:11px 13px;font-family:var(--b);font-weight:700;font-size:12.5px;white-space:nowrap}
+.doc td{padding:10px 13px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+.doc tr:nth-child(even) td{background:#FAF9FE}
+.doc td:first-child{color:var(--ink);font-weight:600}
+footer{background:#16142A;color:#B9B6CC;padding:40px 0;text-align:center;font-size:13px}
+footer a{color:var(--lime);text-decoration:none;font-weight:700}
+@media(max-width:600px){.doc h2{font-size:21px}}
+</style></head><body>
+<nav><div class="in"><a class="logo" href="index.html"><i></i>Troopool</a><a class="back" href="index.html">← Back</a></div></nav>
+<div class="docnav"><div class="in"><a href="user-stories.html" class="">User Stories</a><a href="business-analysis.html" class="">Business Analysis</a><a href="flow-audit.html" class="">Flow Audit</a><a href="concept.html" class="">The Concept</a><a href="case-study.html" class="on">sRide Case Study</a><a href="research.html" class="">Research</a><a href="presentation.html" class="">Presentation</a><a href="troopool-v4.html" class="">Prototype →</a></div></div>
+<header class="hero"><div class="in"><span class="eyebrow">Troopool · document</span><h1>sRide Case Study</h1><p>Deep-dive into the model Troopool builds on.</p></div></header>
+<main class="doc"><blockquote>
+<p>A deep-dive into how <strong>sRide</strong> (sride.co) actually works, written to drive a faithful clone (<code>troopool-app.html</code>).<br />
+Sources at the end. Tags: <strong>[C]</strong> confirmed from sRide/store · <strong>[K]</strong> competitor-confirmed · <strong>[I]</strong> inference.</p>
+</blockquote>
+<hr />
+<h2 id="1-snapshot">1. Snapshot</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What</td>
+<td>India's #1 <strong>workplace carpooling</strong> app — P2P <strong>ride-sharing</strong>, not a taxi service</td>
+</tr>
+<tr>
+<td>Scale</td>
+<td>3M+ users · 20+ cities · 200+ companies · 4.7★ (~43k ratings) [C]</td>
+</tr>
+<tr>
+<td>Modes</td>
+<td><strong>Carpool · Bikepool · Taxipool</strong> — "India's only app offering both carpooling and bikepooling in one app" [C]</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>Cost-sharing only (fuel + tolls ÷ riders) — driver earns <strong>no profit</strong> [C]</td>
+</tr>
+<tr>
+<td>Wedge</td>
+<td>Ride <strong>only with verified colleagues</strong> · ~60% women users · safety-first [C]</td>
+</tr>
+<tr>
+<td>Fee</td>
+<td>sRide takes <strong>6%</strong> of the contribution [C]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="2-the-problem-the-solution">2. The problem → the solution</h2>
+<p><strong>Problem.</strong> Indian metro office commutes are long, expensive (₹200–300/day by cab), and lonely; roads and corporate parking are choked. Public transit doesn't cover the "last corridor" home→office.</p>
+<p><strong>Solution.</strong> Match employees who live and work near each other and travel at the same time, so they <strong>share one car (or bike)</strong> and <strong>split only the running cost</strong>. Trust comes from <strong>work-email verification</strong> — you ride with colleagues, not strangers. Result: ~70% cheaper than a cab, ₹5,000+/month saved, fewer cars, lower Scope-3 emissions.</p>
+<hr />
+<h2 id="3-one-account-two-roles-three-modes">3. One account, two roles, three modes</h2>
+<p><strong>Roles (toggle anytime) [C]:</strong><br />
+- <strong>Ride Giver (Driver)</strong> — offers empty seats on their own commute; recovers fuel/tolls.<br />
+- <strong>Ride Taker (Rider)</strong> — books a seat; per-head cost falls as more riders join.<br />
+- "You can switch between being a Driver and a Rider <strong>at any time within the app</strong>." → one profile, a mode switch, <strong>not</strong> two account types.</p>
+<p><strong>Modes [C]:</strong><br />
+- <strong>Carpool</strong> — share a car (1–3 seats).<br />
+- <strong>Bikepool</strong> — share a two-wheeler (1 pillion). sRide is the only Indian app with both in one place.<br />
+- <strong>Taxipool</strong> — split a hired cab's fare among co-riders.</p>
+<hr />
+<h2 id="4-the-profile-composite-whats-on-a-match-card-ci">4. The profile composite (what's on a match card) [C/I]</h2>
+<p>sRide profiles surface <strong>professional + trust context</strong>, not just a name:<br />
+- Profile <strong>photo</strong> + <strong>name</strong><br />
+- <strong>Designation + company</strong> (the professional composite — e.g., "Sr. Software Engineer · Infosys") ← <em>this is the colleague-trust signal, in place of generic "same building"</em><br />
+- <strong>Membership tier</strong> — <strong>Bronze / Silver / Gold</strong> (earned over rides) [C]<br />
+- <strong>Rides completed</strong> count + <strong>rating &amp; reviews</strong> (★, two-way) [C]<br />
+- <strong>Gender</strong> (for the women-only preference) [C]<br />
+- For a specific match: <strong>route-overlap %</strong>, departure time, seats, price share</p>
+<blockquote>
+<p>Design implication for the clone: the match card = <strong>avatar · name · designation·company · ★rating·rides · membership tier · route-match% · price</strong>.</p>
+</blockquote>
+<hr />
+<h2 id="5-the-end-to-end-flow-all-scenarios">5. The end-to-end flow (all scenarios)</h2>
+<p><strong>A · Onboard (&lt;2 min) [C]:</strong> download → mobile <strong>OTP</strong> → <strong>work-email verify</strong> (+ LinkedIn) → <strong>Gov-ID + selfie match</strong> (3-layer) → add <strong>home + office</strong> + timings → done.</p>
+<p><strong>B · Matching [C]:</strong> corridor-level, <strong>≥70% route overlap</strong>, "precise to the kilometre", <strong>60-second match</strong>. No match → <strong>corridor waitlist</strong>, notified when a colleague joins.</p>
+<p><strong>C · As Ride Taker [C]:</strong> Find a Ride → pick mode (carpool/bikepool) → corridor + time → <strong>browse matched givers</strong> (pick by rating/designation) → request seat → giver accepts → notification → confirmed.</p>
+<p><strong>D · As Ride Giver [C]:</strong> <strong>Offer a Ride in one step</strong> → route, seats, departure, <strong>recurring days</strong> → instant match suggestions → <strong>incoming rider requests</strong> → accept/decline (by rating) → confirmed. Switching to driver is a mode toggle.</p>
+<p><strong>E · Recurring [C]:</strong> "set a <strong>weekly schedule once and sRide keeps the pool running automatically</strong>" — same co-riders daily; one-off rides for occasional office days; skip/pause supported.</p>
+<p><strong>F · During ride [C]:</strong> real-time <strong>GPS tracking</strong> (shareable), <strong>in-app chat</strong> (group with co-riders, numbers hidden), one-tap <strong>SOS</strong>.</p>
+<p><strong>G · After ride [C]:</strong> fare = distance + fuel + tolls ÷ confirmed riders, <strong>auto-deducted</strong> (UPI/card/netbanking/wallet; <strong>no cash</strong>) → <strong>two-way rating</strong> (compulsory) → <strong>Report Ride</strong> option (T&amp;S reviews ≤24h).</p>
+<p><strong>H · Money [C]:</strong> earnings → <strong>wallet</strong> → redeem (Paytm min ₹100 / bank min ₹1,000) · <strong>sRide points/rewards</strong> · <strong>referral</strong> (10% extra savings).</p>
+<hr />
+<h2 id="6-corporate-carpooling-the-b2b-engine-c">6. Corporate carpooling (the B2B engine) [C]</h2>
+<p><strong>Employee experience:</strong> input home/office once → matched with <strong>verified colleagues</strong> on the same route/schedule → alternate driving days ("some mornings you simply relax, read, or prep for work").</p>
+<p><strong>Company onboarding — 7 steps:</strong> leadership buy-in (ESG + experience + facility savings) → distribute app → <strong>map residential/commute clusters</strong> → <strong>pilot one campus</strong> → add incentives → comms momentum → track &amp; publicise impact. (~5–7 business days to configure.)</p>
+<p><strong>Incentives:</strong> reserved/priority <strong>parking</strong>, monthly recognition/rewards, <strong>commute allowances / fuel-card top-ups</strong>, team <strong>leaderboards</strong> &amp; departmental challenges, public impact dashboards.</p>
+<p><strong>HR / admin dashboard KPIs:</strong> adoption rate, rides/week, <strong>cars removed</strong>, <strong>CO₂ avoided</strong> (Scope-3 / BRSR-reportable), aggregate ₹ savings, pulse-survey satisfaction.</p>
+<p><strong>Economics:</strong> <strong>free for commuters</strong>; employees split only fuel+tolls; ~₹5,000+/mo (₹60k+/yr) saved for a 20 km commuter with 2–3 colleagues; companies report <strong>20–40% parking-demand reduction in 3 months</strong>. Reference rollouts: Infosys, Novartis, Capgemini.</p>
+<hr />
+<h2 id="7-trust-safety-c">7. Trust &amp; safety [C]</h2>
+<p>3-layer verification (<strong>OTP · work email/company ID · Gov-ID + selfie</strong>) · women-only ride preference · live GPS shared with contacts · in-app <strong>SOS</strong> · compulsory two-way ratings · <strong>Report Ride</strong> (24h review) · "never onboards without background checking."</p>
+<hr />
+<h2 id="8-monetization-ck">8. Monetization [C/K]</h2>
+<p>6% commission on contribution · wallet redemption (Paytm/bank) · membership tiers + points/rewards · referral credits · B2B value via the HR/ESG platform (positioned "free to companies", real line is the enterprise dashboard/ESG tier). Quick Ride contrast [K]: points-as-currency (1pt=₹1, ~4pts/km), also 6%.</p>
+<hr />
+<h2 id="9-competitor-landscape">9. Competitor landscape</h2>
+<p><strong>India:</strong> <strong>Quick Ride</strong> (main rival — points currency, more configurable), <strong>Orahi</strong>, <strong>Zify</strong>, <strong>MoveInSync/Commute</strong> (enterprise transport). <strong>Global (inspiration):</strong> <strong>Scoop</strong> (night-before scheduling, employer-funded), <strong>Pave Commute</strong>, <strong>Comovee</strong>, <strong>Commute with Enterprise</strong> (vanpool), <strong>BlaBlaCar/Daily</strong> (long-distance + fixed-line commute), <strong>Waze Carpool</strong> (discontinued — cautionary).</p>
+<hr />
+<h2 id="10-what-a-faithful-clone-must-get-right">10. What a faithful clone must get right</h2>
+<ol>
+<li><strong>One account + role toggle</strong> (Rider ↔ Driver), not two account types.</li>
+<li><strong>Three modes</strong> surfaced (carpool / bikepool / taxipool).</li>
+<li><strong>Profile composite = designation · company · membership tier · rides · rating</strong> (colleague trust, not generic badges).</li>
+<li><strong>Corridor ≥70% match %</strong> front-and-centre; waitlist when none.</li>
+<li><strong>Recurring</strong> as a first-class object (weekly, same pool, skip/pause) — and for drivers, the <strong>riders matched to your recurring ride</strong> shown distinctly.</li>
+<li><strong>Auto-pay + two-way rating + SOS + group chat + Report</strong>.</li>
+<li><strong>Corporate layer</strong>: company-scoped circles + HR dashboard (adoption, cars removed, CO₂, savings).</li>
+</ol>
+<hr />
+<h2 id="sources">Sources</h2>
+<p>sRide homepage (sride.co) · FAQ (sride.co/faqs) · corporate-carpooling guide · "sRide carpool" &amp; "safe ride smart ride" blogs · Google Play (<code>co.sride</code>) · App Store (<code>id921249819</code>) · Softonic listing · MouthShut/Glassdoor reviews · Quick Ride (quickride.in) · Scoop / Pave / Comovee / Commute-with-Enterprise · Mobisoft carpool-app-development-2026 blueprint.</p></main>
+<footer>Troopool — the network is the product · <a href="index.html">Back to home</a> · <a href="Troopool-Case-Study.pptx">Download the deck</a></footer>
+</body></html>

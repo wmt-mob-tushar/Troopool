@@ -1,0 +1,14 @@
+# Local agent / tooling config
+.claude/
+.mcp.json
+.hash
+
+# Local vector DB (internal notes/embeddings — not part of the deliverable)
+ruvector.db
+*.rvf
+*.rvf.lock
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,169 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Troopool — User Stories, Goal & Market</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1F0F8;--paper:#FFFFFF;--soft:#ECEAF6;--ink:#181826;--ink-2:#54566B;--ink-3:#8E90A6;--brand:#5B4BD6;--brand-soft:#ECEAFB;--coral:#FF6A4D;--teal:#10A88F;--lime:#CBF24E;--line:#E6E3F1;
+ --d:'Bricolage Grotesque',sans-serif;--b:'Hanken Grotesk',sans-serif;--m:'JetBrains Mono',monospace;}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--b);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.7}
+::selection{background:var(--lime)}
+nav{position:sticky;top:0;z-index:50;background:rgba(241,240,248,.85);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line)}
+nav .in{max-width:980px;margin:0 auto;padding:0 22px;height:58px;display:flex;align-items:center;gap:16px}
+.logo{font-family:var(--d);font-weight:800;font-size:18px;display:flex;align-items:center;gap:8px;letter-spacing:-.02em;text-decoration:none;color:var(--ink)}
+.logo i{width:12px;height:12px;border-radius:50% 50% 50% 3px;background:var(--coral);transform:rotate(8deg);box-shadow:0 0 0 4px rgba(255,106,77,.2)}
+.back{margin-left:auto;font-size:13px;font-weight:700;color:#fff;background:var(--brand);padding:9px 15px;border-radius:10px;text-decoration:none}
+.docnav{background:var(--paper);border-bottom:1px solid var(--line)}
+.docnav .in{max-width:980px;margin:0 auto;padding:9px 22px;display:flex;gap:6px;overflow-x:auto}
+.docnav a{font-size:12.5px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:7px 12px;border-radius:9px;white-space:nowrap;transition:.15s}
+.docnav a:hover{background:var(--soft);color:var(--ink)}
+.docnav a.on{background:var(--brand);color:#fff}
+.hero{background:#16142A;color:#fff;padding:54px 0 46px;background-image:radial-gradient(circle at 12% 16%,rgba(110,93,236,.4),transparent 48%),radial-gradient(circle at 90% 80%,rgba(255,106,77,.2),transparent 46%)}
+.hero .in{max-width:980px;margin:0 auto;padding:0 22px}
+.hero .eyebrow{font-family:var(--m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);font-weight:700}
+.hero h1{font-family:var(--d);font-weight:800;font-size:clamp(30px,5vw,46px);letter-spacing:-.025em;line-height:1.05;margin:14px 0 10px}
+.hero p{color:#C4C1D6;font-size:17px;max-width:62ch}
+.doc{max-width:860px;margin:0 auto;padding:48px 22px 90px}
+.doc h1{font-family:var(--d);font-weight:800;font-size:30px;letter-spacing:-.02em;margin:34px 0 14px}
+.doc h2{font-family:var(--d);font-weight:700;font-size:25px;letter-spacing:-.02em;margin:40px 0 14px;padding-top:24px;border-top:2px solid var(--line)}
+.doc h3{font-family:var(--d);font-weight:700;font-size:18px;margin:26px 0 8px}
+.doc h4{font-weight:700;font-size:15px;margin:18px 0 6px;color:var(--ink)}
+.doc p{color:var(--ink-2);margin:12px 0;font-size:15.5px}
+.doc a{color:var(--brand);font-weight:600}
+.doc strong{color:var(--ink);font-weight:700}
+.doc ul,.doc ol{margin:12px 0 12px 4px;padding-left:22px;color:var(--ink-2);font-size:15.5px}
+.doc li{margin:7px 0}
+.doc li::marker{color:var(--brand)}
+.doc blockquote{margin:18px 0;padding:14px 18px;background:var(--brand-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;color:var(--ink)}
+.doc blockquote p{color:var(--ink);margin:4px 0}
+.doc hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+.doc code{font-family:var(--m);font-size:13px;background:var(--soft);padding:2px 6px;border-radius:6px;color:var(--brand)}
+.doc pre{background:#16142A;color:#E6E3F5;border-radius:14px;padding:16px 18px;overflow-x:auto;margin:18px 0;font-size:12.5px;line-height:1.6}
+.doc pre code{background:none;color:#E6E3F5;padding:0}
+.tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 30px -22px rgba(24,22,45,.3)}
+.doc table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--paper)}
+.doc th{background:var(--brand);color:#fff;text-align:left;padding:11px 13px;font-family:var(--b);font-weight:700;font-size:12.5px;white-space:nowrap}
+.doc td{padding:10px 13px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+.doc tr:nth-child(even) td{background:#FAF9FE}
+.doc td:first-child{color:var(--ink);font-weight:600}
+footer{background:#16142A;color:#B9B6CC;padding:40px 0;text-align:center;font-size:13px}
+footer a{color:var(--lime);text-decoration:none;font-weight:700}
+@media(max-width:600px){.doc h2{font-size:21px}}
+</style></head><body>
+<nav><div class="in"><a class="logo" href="index.html"><i></i>Troopool</a><a class="back" href="index.html">← Back</a></div></nav>
+<div class="docnav"><div class="in"><a href="user-stories.html" class="on">User Stories</a><a href="business-analysis.html" class="">Business Analysis</a><a href="flow-audit.html" class="">Flow Audit</a><a href="concept.html" class="">The Concept</a><a href="case-study.html" class="">sRide Case Study</a><a href="research.html" class="">Research</a><a href="presentation.html" class="">Presentation</a><a href="troopool-v4.html" class="">Prototype →</a></div></div>
+<header class="hero"><div class="in"><span class="eyebrow">Troopool · document</span><h1>User Stories, Goal & Market</h1><p>How real users use Troopool, the goal, and the primary market.</p></div></header>
+<main class="doc"><blockquote>
+<p>Updated for <strong>v4 (networking-first)</strong>. Companion to <code>BUSINESS-ANALYSIS.md</code> and <code>FLOW-AUDIT.md</code>.</p>
+</blockquote>
+<hr />
+<h2 id="1-the-goal-one-paragraph">1. The goal (one paragraph)</h2>
+<p><strong>Troopool is NOT a carpool app — it's a networking platform for professionals who happen to commute together.</strong> The commute is the <em>reason to meet</em>; the <strong>network is the product</strong>. Same route, same office corridor, same interests — Troopool turns the people already in your daily orbit into connections, carpools, circles and a real professional community. Positioning: <strong>LinkedIn × sRide</strong> (not Uber × sRide). The first screen is <strong>People in your orbit</strong>, never "Find a ride."</p>
+<p><strong>The winning loop:</strong> Route match → <strong>swipe to connect</strong> → match → chat → carpool → friendship → circle → community → daily engagement.</p>
+<p><strong>Success =</strong> a verified professional who, within 2 weeks, has <strong>made real connections</strong> (swiped into matches), <strong>carpooled at least once</strong>, and <strong>joined a circle</strong> — and keeps opening the app daily.</p>
+<hr />
+<h2 id="2-primary-market">2. Primary market</h2>
+<p><strong>Primary (beachhead): verified corporate professionals in Indian IT corridors.</strong><br />
+- <strong>Who:</strong> 25–40-year-old professionals at large campuses (Infosys, TCS, Wipro, Cognizant…), commuting 15–25 km daily in <strong>Pune, Bengaluru, Hyderabad, Mumbai, Delhi-NCR</strong>.<br />
+- <strong>Why them first:</strong> dense, predictable corridors (easy matching), captive via employer rollout (solves cold-start), high cab spend (savings hook), and acute hybrid-work loneliness (lost the office as a social/professional layer).<br />
+- <strong>Buyer (B2B):</strong> HR / facilities / sustainability — for retention, engagement, parking relief and BRSR Scope-3 reporting.</p>
+<p><strong>Secondary:</strong> newcomers to a city, hybrid workers wanting a professional circle, and women seeking a safer, verified commute.</p>
+<p><strong>Geography:</strong> India-first; Maharashtra (legal since Apr 2025) + Bengaluru-corporate as the launch wedge → 8–12 cities over 3 years.</p>
+<hr />
+<h2 id="3-personas">3. Personas</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Situation</th>
+<th>Primary need</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Aisha, 26</strong> — new to Pune</td>
+<td>new job, knows no one</td>
+<td>meet verified professionals fast + save on commute</td>
+</tr>
+<tr>
+<td><strong>Rahul, 31</strong> — hybrid SWE</td>
+<td>drives an empty car</td>
+<td>recover fuel + a wider professional network</td>
+</tr>
+<tr>
+<td><strong>Ankit, 29</strong> — startup-curious</td>
+<td>wants founders &amp; AI peers</td>
+<td>circles, events, people-you-may-know</td>
+</tr>
+<tr>
+<td><strong>Priya, 34</strong> — PM, safety-first</td>
+<td>wants verified, women-friendly</td>
+<td>high Trust Score matches + safe carpool</td>
+</tr>
+<tr>
+<td><strong>Sahil — HR/ESG lead</strong></td>
+<td>engagement + ESG targets</td>
+<td>adoption, connections, engagement score, CO₂</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="4-how-it-works-the-users-mental-model">4. How it works (the user's mental model)</h2>
+<ol>
+<li><strong>Welcome</strong> — "Meet professionals already in your daily orbit."</li>
+<li><strong>Build your Trust Score</strong> — phone + work email (required); <strong>DigiLocker / selfie</strong> optional, each raising a visible <strong>0–100 Trust Score</strong>. Higher trust = more &amp; better matches. <em>(No LinkedIn.)</em></li>
+<li><strong>Set your orbit &amp; interests</strong> — home/office, days, timing + professional interests (AI, Product, Engineering, Startups…).</li>
+<li><strong>Network (the home of the app)</strong> — a <strong>Tinder-style swipe deck</strong> of people in your orbit: <strong>✕ pass / ❤ connect</strong>. <strong>Mutual like → "It's a match!" → chat.</strong> Below it: browse by route / nearby / interests.</li>
+<li><strong>Do something real</strong> — chat action chips (Coffee / Carpool / Walk / Event / Circle); <strong>carpool</strong> a match (host accepts → ride group chat → track → rate → recurring).</li>
+<li><strong>Community</strong> — professional Circles (Pune AI, Hinjewadi Founders, Women in Tech…) with group chat, <strong>events, polls, carpool requests</strong>; meet other circles.</li>
+<li><strong>Home + Profile</strong> — daily dashboard with notifications, today's commute, new matches, circle updates; profile shows your Trust Score, connections, and (for corporates) the <strong>HR/ESG dashboard</strong>.</li>
+</ol>
+<hr />
+<h2 id="5-user-stories-as-a-i-want-so-that">5. User stories (As a … I want … so that …)</h2>
+<h3 id="trust-onboarding">Trust &amp; onboarding</h3>
+<ul>
+<li><strong>As a new user,</strong> I want a visible <strong>Trust Score</strong> I can raise with DigiLocker/selfie, <strong>so that</strong> I look credible and get better matches — and only meet accountable, verified professionals.</li>
+<li><strong>As a woman,</strong> I want high-trust, verified profiles + women-only mode + SOS, <strong>so that</strong> connecting and carpooling feel safe.</li>
+</ul>
+<h3 id="network-swipe-to-match-the-core">Network (swipe-to-match — the core)</h3>
+<ul>
+<li><strong>As any user,</strong> I want to <strong>swipe through people in my orbit</strong> (route / nearby / interests) and connect on a <strong>mutual like</strong>, <strong>so that</strong> meeting feels effortless — like sRide's "Meet People," not a formal request.</li>
+<li><strong>As a user,</strong> I want to see <strong>who liked me</strong>, <strong>so that</strong> I can connect back quickly.</li>
+<li><strong>As Aisha,</strong> I want <strong>"People you may know"</strong> to appear after a few connections, <strong>so that</strong> my network compounds from my commute.</li>
+</ul>
+<h3 id="chat-carpool-the-reason-to-meet">Chat &amp; carpool (the reason to meet)</h3>
+<ul>
+<li><strong>As a match,</strong> I want chat <strong>action chips</strong> (Coffee / Carpool / Walk / Event / Circle), <strong>so that</strong> a connection turns into a real plan.</li>
+<li><strong>As Rahul (host),</strong> I want to accept riders and open a <strong>ride group chat</strong> where all co-passengers connect, <strong>so that</strong> the carpool builds my network, not just my fuel savings.</li>
+<li><strong>As a rider,</strong> I want the exact cost split before I commit and a <strong>2-way rating</strong> after, <strong>so that</strong> there are no surprises and trust stays high.</li>
+</ul>
+<h3 id="community">Community</h3>
+<ul>
+<li><strong>As Ankit,</strong> I want professional <strong>Circles with events, polls and carpool requests</strong>, <strong>so that</strong> I meet groups of peers (founders, PMs, AI builders), not just one person.</li>
+<li><strong>As a circle,</strong> I want to <strong>meet other circles</strong> (say hi → group chat), <strong>so that</strong> my community expands safely.</li>
+</ul>
+<h3 id="daily-engagement-corporate">Daily engagement &amp; corporate</h3>
+<ul>
+<li><strong>As any user,</strong> I want a <strong>Home dashboard + smart notifications</strong> (morning route, new match, ride, event), <strong>so that</strong> I have a reason to open the app daily — without spam.</li>
+<li><strong>As Sahil (HR/ESG),</strong> I want a dashboard of adoption, <strong>new connections, community participation, an Employee Engagement Score</strong>, CO₂ (Scope-3) and parking saved, <strong>so that</strong> I can prove engagement, retention and BRSR impact.</li>
+</ul>
+<hr />
+<h2 id="6-end-to-end-journeys-in-the-prototype">6. End-to-end journeys (in the prototype)</h2>
+<ul>
+<li><strong>A — Connect (primary):</strong> Welcome → Trust Score → orbit/interests → <strong>Network swipe</strong> → ❤ on a route-mate → <strong>It's a match!</strong> → chat → carpool → ride group → rate.</li>
+<li><strong>B — Community:</strong> Network → join <strong>Pune AI Circle</strong> → RSVP an event → vote a poll → offer a carpool request → meet another circle.</li>
+<li><strong>C — Daily:</strong> Home → morning notification → today's commute → new matches → circle update → coffee request.</li>
+<li><strong>D — Corporate:</strong> Profile → <strong>HR / ESG dashboard</strong> → adoption · new connections · engagement score 8.4/10 · CO₂ Scope-3 · ₹ savings.</li>
+</ul>
+<hr />
+<h2 id="7-what-makes-it-different">7. What makes it different</h2>
+<ul>
+<li><strong>People first, not rides</strong> — the first screen is your orbit, not a ride search.</li>
+<li><strong>Swipe-to-match</strong> (sRide-iOS style) — connecting feels effortless and mutual.</li>
+<li><strong>Trust Score</strong> — verified, accountable professionals; safety as a feature.</li>
+<li><strong>The commute compounds into a network</strong> — carpool → friendship → circle → community → daily habit.</li>
+<li><strong>B2B engagement &amp; ESG</strong> — the corporate story carpool-only apps can't tell.</li>
+</ul></main>
+<footer>Troopool — the network is the product · <a href="index.html">Back to home</a> · <a href="Troopool-Case-Study.pptx">Download the deck</a></footer>
+</body></html>

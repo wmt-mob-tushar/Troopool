@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Troopool — Flow Audit & Finalized Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1F0F8;--paper:#FFFFFF;--soft:#ECEAF6;--ink:#181826;--ink-2:#54566B;--ink-3:#8E90A6;--brand:#5B4BD6;--brand-soft:#ECEAFB;--coral:#FF6A4D;--teal:#10A88F;--lime:#CBF24E;--line:#E6E3F1;
+ --d:'Bricolage Grotesque',sans-serif;--b:'Hanken Grotesk',sans-serif;--m:'JetBrains Mono',monospace;}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--b);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.7}
+::selection{background:var(--lime)}
+nav{position:sticky;top:0;z-index:50;background:rgba(241,240,248,.85);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line)}
+nav .in{max-width:980px;margin:0 auto;padding:0 22px;height:58px;display:flex;align-items:center;gap:16px}
+.logo{font-family:var(--d);font-weight:800;font-size:18px;display:flex;align-items:center;gap:8px;letter-spacing:-.02em;text-decoration:none;color:var(--ink)}
+.logo i{width:12px;height:12px;border-radius:50% 50% 50% 3px;background:var(--coral);transform:rotate(8deg);box-shadow:0 0 0 4px rgba(255,106,77,.2)}
+.back{margin-left:auto;font-size:13px;font-weight:700;color:#fff;background:var(--brand);padding:9px 15px;border-radius:10px;text-decoration:none}
+.docnav{background:var(--paper);border-bottom:1px solid var(--line)}
+.docnav .in{max-width:980px;margin:0 auto;padding:9px 22px;display:flex;gap:6px;overflow-x:auto}
+.docnav a{font-size:12.5px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:7px 12px;border-radius:9px;white-space:nowrap;transition:.15s}
+.docnav a:hover{background:var(--soft);color:var(--ink)}
+.docnav a.on{background:var(--brand);color:#fff}
+.hero{background:#16142A;color:#fff;padding:54px 0 46px;background-image:radial-gradient(circle at 12% 16%,rgba(110,93,236,.4),transparent 48%),radial-gradient(circle at 90% 80%,rgba(255,106,77,.2),transparent 46%)}
+.hero .in{max-width:980px;margin:0 auto;padding:0 22px}
+.hero .eyebrow{font-family:var(--m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);font-weight:700}
+.hero h1{font-family:var(--d);font-weight:800;font-size:clamp(30px,5vw,46px);letter-spacing:-.025em;line-height:1.05;margin:14px 0 10px}
+.hero p{color:#C4C1D6;font-size:17px;max-width:62ch}
+.doc{max-width:860px;margin:0 auto;padding:48px 22px 90px}
+.doc h1{font-family:var(--d);font-weight:800;font-size:30px;letter-spacing:-.02em;margin:34px 0 14px}
+.doc h2{font-family:var(--d);font-weight:700;font-size:25px;letter-spacing:-.02em;margin:40px 0 14px;padding-top:24px;border-top:2px solid var(--line)}
+.doc h3{font-family:var(--d);font-weight:700;font-size:18px;margin:26px 0 8px}
+.doc h4{font-weight:700;font-size:15px;margin:18px 0 6px;color:var(--ink)}
+.doc p{color:var(--ink-2);margin:12px 0;font-size:15.5px}
+.doc a{color:var(--brand);font-weight:600}
+.doc strong{color:var(--ink);font-weight:700}
+.doc ul,.doc ol{margin:12px 0 12px 4px;padding-left:22px;color:var(--ink-2);font-size:15.5px}
+.doc li{margin:7px 0}
+.doc li::marker{color:var(--brand)}
+.doc blockquote{margin:18px 0;padding:14px 18px;background:var(--brand-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;color:var(--ink)}
+.doc blockquote p{color:var(--ink);margin:4px 0}
+.doc hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+.doc code{font-family:var(--m);font-size:13px;background:var(--soft);padding:2px 6px;border-radius:6px;color:var(--brand)}
+.doc pre{background:#16142A;color:#E6E3F5;border-radius:14px;padding:16px 18px;overflow-x:auto;margin:18px 0;font-size:12.5px;line-height:1.6}
+.doc pre code{background:none;color:#E6E3F5;padding:0}
+.tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 30px -22px rgba(24,22,45,.3)}
+.doc table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--paper)}
+.doc th{background:var(--brand);color:#fff;text-align:left;padding:11px 13px;font-family:var(--b);font-weight:700;font-size:12.5px;white-space:nowrap}
+.doc td{padding:10px 13px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+.doc tr:nth-child(even) td{background:#FAF9FE}
+.doc td:first-child{color:var(--ink);font-weight:600}
+footer{background:#16142A;color:#B9B6CC;padding:40px 0;text-align:center;font-size:13px}
+footer a{color:var(--lime);text-decoration:none;font-weight:700}
+@media(max-width:600px){.doc h2{font-size:21px}}
+</style></head><body>
+<nav><div class="in"><a class="logo" href="index.html"><i></i>Troopool</a><a class="back" href="index.html">← Back</a></div></nav>
+<div class="docnav"><div class="in"><a href="user-stories.html" class="">User Stories</a><a href="business-analysis.html" class="">Business Analysis</a><a href="flow-audit.html" class="on">Flow Audit</a><a href="concept.html" class="">The Concept</a><a href="case-study.html" class="">sRide Case Study</a><a href="research.html" class="">Research</a><a href="presentation.html" class="">Presentation</a><a href="troopool-v4.html" class="">Prototype →</a></div></div>
+<header class="hero"><div class="in"><span class="eyebrow">Troopool · document</span><h1>Flow Audit & Finalized Flow</h1><p>What was weak, and the finalized end-to-end product flow.</p></div></header>
+<main class="doc"><blockquote>
+<p>Senior flow-master review of the v1 prototype (<code>troopool-app.html</code>, ~37 screens, 5 tabs) → the finalized flow that <code>troopool-v3.html</code> implements.</p>
+</blockquote>
+<hr />
+<h2 id="a-current-state-map-v1">A. Current-state map (v1)</h2>
+<p><strong>Tabs:</strong> Discover · Commute · Circles · Chats · You.<br />
+<strong>Carpool:</strong> find→matches→detail→request→confirmed→active→cost→rating · offer→requests→accept/decline · recurring · taxi→taximatch→taxiconfirm.<br />
+<strong>Community:</strong> deck→person→connect→match→chat (carpool card) · circle→circleChat · circleMatch · planNew→planCreated · neighbor.<br />
+<strong>State globals:</strong> <code>HOME_MODE</code>, <code>DRIVER_VERIFIED</code>, <code>BOOKING</code>, <code>CARPOOL</code>, <code>CIRCLE_CARPOOL</code>, <code>CTX</code>, <code>DTAB</code>.</p>
+<hr />
+<h2 id="b-weaknesses-prioritized">B. Weaknesses (prioritized)</h2>
+<h3 id="p0-architecture-clarity">P0 — architecture / clarity</h3>
+<ol>
+<li><strong>Discover ↔ Commute redundancy.</strong> Both let you start a carpool via different mental models → users don't know which to use.<br />
+<em>Fix:</em> <strong>Commute = the only ride-booking hub; Discover = social exploration.</strong> From a Discover person you <em>propose</em> a carpool (into chat), you don't <em>book</em> there.</li>
+<li><strong>Community→carpool bridge is asymmetric.</strong> "Pool together" only shows for route matches (<code>p.why.k==='way'</code>); interest/neighbour connections can't pool.<br />
+<em>Fix:</em> any connection can <strong>"Propose a carpool"</strong> via a sheet (route/time) that drops a carpool card into the chat.</li>
+</ol>
+<h3 id="p1-high">P1 — high</h3>
+<ol start="3">
+<li><strong>Taxipool dead-ends</strong> — <code>taxiconfirm</code> has no CTA; taxipools never reach My Rides. <em>Fix:</em> add CTAs (chat / meeting-point / track) + log to history.</li>
+<li><strong>Chat carpool card is manual</strong> — needs an explicit tap to appear. <em>Fix:</em> auto-surface for route-matched people.</li>
+<li><strong>State fragility / double-booking</strong> — <code>CARPOOL</code> and <code>CIRCLE_CARPOOL</code> bypass the one-per-slot <code>BOOKING</code> gate. <em>Fix:</em> <strong>unify into one <code>BOOKING{type, who, slot, status}</code></strong> with a conflict sheet.</li>
+</ol>
+<h3 id="p2-medium">P2 — medium</h3>
+<ol start="6">
+<li>Onboarding doesn't branch <strong>rider vs host</strong> (KYC friction discovered at point-of-use). <em>Fix:</em> ask role after email-verify; riders skip KYC.</li>
+<li><strong>Plans half-baked</strong> — no "My Plans/Going/Invited", no edit/cancel. <em>Fix:</em> add a My Plans view.</li>
+<li><strong><code>circleMatch</code> is read-only</strong> — no "Say hi" interaction. <em>Fix:</em> Say-hi → mutual → group chat opens.</li>
+<li><strong>Recurring</strong> has only skip/pause. <em>Fix:</em> add edit time/route + cancel.</li>
+</ol>
+<h3 id="p3-low">P3 — low</h3>
+<ol start="10">
+<li><strong>My Rides rider/driver toggle</strong> has no visible control. <em>Fix:</em> add a segmented toggle.</li>
+<li><strong>Wallet &amp; sNeighbour are near-orphans.</strong> <em>Fix:</em> link Wallet from You; flesh out sNeighbour (request→accept→chat→done).</li>
+</ol>
+<h3 id="genuinely-solid-kept-as-is-in-v3">Genuinely SOLID (kept as-is in v3)</h3>
+<p>Rider booking chain (one-per-slot <code>BOOKING</code>) · driver path (KYC→vehicle→offer→requests) · recurring skip/pause · route map + transparent cost (match-ring %) · person→connect→match · circle detail (members/plans/group-chat/carpool-in-circle) · circles join/leave.</p>
+<hr />
+<h2 id="c-finalized-to-be-flow-v3">C. Finalized to-be flow (v3)</h2>
+<h3 id="ia-5-tabs-discover-is-the-landing-community-first">IA — 5 tabs, <strong>Discover is the landing</strong> (community-first)</h3>
+<ul>
+<li><strong>Discover</strong> — grouped feed (🛣️ On your way / 🏠 Nearby / 🎸 Wavelength) + swipe deck + "Happening near you" → person → connect → match. Carpool here = <strong>Propose a carpool</strong> (→ chat), not booking.</li>
+<li><strong>Commute</strong> — the transactional ride hub: Find · Host · Recurring · Taxipool · My Rides. Cross-links to Discover.</li>
+<li><strong>Circles</strong> — your circles + suggested + <strong>Meet other circles</strong> (group-to-group Say-hi→mutual→chat) → detail (members · plans · carpool-in-circle · group chat).</li>
+<li><strong>Chats</strong> — list → chat that <strong>auto-shows a carpool card</strong> when route-matched; action chips (Carpool / Coffee / Walk / Plan).</li>
+<li><strong>You</strong> — profile · verification · interests/open-to · <strong>My Rides · Wallet · Plans</strong> · settings (women-only, SOS) · <strong>HR/ESG dashboard</strong> (corporate).</li>
+</ul>
+<h3 id="unified-state">Unified state</h3>
+<p><code>BOOKING = {type:'carpool'|'circle'|'taxi', who, slot, status}</code> — <strong>one active ride per slot, across all types</strong>; conflict sheet on double-book. <code>DRIVER_VERIFIED</code> gate; <code>CTX{person,circle}</code>.</p>
+<h3 id="happy-paths-the-demo">Happy paths (the demo)</h3>
+<ul>
+<li><strong>B — Community (primary):</strong> onboard → Discover → person(why-overlap) → connect → match → chat(chips) → join circle → RSVP/My Plans → sNeighbour.</li>
+<li><strong>A — Carpool (wedge):</strong> Discover "on your way" person → <strong>Propose carpool</strong> → chat carpool card → Confirm → active(map/SOS) → cost → rating → next-day recurring. <em>(Or Commute → Find → matches → detail → request → confirmed.)</em></li>
+<li><strong>C — Corporate (B2B):</strong> You → <strong>HR/ESG dashboard</strong> (adoption · active poolers · cars removed · CO₂ Scope-3 · ₹ savings · corridors).</li>
+<li><strong>D — sNeighbour:</strong> feed → accept airport-pool / lend item → chat → done.</li>
+</ul>
+<h3 id="swimlane-journey-a-text-bpmn">Swimlane (Journey A, text BPMN)</h3>
+<pre><code>Rider          | open Discover → tap person → Propose carpool → chat → Confirm → [ride] → rate
+System         |  match% + why-overlap → create BOOKING(proposed) → carpool card → BOOKING(confirmed) → auto-pay → 2-way rating → seed recurring
+Driver/Host    |                                   ← accept request (Commute path) ←            → rate rider
+</code></pre>
+<hr />
+<h2 id="d-what-changes-vs-v1">D. What changes vs v1</h2>
+<p>Disambiguate Discover/Commute · unify carpool state · universal Propose-carpool bridge · fix taxipool/chat-card/plans/recurring/myrides/wallet/sNeighbour · onboarding role branch · <strong>new theme</strong> (indigo-led "Connect" palette) · full scope incl. HR/ESG dashboard. Build = clean <code>troopool-v3.html</code> from scratch, v1+v2 as reference.</p></main>
+<footer>Troopool — the network is the product · <a href="index.html">Back to home</a> · <a href="Troopool-Case-Study.pptx">Download the deck</a></footer>
+</body></html>
